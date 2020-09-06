@@ -11,6 +11,7 @@ const session = require('express-session')
 const methodOverride = require('method-override')
 const users = require('./data/skklubDB.json')
 const sql = require('./mysql-query')
+const createJsonDb = require('./public/js/createDB')
 
 const initializePassport = require('./passport-config')
 initializePassport(
@@ -24,9 +25,7 @@ initializePassport(
 
 app.set('view-engine', 'ejs') // template engine setting
 app.use( express.static( "public" ) );
-app.use(express.urlencoded({
-    extended: false
-})) // https://velog.io/@yejinh/express-%EB%AF%B8%EB%93%A4%EC%9B%A8%EC%96%B4-bodyParser-%EB%AA%A8%EB%93%88
+app.use(express.urlencoded({ extended: false })) // https://velog.io/@yejinh/express-%EB%AF%B8%EB%93%A4%EC%9B%A8%EC%96%B4-bodyParser-%EB%AA%A8%EB%93%88
 // express에 bodyParser 내장
 app.use(flash())
 app.use(session({
@@ -68,6 +67,24 @@ app.get('/info/update', checkAuthenticated, (req, res) => {
                     res.render('clubupdate.ejs', { result: results, cname: req.user.cname})
                 }
     })
+})
+
+app.post('/info/update', checkAuthenticated, (req, res) => {
+    //var columnList = ['cname', 'category1', 'category2', 'category3', 'campus', 'estab_year', 'intro_text', 'intro_sentence', 'activity_info', 'meeting_time', 'activity_location', 'activity_num', 'recruit_season', 'activity_period', 'recruit_process', 'recruit_num', 'recruit_site', 'president_name', 'president_contact', 'emergency_contact']
+        var updateSql = ''
+        for(var key in req.body){
+            updateSql += `${key}='${req.body[key]}', `
+        }
+        updateSql = `UPDATE club SET ` + updateSql.slice(0, -2) + ` WHERE cid=${req.user.cid}`
+        sql.generalQuery(updateSql, null, (err, results) => {
+            if (err) {
+                console.log(err)
+            } else {
+                console.log('3')
+                createJsonDb()
+                res.redirect('/info')
+            }
+        })
 })
 
 app.get('/account', checkAuthenticated, (req, res) => {

@@ -10,6 +10,9 @@
 
 <h1> <%= cname %>의 동아리소개 정보입니다. </h1>
 <a href="/info/update"><button>동아리 정보 수정</button></a>
+<form action="/logout?_method=DELETE" method="POST">
+    <button type="submit">Log out</button>
+</form>
 <div class="wrapper">
     <table>
         <colgroup>
@@ -28,7 +31,7 @@
         <tr>
             <td>동아리/모임 이름</td>
             <td><%= result['cname']  %> </td>
-            <td rowspan="5"><img style="width:100%;" src="./img/logo/<%= result['logo_path'] %>" alt=""></td>
+            <td rowspan="5"><img style="width:100%;" src="/img/logo/<%= result['logo_path'] %>" alt=""></td>
         </tr>
         <tr>
             <td>대분류</td>
@@ -120,10 +123,15 @@
             <td colspan="2" id="emergency_contact"></td>
         </tr>
     </table>
-    <img src="./img/SAPA.jpg" alt="">
 </div>
 
 <!-- html 로드 후에 실행 (개행 표현을 위해) -->
 <% for(var key in result){ %> 
-    <script>document.getElementById(`<%= key %>`).innerHTML = `<%= result[key] %>`.replace(/\n/gi, '<br>')</script>
+    <script>
+        try{
+            document.getElementById(`<%= key %>`).innerHTML = `<%= result[key] %>`.replace(/\n/gi, '<br>')
+        } catch {
+            console.log(`Cannot find [ <%= key %> ]`)   
+        }
+    </script>
     <% } %> 

@@ -43,6 +43,9 @@
 
 <h1> <%= cname %>의 동아리소개 정보입니다. </h1>
 <a href="/info"><button>뒤로 가기</button></a>
+<form action="/logout?_method=DELETE" method="POST">
+    <button type="submit">Log out</button>
+</form>
 <div class="wrapper">
     <form action="/info/update" method="POST">
         <table>
@@ -61,8 +64,8 @@
             </tr>
             <tr>
                 <td>동아리/모임 이름</td>
-                <td><input type="text" value="<%= result[0][0]['cname'] %>"> </td>
-                <td rowspan="5"><img style="width:100%;" src="./img/logo/<%= result[0][0]['logo_path'] %>" alt=""></td>
+                <td><input type="text" name="cname" value="<%= result[0][0]['cname'] %>" placeholder="모임이름"> </td>
+                <td rowspan="5"><img style="width:100%;" src="/img/logo/<%= result[0][0]['logo_path'] %>" alt=""></td>
             </tr>
             <tr>
                 <td>대분류</td>
@@ -88,7 +91,7 @@
             </tr>
             <tr>
                 <td>소분류</td>
-                <td><input type="text" value="<%= result[0][0]['category3'] %>"> </td>
+                <td><input type="text" name="category3" value="<%= result[0][0]['category3'] %>" placeholder="동아리 활동내용 요약"> </td>
             </tr>
             <tr>
                 <td>캠퍼스</td>
@@ -104,7 +107,7 @@
             </tr>
             <tr>
                 <td>설립연도</td>
-                <td><input type="text" value="<%= result[0][0]['estab_year'] %>"> </td>
+                <td><input type="text" name="estab_year" value="<%= result[0][0]['estab_year'] %>" placeholder="설립연도"> </td>
                 <td><%= cname %>의 로고 </td>
             </tr>
 
@@ -113,35 +116,39 @@
             </tr>
             <tr>
                 <td>소개글</td>
-                <td colspan="2"><textarea type="text"
-                        style="width:100%; min-height: 400px; padding: 15px 10px;"> <%= result[0][0]['intro_text'] %> </textarea>
+                <td colspan="2">
+                    <textarea type="text" name="intro_text" style="width:100%; min-height: 400px; padding: 15px 10px;"> 
+                        <%= result[0][0]['intro_text'] %> 
+                    </textarea>
                 </td>
             </tr>
             <tr>
                 <td>핵심 소개문구</td>
-                <td colspan="2"><input type="text" value="<%= result[0][0]['intro_sentence'] %>" style="width:80%;">
+                <td colspan="2"><input type="text" name="intro_sentence" value="<%= result[0][0]['intro_sentence'] %>" style="width:80%;" placeholder="표어, 캐치프레이즈 등">
                 </td>
             </tr>
             <tr>
                 <td>활동내용</td>
-                <td colspan="2"><textarea type="text"
-                        style="width:100%; min-height: 300px; padding: 15px 10px;"> <%= result[0][0]['activity_info'] %> </textarea>
+                <td colspan="2"><textarea type="text" name="activity_info" style="width:100%; min-height: 300px; padding: 15px 10px;">
+                    <%= result[0][0]['activity_info'] %> 
+                </textarea>
                 </td>
             </tr>
             <tr>
                 <td>모임시간</td>
-                <td colspan="2"><textarea type="text"
-                        style="width:100%; min-height: 100px; padding: 15px 10px;"> <%= result[0][0]['meeting_time'] %> </textarea>
+                <td colspan="2"><textarea type="text" name="meeting_time" style="width:100%; min-height: 100px; padding: 15px 10px;"> 
+                    <%= result[0][0]['meeting_time'] %> 
+                </textarea>
                 </td>
             </tr>
             <tr>
                 <td>모임장소</td>
-                <td colspan="2"><input type="text" value="<%= result[0][0]['activity_location'] %>" style="width:80%;">
+                <td colspan="2"><input type="text" name="activity_location" value="<%= result[0][0]['activity_location'] %>" style="width:80%;" placeholder="활동 또는 모임장소">
                 </td>
             </tr>
             <tr>
                 <td>활동인원</td>
-                <td colspan="2"><input type="text" value="<%= result[0][0]['activity_num'] %>"></td>
+                <td colspan="2"><input type="text" name="activity_num" value="<%= result[0][0]['activity_num'] %>" placeholder="대략적인 활동인원"></td>
             </tr>
 
             <tr>
@@ -149,26 +156,25 @@
             </tr>
             <tr>
                 <td>모집시기</td>
-                <td colspan="2"><input type="text" value="<%= result[0][0]['recruit_season'] %>"> ex. 매학기/상반기/상시모집 등
+                <td colspan="2"><input type="text" name="recruit_season" value="<%= result[0][0]['recruit_season'] %>" placeholder="매학기/상반기/상시모집 등">
                 </td>
             </tr>
             <tr>
                 <td>의무활동기간</td>
-                <td colspan="2"><input type="text" value="<%= result[0][0]['activity_period'] %>"> ex. 2학기/없음 등</td>
+                <td colspan="2"><input type="text" name="activity_period" value="<%= result[0][0]['activity_period'] %>" placeholder="1년/3학기/없음 등"></td>
             </tr>
             <tr>
                 <td>모집방식</td>
-                <td colspan="2"><input type="text" value="<%= result[0][0]['recruit_process'] %>"> ex. 자유가입/서류/면접/실기 등
+                <td colspan="2"><input type="text" name="recruit_process" value="<%= result[0][0]['recruit_process'] %>" placeholder="자유가입/서류/면접/실기 등">
                 </td>
             </tr>
             <tr>
                 <td>모집인원</td>
-                <td colspan="2"><input type="text" value="<%= result[0][0]['recruit_num'] %>"> ex. 30명/변동 등</td>
+                <td colspan="2"><input type="text" name="recruit_num" value="<%= result[0][0]['recruit_num'] %>" placeholder="OO명/변동 등"></td>
             </tr>
             <tr>
                 <td>리쿠르팅 사이트</td>
-                <td colspan="2"><input type="text" value="<%= result[0][0]['recruit_site'] %>"
-                        style="width:80%;"><br>구글폼, 자체사이트 등</td>
+                <td colspan="2"><input type="text" name="recruit_site" value="<%= result[0][0]['recruit_site'] %>" style="width:80%;" placeholder="구글폼, 자체사이트 등"></td>
             </tr>
 
             <tr>
@@ -176,15 +182,15 @@
             </tr>
             <tr>
                 <td>대표자 이름</td>
-                <td colspan="2"><input type="text" value="<%= result[0][0]['president_name'] %>"> </td>
+                <td colspan="2"><input type="text" name="president_name" value="<%= result[0][0]['president_name'] %>" placeholder="모임장/대표자 이름"> </td>
             </tr>
             <tr>
                 <td>대표자 연락처</td>
-                <td colspan="2"><input type="text" value="<%= result[0][0]['president_contact'] %>"> </td>
+                <td colspan="2"><input type="text" name="president_contact" value="<%= result[0][0]['president_contact'] %>" placeholder="모임장/대표자 연락처"> </td>
             </tr>
             <tr>
                 <td>긴급연락처</td>
-                <td colspan="2"><input type="text" value="<%= result[0][0]['emergency_contact'] %>"> </td>
+                <td colspan="2"><input type="text" name="emergency_contact" value="<%= result[0][0]['emergency_contact'] %>" placeholder="긴급연락처"> </td>
             </tr>
         </table>
         <input type="submit" value="수정하기">
