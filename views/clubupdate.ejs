@@ -1,0 +1,192 @@
+<style>
+    table {
+        border-collapse: collapse;
+        max-width: 80%;
+        position: relative;
+        margin: auto;
+    }
+
+    th {
+        background-color: rgb(221, 221, 221);
+    }
+
+    th,
+    td {
+        border: 1px solid black;
+        padding: 1% 3%;
+    }
+
+    th,
+    td:first-child {
+        text-align: center;
+    }
+
+    th,
+    td[colspan="2"] {
+        padding: 10px 0;
+        font-size: 15px;
+        font-weight: bold;
+    }
+
+    .wrapper {
+        padding: 5%
+    }
+</style>
+<script>
+    window.onload = function () {
+        // 사전입력 정보 불러오기 기능
+        document.querySelector(`#category1 option[value="<%= result[0][0]['category1']%>"]`).selected = true
+        document.querySelector(`#category2 option[value="<%= result[0][0]['category2']%>"]`).selected = true
+        document.querySelector(`#campus input[value="<%= result[0][0]['campus']%>"]`).checked = true
+    }
+</script>
+
+<h1> <%= cname %>의 동아리소개 정보입니다. </h1>
+<a href="/info"><button>뒤로 가기</button></a>
+<div class="wrapper">
+    <form action="/info/update" method="POST">
+        <table>
+            <colgroup>
+                <col width="20%" />
+                <col width="40%" />
+                <col width="40%" />
+            </colgroup>
+            <tr>
+                <th>항목</th>
+                <th colspan="2">내용</th>
+            </tr>
+
+            <tr>
+                <td colspan="3">기본정보</td>
+            </tr>
+            <tr>
+                <td>동아리/모임 이름</td>
+                <td><input type="text" value="<%= result[0][0]['cname'] %>"> </td>
+                <td rowspan="5"><img style="width:100%;" src="./img/logo/<%= result[0][0]['logo_path'] %>" alt=""></td>
+            </tr>
+            <tr>
+                <td>대분류</td>
+                <td>
+                    <select name="category1" id="category1">
+                        <% var category1 = result[1] %>
+                        <% for(var i=0;i<category1.length;i++){ %>
+                        <option value="<%= category1[i]['category1'] %>"><%= category1[i]['category1'] %> </option>
+                        <% } %>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>중분류</td>
+                <td>
+                    <select name="category2" id="category2">
+                        <% var category2 = result[2] %>
+                        <% for(var i=0;i<category2.length;i++){ %>
+                        <option value="<%= category2[i]['category2'] %>"><%= category2[i]['category2'] %> </option>
+                        <% } %>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>소분류</td>
+                <td><input type="text" value="<%= result[0][0]['category3'] %>"> </td>
+            </tr>
+            <tr>
+                <td>캠퍼스</td>
+                <td id="campus">
+                    <input type="radio" id="mr" name="campus" value="명륜">
+                    <label for="mr">명륜</label>
+                    <input type="radio" id="yj" name="campus" value="율전">
+                    <label for="yj">율전</label><br>
+                    <input type="radio" id="both" name="campus" value="명륜, 율전">
+                    <label for="both">명륜/율전 통합</label><span style="font-size: smaller;color:red;">(명륜/율전 통합관리계정의 경우만
+                        선택)</span>
+                </td>
+            </tr>
+            <tr>
+                <td>설립연도</td>
+                <td><input type="text" value="<%= result[0][0]['estab_year'] %>"> </td>
+                <td><%= cname %>의 로고 </td>
+            </tr>
+
+            <tr>
+                <td colspan="3">모임 소개</td>
+            </tr>
+            <tr>
+                <td>소개글</td>
+                <td colspan="2"><textarea type="text"
+                        style="width:100%; min-height: 400px; padding: 15px 10px;"> <%= result[0][0]['intro_text'] %> </textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>핵심 소개문구</td>
+                <td colspan="2"><input type="text" value="<%= result[0][0]['intro_sentence'] %>" style="width:80%;">
+                </td>
+            </tr>
+            <tr>
+                <td>활동내용</td>
+                <td colspan="2"><textarea type="text"
+                        style="width:100%; min-height: 300px; padding: 15px 10px;"> <%= result[0][0]['activity_info'] %> </textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>모임시간</td>
+                <td colspan="2"><textarea type="text"
+                        style="width:100%; min-height: 100px; padding: 15px 10px;"> <%= result[0][0]['meeting_time'] %> </textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>모임장소</td>
+                <td colspan="2"><input type="text" value="<%= result[0][0]['activity_location'] %>" style="width:80%;">
+                </td>
+            </tr>
+            <tr>
+                <td>활동인원</td>
+                <td colspan="2"><input type="text" value="<%= result[0][0]['activity_num'] %>"></td>
+            </tr>
+
+            <tr>
+                <td colspan="3">리쿠르팅 정보</td>
+            </tr>
+            <tr>
+                <td>모집시기</td>
+                <td colspan="2"><input type="text" value="<%= result[0][0]['recruit_season'] %>"> ex. 매학기/상반기/상시모집 등
+                </td>
+            </tr>
+            <tr>
+                <td>의무활동기간</td>
+                <td colspan="2"><input type="text" value="<%= result[0][0]['activity_period'] %>"> ex. 2학기/없음 등</td>
+            </tr>
+            <tr>
+                <td>모집방식</td>
+                <td colspan="2"><input type="text" value="<%= result[0][0]['recruit_process'] %>"> ex. 자유가입/서류/면접/실기 등
+                </td>
+            </tr>
+            <tr>
+                <td>모집인원</td>
+                <td colspan="2"><input type="text" value="<%= result[0][0]['recruit_num'] %>"> ex. 30명/변동 등</td>
+            </tr>
+            <tr>
+                <td>리쿠르팅 사이트</td>
+                <td colspan="2"><input type="text" value="<%= result[0][0]['recruit_site'] %>"
+                        style="width:80%;"><br>구글폼, 자체사이트 등</td>
+            </tr>
+
+            <tr>
+                <td colspan="3">연락처/사이트</td>
+            </tr>
+            <tr>
+                <td>대표자 이름</td>
+                <td colspan="2"><input type="text" value="<%= result[0][0]['president_name'] %>"> </td>
+            </tr>
+            <tr>
+                <td>대표자 연락처</td>
+                <td colspan="2"><input type="text" value="<%= result[0][0]['president_contact'] %>"> </td>
+            </tr>
+            <tr>
+                <td>긴급연락처</td>
+                <td colspan="2"><input type="text" value="<%= result[0][0]['emergency_contact'] %>"> </td>
+            </tr>
+        </table>
+        <input type="submit" value="수정하기">
+    </form>
+</div>

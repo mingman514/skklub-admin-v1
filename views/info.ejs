@@ -1,0 +1,129 @@
+
+<style>
+    table{ border-collapse: collapse; max-width: 80%; position: relative; margin:auto;}
+    th{ background-color: rgb(221, 221, 221);}
+    th, td{ border: 1px solid black; padding: 1% 3%;}
+    th, td:first-child{ text-align:center;}
+    th, td[colspan="2"]{padding:10px 0; font-size: 15px; font-weight: bold;}
+    .wrapper{padding:5%}
+</style>
+
+<h1> <%= cname %>의 동아리소개 정보입니다. </h1>
+<a href="/info/update"><button>동아리 정보 수정</button></a>
+<div class="wrapper">
+    <table>
+        <colgroup>
+            <col width="20%"/>
+            <col width="40%"/>
+            <col width="40%"/>
+        </colgroup>
+        <tr>
+            <th>항목</th>
+            <th colspan="2">내용</th>
+        </tr>
+        
+        <tr>
+            <td colspan="3">기본정보</td>
+        </tr>
+        <tr>
+            <td>동아리/모임 이름</td>
+            <td><%= result['cname']  %> </td>
+            <td rowspan="5"><img style="width:100%;" src="./img/logo/<%= result['logo_path'] %>" alt=""></td>
+        </tr>
+        <tr>
+            <td>대분류</td>
+            <td id="category1"></td>
+        </tr>
+        <tr>
+            <td>중분류</td>
+            <td id="category2"></td>
+        </tr>
+        <tr>
+            <td>소분류</td>
+            <td id="category3"></td>
+        </tr>
+        <tr>
+            <td>캠퍼스</td>
+            <td id="campus"></td>
+        </tr>
+        <tr>
+            <td>설립연도</td>
+            <td id="estab_year"></td>
+            <td><%= cname %> 로고 </td>
+        </tr>
+
+        <tr>
+            <td colspan="3">모임 소개</td>
+        </tr>
+        <tr>
+            <td>소개글</td>
+            <td colspan="2" id="intro_text"> </td>
+        </tr>
+        <tr>
+            <td>핵심 소개문구</td>
+            <td colspan="2" id="intro_sentence"></td>
+        </tr>
+        <tr>
+            <td>활동내용</td>
+            <td colspan="2" id="activity_info"></td>
+        </tr>
+        <tr>
+            <td>모임시간</td>
+            <td colspan="2" id="meeting_time"></td>
+        </tr>
+        <tr>
+            <td>모임장소</td>
+            <td colspan="2" id="activity_location"></td>
+        </tr>
+        <tr>
+            <td>활동인원</td>
+            <td colspan="2" id="activity_num"> </td>
+        </tr>
+
+        <tr>
+            <td colspan="3">리쿠르팅 정보</td>
+        </tr>
+        <tr>
+            <td>모집시기</td>
+            <td colspan="2" id="recruit_season"></td>
+        </tr>
+        <tr>
+            <td>의무활동기간</td>
+            <td colspan="2" id="activity_period"></td>
+        </tr>
+        <tr>
+            <td>모집방식</td>
+            <td colspan="2" id="recruit_process"></td>
+        </tr>
+        <tr>
+            <td>모집인원</td>
+            <td colspan="2" id="recruit_num"></td>
+        </tr>
+        <tr>
+            <td>리쿠르팅 사이트</td>
+            <td colspan="2" id="recruit_site"></td>
+        </tr>
+        
+        <tr>
+            <td colspan="3">연락처/사이트</td>
+        </tr>
+        <tr>
+            <td>대표자 이름</td>
+            <td colspan="2" id="president_name"></td>
+        </tr>
+        <tr>
+            <td>대표자 연락처</td>
+            <td colspan="2" id="president_contact"></td>
+        </tr>
+        <tr>
+            <td>긴급연락처</td>
+            <td colspan="2" id="emergency_contact"></td>
+        </tr>
+    </table>
+    <img src="./img/SAPA.jpg" alt="">
+</div>
+
+<!-- html 로드 후에 실행 (개행 표현을 위해) -->
+<% for(var key in result){ %> 
+    <script>document.getElementById(`<%= key %>`).innerHTML = `<%= result[key] %>`.replace(/\n/gi, '<br>')</script>
+    <% } %> 
