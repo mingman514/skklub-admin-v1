@@ -1,0 +1,45 @@
+<nav class="navbar navbar-expand-lg navbar-dark indigo">
+    <a class="navbar-brand" href="/">SKKLUB 관리자</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+      aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://www.skklub.com/" target="_blank">SKKLUB</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">관리메뉴</a>
+            <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/info">소개정보 관리</a>
+              <a class="dropdown-item" href="/account">계정 관리</a>
+            </div>
+          </li>
+          <% try {if(cname) { %>
+            <li>
+              <span class="white-text">
+                <form action="/logout?_method=DELETE" method="POST" style="margin-block-end: 0;">
+                    <button type="submit" class="btn btn-mdb-color btn-sm logout-btn">로그아웃</button>
+                </form>
+            </span>
+            </li>
+            <% }} catch{ %> 
+            <% } %> 
+      </ul>
+
+      <span class="navbar-text white-text">
+        <% try {if(cname) { %>
+        <span style="font-weight: bold;"><%= cname %></span> 관리자님, 환영합니다!
+        <% }} catch{ %> 
+            <span>로그인이 필요합니다</span>
+        <% } %> 
+      </span>
+      
+    </div>
+  </nav>

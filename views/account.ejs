@@ -1,20 +1,35 @@
 <%- include('./partials/header.ejs'); %>
+<%- include('./partials/navbar.ejs'); %>
 
-<h1>내 동아리 계정 설정</h1>
-<h3>비밀번호 변경</h3>
-<div>비밀번호 조건</div>
-<ul>
-    <li>6~20 자리</li>
-    <li>공백 불가</li>
-</ul>
-<form action="/account" method="POST">
-    변경할 비밀번호 : <input type="password" name="pw1" required><br>
-    비밀번호 확인 : <input type="password" name="pw2" required><br>
-    <input type="submit" value="변경하기">
-</form>
-<% if(messages.flash) { %> 
-    <%= messages.flash %> 
-<% } %>
-
+<div class="card-group">
+    <div class="card">
+    <div class="card-body">
+        <div class="view overlay zoom">
+            <img src="/img/skk_character4.jpg" class="img-fluid" style="width:30%;float:right;" alt="">
+        </div>
+        <h3 class="card-title">SKKLUB 계정관리</h3>
+        <p class="card-text">SKKLUB의 계정을 관리하는 공간이에요. 이곳에서 입력하는 정보는 모두 암호화되어 저장되니 걱정마세요! 관리자도 절대 알 수가 없답니다.</p>
+        <p class="card-text">아이디 혹은 비밀번호를 잊으셨다면, SKKLUB 관리자에게 문의주세요 :)</p>
+        <hr>
+        <p class="card-text">스클럽에 대한 전반적인 소개나 개발이슈 및 연락처는 <a href="https://www.notion.so/9f2a5b7d93a54fedb36c961afa1fb254" target="_blank">스클럽 공식문서</a>를 참고해주세요.</p>
+    </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="card-header">
+                <h3 class="text-center">계정 비밀번호 변경</h3>
+            </div>
+            <form class="text-center border border-light p-5" action="/account" method="POST">
+                변경할 비밀번호<input type="password" id="pw1" class="form-control mb-4" name="pw1" required>
+                비밀번호 확인<input type="password" id="pw2" class="form-control mb-4" name="pw2" required>
+                <!-- Submit button -->
+                <button class="btn btn-info btn-block" type="submit" id="pwchange">변경하기</button>
+                <% if(messages.flash) { %>
+                    <div style="color: rgb(247, 114, 114);margin-top:10px;"><%= messages.flash %></div>
+                <% } %>
+            </form>
+        </div>
+    </div>
+</div>
 
 <%- include('./partials/scripts.ejs'); %>

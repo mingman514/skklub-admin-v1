@@ -2,6 +2,7 @@ if (process.env.NODE_ENV !== 'production') { // 개발중이라면
     require('dotenv').config()
 }
 
+/* Modules */
 const express = require('express')
 const app = express()
 const bcrypt = require('bcrypt') // password hashing https://jungwoon.github.io/node.js/2017/08/07/bcrypt-nodejs/
@@ -12,6 +13,8 @@ const methodOverride = require('method-override')
 const users = require('./data/skklubDB.json')
 const sql = require('./public/js/mysql-query')
 const createJsonDb = require('./public/js/createDB')
+
+/* To-do: Router 분리작업 */
 
 const initializePassport = require('./passport-config')
 initializePassport(
@@ -40,9 +43,7 @@ app.use(methodOverride('_method'))
 
 
 app.get('/', checkAuthenticated, (req, res) => {
-    res.render('index.ejs', {
-        cname: req.user.cname, alertmsg : ''
-    }) // redirect to 동헌's main page
+    res.render('index.ejs', { cname: req.user.cname}) // redirect to 동헌's main page
 })
 
 // 동아리정보 뷰
@@ -82,7 +83,7 @@ app.post('/info/update', checkAuthenticated, (req, res) => {
                 console.log(err)
             } else {
                 createJsonDb() // 세션정보 사라짐(writefile로 파일이 수정돼서 nodemon reload 작동)
-                msg = `▶ ${req.user.cname}의 정보가 변경되었습니다.\n다시 로그인해주세요.`
+                msg = `${req.user.cname}의 정보가 변경되었습니다.\n다시 로그인해주세요.`
                 req.flash('flash',msg)
                 res.render('login.ejs')
             }
@@ -90,23 +91,22 @@ app.post('/info/update', checkAuthenticated, (req, res) => {
 })
 
 app.get('/account', checkAuthenticated, (req, res) => {
-    res.render('account.ejs', {name: req.user.cname, flash: ''})
+    res.render('account.ejs', {cname: req.user.cname, flash: ''})
 })
 app.post('/account', checkAuthenticated, (req, res) => {
     var pw1 = req.body.pw1
     var pw2 = req.body.pw2
     var msg = ''
     if(pw1 !== pw2){
-         msg += '▶ 변경할 비밀번호를 일치시켜주세요.\n'
+         msg += '변경할 비밀번호를 일치시켜주세요.\n'
     }
     else if (pw1.length < 6 || pw1.length > 20) {
-        msg += '▶ 6자리 ~ 20자리 이내로 입력해주세요.\n'
+        msg += '6자리 ~ 20자리 이내로 입력해주세요.\n'
     }
     else if(pw1.search(/\s/) != -1) {
-        msg += '▶ 비밀번호에 공백은 포함될 수 없습니다.\n'
+        msg += '비밀번호에 공백은 포함될 수 없습니다.\n'
     }
     if(msg){
-        console.log('msg: ',msg)
         req.flash('flash',msg);
         res.redirect('/account')
     } else{
@@ -116,7 +116,7 @@ app.post('/account', checkAuthenticated, (req, res) => {
                 const hashedPassword = await bcrypt.hash(pw1, 10)
                     sql(hashedPassword)
             } catch {
-                let msg = '▶ Bcrypt Error! 관리자에게 문의하세요.'
+                let msg = 'Bcrypt Error! 관리자에게 문의하세요.'
                 req.flash('flash',msg);
                 res.redirect('/account')
             }
@@ -125,12 +125,12 @@ app.post('/account', checkAuthenticated, (req, res) => {
             sql.generalQuery('UPDATE club SET admin_pw=? WHERE cid=?',[hashedPassword, req.user.cid], (err, results) => {
             if (err) {
                         console.log(err)
-                        msg = '▶ DB UPDATE Query Error! 관리자에게 문의하세요.'
+                        msg = 'DB UPDATE Query Error! 관리자에게 문의하세요.'
                         req.flash('flash',msg)
                         res.redirect('/account')
                     } else {
                         createJsonDb()
-                        msg = `▶ ${req.user.cname}의 계정 비밀번호가 변경되었습니다.\n다시 로그인해주세요.`
+                        msg = `${req.user.cname}의 계정 비밀번호가 변경되었습니다.\n다시 로그인해주세요.`
                         req.flash('flash',msg)
                         res.render('login.ejs')
                     }
@@ -150,6 +150,7 @@ app.post('/login', passport.authenticate('local', {
     failureFlash: true
 }))
 
+// register 구현 아직
 app.get('/register', checkNotAuthenticated, (req, res) => {
     res.render('register.ejs')
 })

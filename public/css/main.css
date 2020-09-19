@@ -1,0 +1,44 @@
+/* index */
+#index-card .card-body{
+    padding-bottom: 70px;
+}
+
+#index-card .index-btn{
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+#index-card .card-body img{
+    width: 90%;
+    margin: auto 5%;
+}
+
+#index-card .card-text:hover{
+    color: rgb(51, 51, 51);
+}
+
+/* nav */
+li .logout-btn{
+    padding: 0.2rem 0.6rem !important;
+    position: relative;
+    top: 4px;
+}
+
+/* info */
+#info-table{
+    width: 80% !important;
+    margin: 0 10%;
+}
+
+/* login */
+input#admin_id, input#password, button#sign-in, input#pw1, input#pw2, button#pwchange{
+    width: 50% !important;
+    margin: auto auto;
+    text-align:center;
+}
+@media screen and (max-width: 768px) {
+    input#admin_id, input#password, button#sign-in, input#pw1, input#pw2, button#pwchange{
+        width: 80% !important;
+    }
+}
