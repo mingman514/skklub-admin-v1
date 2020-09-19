@@ -10,7 +10,7 @@ const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
 const users = require('./data/skklubDB.json')
-const sql = require('./mysql-query')
+const sql = require('./public/js/mysql-query')
 const createJsonDb = require('./public/js/createDB')
 
 const initializePassport = require('./passport-config')
@@ -23,7 +23,8 @@ initializePassport(
         return users.find(user => user.cid === cid)
     })
 
-app.set('view-engine', 'ejs') // template engine setting
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs') // template engine setting
 app.use( express.static( "public" ) );
 app.use(express.urlencoded({ extended: false })) // https://velog.io/@yejinh/express-%EB%AF%B8%EB%93%A4%EC%9B%A8%EC%96%B4-bodyParser-%EB%AA%A8%EB%93%88
 // express에 bodyParser 내장
@@ -40,7 +41,7 @@ app.use(methodOverride('_method'))
 
 app.get('/', checkAuthenticated, (req, res) => {
     res.render('index.ejs', {
-        cname: req.user.cname
+        cname: req.user.cname, alertmsg : ''
     }) // redirect to 동헌's main page
 })
 
@@ -80,17 +81,62 @@ app.post('/info/update', checkAuthenticated, (req, res) => {
             if (err) {
                 console.log(err)
             } else {
-                console.log('3')
-                createJsonDb()
-                res.redirect('/info')
+                createJsonDb() // 세션정보 사라짐(writefile로 파일이 수정돼서 nodemon reload 작동)
+                msg = `▶ ${req.user.cname}의 정보가 변경되었습니다.\n다시 로그인해주세요.`
+                req.flash('flash',msg)
+                res.render('login.ejs')
             }
         })
 })
 
 app.get('/account', checkAuthenticated, (req, res) => {
-    res.render('account.ejs', {
-        name: req.user.cname
+    res.render('account.ejs', {name: req.user.cname, flash: ''})
+})
+app.post('/account', checkAuthenticated, (req, res) => {
+    var pw1 = req.body.pw1
+    var pw2 = req.body.pw2
+    var msg = ''
+    if(pw1 !== pw2){
+         msg += '▶ 변경할 비밀번호를 일치시켜주세요.\n'
+    }
+    else if (pw1.length < 6 || pw1.length > 20) {
+        msg += '▶ 6자리 ~ 20자리 이내로 입력해주세요.\n'
+    }
+    else if(pw1.search(/\s/) != -1) {
+        msg += '▶ 비밀번호에 공백은 포함될 수 없습니다.\n'
+    }
+    if(msg){
+        console.log('msg: ',msg)
+        req.flash('flash',msg);
+        res.redirect('/account')
+    } else{
+        // 비밀번호 암호화과정 추가
+        var _bcrypt = async function(sql){
+            try {
+                const hashedPassword = await bcrypt.hash(pw1, 10)
+                    sql(hashedPassword)
+            } catch {
+                let msg = '▶ Bcrypt Error! 관리자에게 문의하세요.'
+                req.flash('flash',msg);
+                res.redirect('/account')
+            }
+        }
+        _bcrypt((hashedPassword) => {
+            sql.generalQuery('UPDATE club SET admin_pw=? WHERE cid=?',[hashedPassword, req.user.cid], (err, results) => {
+            if (err) {
+                        console.log(err)
+                        msg = '▶ DB UPDATE Query Error! 관리자에게 문의하세요.'
+                        req.flash('flash',msg)
+                        res.redirect('/account')
+                    } else {
+                        createJsonDb()
+                        msg = `▶ ${req.user.cname}의 계정 비밀번호가 변경되었습니다.\n다시 로그인해주세요.`
+                        req.flash('flash',msg)
+                        res.render('login.ejs')
+                    }
+        })
     })
+    }
 })
 
 // https://www.skklub.com:3000/admin 통해서 들어온 요청 처리 (동헌이꺼에서 redirect('https://www.skklub.com:5000/login') 하기)

@@ -1,6 +1,11 @@
+<%- include('./partials/header.ejs'); %>
+
 <h1>SKKLUB 동아리 로그인</h1>
 <% if(messages.error) { %> 
     <%= messages.error %> 
+<% } %>
+<% if(messages.flash) { %> 
+    <%= messages.flash %> 
 <% } %> 
 <form action="/login" method="POST">
     <div>
@@ -9,8 +14,7 @@
     </div>
     <div>
         <label for="password">비밀번호</label>
-        <input type="text" id="password" name="password" required value="111111"> <!-- name항목은 서버에서 이용될 이름 -->
+        <input type="password" id="password" name="password" required value="akdrhakt"> <!-- name항목은 서버에서 이용될 이름 -->
     </div>
     <button type="submit">로그인</button>
 </form>
-<a href="/register">Register</a>
