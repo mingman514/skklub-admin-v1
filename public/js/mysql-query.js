@@ -20,17 +20,17 @@ module.exports = {
             }
         })
     },
-    entireData: function () {
-        connection.query(`select * from club`, function (error, results, fields) {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log(results);
-                return results
-            }
-        });
-        connection.end()
-    },
+    // entireData: function () {
+    //     connection.query(`select * from club`, function (error, results, fields) {
+    //         if (error) {
+    //             console.log(error);
+    //         } else {
+    //             console.log(results);
+    //             return results
+    //         }
+    //     });
+    //     connection.end()
+    // },
     searchResult: function (input,searchColumn,callback) {
         connection.query(`select * from club where ${searchColumn}='${input}'`, (error, results, fields) => {
             if (error) {

@@ -121,6 +121,7 @@ app.get("/info/update", checkAuthenticated, (req, res) => {
         res.render("clubupdate.ejs", {
           result: results,
           cname: req.user.cname,
+          auth: req.user.authority
         });
       }
     }
@@ -212,6 +213,27 @@ app.post(
   })
 );
 
+// master
+app.get("/master", checkMasterAuth, (req, res) => {
+    res.render("clublist.ejs", { cname: req.user.cname, auth: req.user.authority });
+})
+
+// getData
+app.get("/getData", checkMasterAuth, (req, res) => {
+  // param 전달받아서 sql로 필터처리하는 부분 구현!
+  // table column추가
+  sql.generalQuery(`select cid, cname, category1, authority from club`, null, (err, results) => {
+    if (err) {
+      console.log(err);
+    } else {
+      var obj_result = { data: results }
+      res.json(obj_result)
+    }
+  }
+);
+  // res.json(results)
+})
+
 // register 구현 아직
 app.get("/register", checkNotAuthenticated, (req, res) => {
   res.render("register.ejs");
@@ -255,6 +277,15 @@ function checkNotAuthenticated(req, res, next) {
   }
   next();
 }
+
+function checkMasterAuth(req, res, next) {
+    // 마스터 계정이 아니면 index 페이지로
+    if (req.user.authority === 9) {
+      // login success
+      return next();
+    }
+    res.redirect("/");
+  }
 
 app.listen(process.env.PORT, () => {
     console.log(`listening on PORT http://localhost:${process.env.PORT}`)

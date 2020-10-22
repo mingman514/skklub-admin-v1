@@ -1,0 +1,57 @@
+<%- include('./partials/header.ejs'); %>
+<%- include('./partials/navbar.ejs'); %>
+
+<div class="card">
+    <div class="card-body">
+        <h3 class="text-center"> 스클럽 동아리 명단 </h3>
+        <!-- 검색조건 -->
+        <div class="text-right">
+            <form action="/search">
+                <select name="campus">
+                    <option value="a">캠퍼스</option>
+                    <option value="mr">명륜</option>
+                    <option value="yj">율전</option>
+                </select>
+                <select name="category">
+                    <option value="c">모임구분</option>
+                    <option value="1">중앙동아리</option>
+                    <option value="2">준중앙동아리</option>
+                    <option value="3">독립동아리</option>
+                    <option value="4">소모임</option>
+                    <option value="5">기타단체</option>
+                </select>
+                <select name="authority">
+                    <option value="b">승인여부</option>
+                    <option value="1">미승인</option>
+                    <option value="2">승인</option>
+                </select>
+                <input type="text" name="searchKey" id="searchKey">
+                <button id="search_btn" type="submit" class="fa fa-search"></button>
+            </form>
+            <button id="reset_filter">초기화</button>
+        </div>
+        <table class="table clublist">
+            <thead>
+                <tr>
+                    <th>CID</th>
+                    <th>CNAME</th>
+                    <th>Category</th>
+                    <th>Authority</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>몰라</td>
+                    <td>중앙동아리</td>
+                    <td>1</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<%- include('./partials/scripts.ejs'); %>
+<script src="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="/js/datatable.js"></script>
