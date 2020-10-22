@@ -43,7 +43,7 @@ app.use(methodOverride('_method'))
 
 
 app.get('/', checkAuthenticated, (req, res) => {
-    res.render('index.ejs', { cname: req.user.cname}) // redirect to 동헌's main page
+    res.render('index.ejs', { cname: req.user.cname, auth: req.user.authority }) // redirect to 동헌's main page
 })
 
 // 동아리정보 뷰
@@ -55,7 +55,7 @@ app.get('/info', checkAuthenticated, (req, res) => {
             res.redirect('/')
         } else {
             // console.log('worked!\nresults:' + JSON.stringify(results[0]))
-            res.render('info.ejs', { result: results[0], cname: req.user.cname })
+            res.render('info.ejs', { result: results[0], cname: req.user.cname, auth: req.user.authority })
         }
     })
 })
@@ -66,7 +66,7 @@ app.get('/info/update', checkAuthenticated, (req, res) => {
                     console.log(err)
                     res.redirect('/info')
                 } else {
-                    res.render('clubupdate.ejs', { result: results, cname: req.user.cname})
+                    res.render('clubupdate.ejs', { result: results, cname: req.user.cname, auth: req.user.authority})
                 }
     })
 })
@@ -91,7 +91,7 @@ app.post('/info/update', checkAuthenticated, (req, res) => {
 })
 
 app.get('/account', checkAuthenticated, (req, res) => {
-    res.render('account.ejs', {cname: req.user.cname, flash: ''})
+    res.render('account.ejs', {cname: req.user.cname, flash: '', auth: req.user.authority })
 })
 app.post('/account', checkAuthenticated, (req, res) => {
     var pw1 = req.body.pw1
@@ -192,5 +192,5 @@ function checkNotAuthenticated(req, res, next) { // 로그인 되어있으면 �
 }
 
 app.listen(process.env.PORT, () => {
-    console.log(`listening on PORT ${process.env.PORT}`)
+    console.log(`listening on PORT http://localhost:${process.env.PORT}`)
 })

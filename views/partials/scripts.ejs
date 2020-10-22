@@ -1,13 +1,22 @@
-<!-- SCRIPTS -->
+<!-- ADDITONAL SCRIPTS -->
 
-    <!-- JQuery -->
-    <script type="text/javascript" src="lib/js/jquery-3.3.1.min.js"></script>
-
-    <!-- Bootstrap tooltips -->
-    <script type="text/javascript" src="lib/js/popper.min.js"></script>
-
-    <!-- Bootstrap core JavaScript -->
-    <script type="text/javascript" src="lib/js/bootstrap.min.js"></script>
-
+    
     <!-- MDB core JavaScript -->
     <script type="text/javascript" src="lib/js/mdb.min.js"></script>
+
+    <!-- auth check and chg color & add master button -->
+        <% try{if(auth === 9) { %> 
+        <script>
+            $('.navbar-brand').text('SKKLUB 마스터 관리자').css('font-weight','bold');
+            $('.navbar.navbar-dark').removeClass('indigo').addClass('red darken-3');
+            $('.btn-primary').each(function(idx, item){
+                $(this).removeClass('btn-primary').addClass('danger-color');
+            })
+            $('.btn[name=manage_club]').attr('disabled','disabled').parent().removeAttr('href');
+            var manageMaster = '<button type="submit" class="btn purple-gradient btn-lg" style="width:80%;margin-left:10%; font-size:3.5vw;">SKKLUB 관리 마스터</button>'
+            $('#index-card').before(manageMaster)
+            //var manageMaster = '<button type="submit" class="btn purple-gradient btn-sm btn-rounded" style="max-width:120px;">SKKLUB 관리</button>'
+            // $('.navbar-nav.mr-auto').append(manageMaster);
+        </script>
+        <% }} catch{ %>
+        <% } %> 

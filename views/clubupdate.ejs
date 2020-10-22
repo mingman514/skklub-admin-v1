@@ -148,7 +148,7 @@
                 <tr>
                     <td>리쿠르팅 사이트</td>
                     <td colspan="2"><input type="text" name="recruit_site" value="<%= result[0][0]['recruit_site'] %>"
-                            style="width:80%;" placeholder="구글폼, 자체사이트 등"></td>
+                            style="min-width:80%;" placeholder="구글폼, 자체사이트 등"></td>
                 </tr>
 
                 <tr>
@@ -169,6 +169,16 @@
                     <td colspan="2"><input type="text" name="emergency_contact"
                             value="<%= result[0][0]['emergency_contact'] %>" placeholder="긴급연락처"> </td>
                 </tr>
+                <tr>
+                    <td>동아리 웹페이지 1</td>
+                    <td colspan="2"><input type="text" name="website_link"
+                            value="<%= result[0][0]['website_link'] %>" style="min-width:80%;" placeholder="페이스북, 인스타, 블로그 등"> </td>
+                </tr>
+                <tr>
+                    <td>동아리 웹페이지 2</td>
+                    <td colspan="2"><input type="text" name="website_link2"
+                            value="<%= result[0][0]['website_link2'] %>" style="min-width:80%;" placeholder="페이스북, 인스타, 블로그 등"> </td>
+                </tr>
             </table>
             <div class="text-center">
                 <button type="submit" class="btn btn-deep-orange btn-sm">저장하기</button>
@@ -179,14 +189,4 @@
 </div>
 
 
-<!-- JQuery -->
-<script type="text/javascript" src="../lib/js/jquery-3.3.1.min.js"></script>
-
-<!-- Bootstrap tooltips -->
-<script type="text/javascript" src="../lib/js/popper.min.js"></script>
-
-<!-- Bootstrap core JavaScript -->
-<script type="text/javascript" src="../lib/js/bootstrap.min.js"></script>
-
-<!-- MDB core JavaScript -->
-<script type="text/javascript" src="../lib/js/mdb.min.js"></script>
+<%- include('./partials/scripts.ejs'); %>
