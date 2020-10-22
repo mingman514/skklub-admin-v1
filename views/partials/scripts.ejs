@@ -13,7 +13,7 @@
                 $(this).removeClass('btn-primary').addClass('danger-color');
             })
             $('.btn[name=manage_club]').attr('disabled','disabled').parent().removeAttr('href');
-            var manageMaster = '<button type="submit" class="btn purple-gradient btn-lg" style="width:80%;margin-left:10%; font-size:3.5vw;">SKKLUB 관리 마스터</button>'
+            var manageMaster = '<a href="/"> <button type="submit" class="btn purple-gradient btn-lg" style="width:80%;margin-left:10%; font-size:3.5vw;">SKKLUB 관리 마스터</button></a>'
             $('#index-card').before(manageMaster)
             //var manageMaster = '<button type="submit" class="btn purple-gradient btn-sm btn-rounded" style="max-width:120px;">SKKLUB 관리</button>'
             // $('.navbar-nav.mr-auto').append(manageMaster);
