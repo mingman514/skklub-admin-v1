@@ -14,10 +14,10 @@ const methodOverride = require("method-override");
 const users = require("./data/skklubDB.json");
 const sql = require("./public/js/mysql-query");
 const createJsonDb = require("./public/js/createDB");
-const data = require("./data/skklubDB.json")
-const cors = require("cors")
+const data = require("./data/skklubDB.json");
+const cors = require("cors");
 
-app.use(cors())
+app.use(cors());
 
 /* To-do: Router 분리작업 */
 
@@ -49,66 +49,27 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride("_method"));
 
-app.get('/', checkAuthenticated, (req, res) => {
-    res.render('index.ejs', { cname: req.user.cname, auth: req.user.authority }) // redirect to 동헌's main page
-})
+app.get("/", checkAuthenticated, (req, res) => {
+  res.render("index.ejs", { cname: req.user.cname, auth: req.user.authority }); // redirect to 동헌's main page
+});
 
 // 동아리정보 뷰
-app.get('/info', checkAuthenticated, (req, res) => {
-    sql.searchResult(req.user.cid, 'cid', (err, results) => {
-        // console.log(`result : ${results[0]['cid']}`)
-        if (err) {
-            console.log(err)
-            res.redirect('/')
-        } else {
-            // console.log('worked!\nresults:' + JSON.stringify(results[0]))
-            res.render('info.ejs', { result: results[0], cname: req.user.cname, auth: req.user.authority })
-        }
-    })
-})
-// 동아리정보 수정
-app.get('/info/update', checkAuthenticated, (req, res) => {
-    sql.generalQuery(`select * from club where cid= ?;` + `select distinct category1 from club;` + `select distinct category2 from club;`,[req.user.cid], (err, results) => {
-        if (err) {
-                    console.log(err)
-                    res.redirect('/info')
-                } else {
-                    res.render('clubupdate.ejs', { result: results, cname: req.user.cname, auth: req.user.authority})
-                }
-    })
-})
-
-app.post('/info/update', checkAuthenticated, (req, res) => {
-    //var columnList = ['cname', 'category1', 'category2', 'category3', 'campus', 'estab_year', 'intro_text', 'intro_sentence', 'activity_info', 'meeting_time', 'activity_location', 'activity_num', 'recruit_season', 'activity_period', 'recruit_process', 'recruit_num', 'recruit_site', 'president_name', 'president_contact', 'emergency_contact']
-        var updateSql = ''
-        for(var key in req.body){
-            updateSql += `${key}='${req.body[key]}', `
-        }
-        updateSql = `UPDATE club SET ` + updateSql.slice(0, -2) + ` WHERE cid=${req.user.cid}`
-        sql.generalQuery(updateSql, null, (err, results) => {
-            if (err) {
-                console.log(err)
-            } else {
-                createJsonDb() // 세션정보 사라짐(writefile로 파일이 수정돼서 nodemon reload 작동)
-                msg = `${req.user.cname}의 정보가 변경되었습니다.\n다시 로그인해주세요.`
-                req.flash('flash',msg)
-                res.render('login.ejs')
-            }
-        })
-})
-
-app.get('/account', checkAuthenticated, (req, res) => {
-    res.render('account.ejs', {cname: req.user.cname, flash: '', auth: req.user.authority })
-})
-app.post('/account', checkAuthenticated, (req, res) => {
-    var pw1 = req.body.pw1
-    var pw2 = req.body.pw2
-    var msg = ''
-    if(pw1 !== pw2){
-         msg += '변경할 비밀번호를 일치시켜주세요.\n'
-
+app.get("/info", checkAuthenticated, (req, res) => {
+  sql.searchResult(req.user.cid, "cid", (err, results) => {
+    // console.log(`result : ${results[0]['cid']}`)
+    if (err) {
+      console.log(err);
+      res.redirect("/");
+    } else {
+      // console.log('worked!\nresults:' + JSON.stringify(results[0]))
+      res.render("info.ejs", {
+        result: results[0],
+        cname: req.user.cname,
+        auth: req.user.authority,
+      });
     }
   });
+});
 // 동아리정보 수정
 app.get("/info/update", checkAuthenticated, (req, res) => {
   sql.generalQuery(
@@ -124,7 +85,64 @@ app.get("/info/update", checkAuthenticated, (req, res) => {
         res.render("clubupdate.ejs", {
           result: results,
           cname: req.user.cname,
-          auth: req.user.authority
+          auth: req.user.authority,
+        });
+      }
+    }
+  );
+});
+
+app.post("/info/update", checkAuthenticated, (req, res) => {
+  //var columnList = ['cname', 'category1', 'category2', 'category3', 'campus', 'estab_year', 'intro_text', 'intro_sentence', 'activity_info', 'meeting_time', 'activity_location', 'activity_num', 'recruit_season', 'activity_period', 'recruit_process', 'recruit_num', 'recruit_site', 'president_name', 'president_contact', 'emergency_contact']
+  var updateSql = "";
+  for (var key in req.body) {
+    updateSql += `${key}='${req.body[key]}', `;
+  }
+  updateSql =
+    `UPDATE club SET ` + updateSql.slice(0, -2) + ` WHERE cid=${req.user.cid}`;
+  sql.generalQuery(updateSql, null, (err, results) => {
+    if (err) {
+      console.log(err);
+    } else {
+      createJsonDb(); // 세션정보 사라짐(writefile로 파일이 수정돼서 nodemon reload 작동)
+      msg = `${req.user.cname}의 정보가 변경되었습니다.\n다시 로그인해주세요.`;
+      req.flash("flash", msg);
+      res.render("login.ejs");
+    }
+  });
+});
+
+app.get("/account", checkAuthenticated, (req, res) => {
+  res.render("account.ejs", {
+    cname: req.user.cname,
+    flash: "",
+    auth: req.user.authority,
+  });
+});
+app.post("/account", checkAuthenticated, (req, res) => {
+  var pw1 = req.body.pw1;
+  var pw2 = req.body.pw2;
+  var msg = "";
+  if (pw1 !== pw2) {
+    msg += "변경할 비밀번호를 일치시켜주세요.\n";
+  }
+});
+// 동아리정보 수정
+app.get("/info/update", checkAuthenticated, (req, res) => {
+  sql.generalQuery(
+    `select * from club where cid= ?;` +
+      `select distinct category1 from club;` +
+      `select distinct category2 from club;`,
+    [req.user.cid],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        res.redirect("/info");
+      } else {
+        res.render("clubupdate.ejs", {
+          result: results,
+          cname: req.user.cname,
+          auth: req.user.authority,
         });
       }
     }
@@ -218,24 +236,30 @@ app.post(
 
 // master
 app.get("/master", checkMasterAuth, (req, res) => {
-    res.render("clublist.ejs", { cname: req.user.cname, auth: req.user.authority });
-})
+  res.render("clublist.ejs", {
+    cname: req.user.cname,
+    auth: req.user.authority,
+  });
+});
 
 // getData
 app.get("/getData", checkMasterAuth, (req, res) => {
   // param 전달받아서 sql로 필터처리하는 부분 구현!
   // table column추가
-  sql.generalQuery(`select cid, cname, category1, authority from club`, null, (err, results) => {
-    if (err) {
-      console.log(err);
-    } else {
-      var obj_result = { data: results }
-      res.json(obj_result)
+  sql.generalQuery(
+    `select cid, cname, category1, authority from club`,
+    null,
+    (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        var obj_result = { data: results };
+        res.json(obj_result);
+      }
     }
-  }
-);
+  );
   // res.json(results)
-})
+});
 
 // register 구현 아직
 app.get("/register", checkNotAuthenticated, (req, res) => {
@@ -282,18 +306,29 @@ function checkNotAuthenticated(req, res, next) {
 }
 
 function checkMasterAuth(req, res, next) {
-    // 마스터 계정이 아니면 index 페이지로
-    if (req.user.authority === 9) {
-      // login success
-      return next();
-    }
-    res.redirect("/");
+  // 마스터 계정이 아니면 index 페이지로
+  if (req.user.authority === 9) {
+    // login success
+    return next();
   }
+  res.redirect("/");
+}
 
 app.listen(process.env.PORT, () => {
-    console.log(`listening on PORT http://localhost:${process.env.PORT}`)
-})
+  console.log(`listening on PORT http://localhost:${process.env.PORT}`);
+});
 
 app.get("/api", (req, res, next) => {
   res.send(data);
+});
+
+app.get("/api/:id", (req, res) => {
+  const clubId = parseInt(req.params.id, 10);
+  const club = data.find((_club) => _club.cid === clubId);
+
+  if (club) {
+    res.json(club);
+  } else {
+    res.json({ message: `club ${clubId} doesn't exist` });
+  }
 });
