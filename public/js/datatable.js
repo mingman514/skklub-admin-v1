@@ -45,12 +45,15 @@
              ordering: true,
              pageLength: 10,
              paging: true,
+             stateSave: true,
              ajax: {
                 "url": '/getData',
+                "type" : 'POST',
                 "data": function (d) {
                    d.campus = $("select[name='campus']").val();
-                   d.category = $("select[name='category']").val();
-                   d.authority = $("select[name='authority']").val();
+                   d.category = $("select[name='category1']").val();
+                   d.status = $("select[name='status']").val();
+                   d.searchCategory = $("select[name='searchCategory']").val();
                    d.searchKey = $("#searchKey").val();
                 }
              },
@@ -114,8 +117,8 @@
           // 필터초기화
           $("#reset_filter").click(function(){
              $("select[name='campus']").text('캠퍼스').attr("selected","selected");
-             $("select[name=category]").text('모임구분').attr("selected","selected");
-             $("select[name='authority']").val('승인여부').attr("selected","selected");
+             $("select[name=category1]").text('모임구분').attr("selected","selected");
+             $("select[name='status']").val('승인여부').attr("selected","selected");
              $("#searchKey").val('').focus();
             //  $("#search_btn").click();
           })

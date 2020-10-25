@@ -76,7 +76,6 @@ app.get('/info/update', checkAuthenticated, (req, res) => {
 })
 
 app.post('/info/update', checkAuthenticated, (req, res) => {
-    //var columnList = ['cname', 'category1', 'category2', 'category3', 'campus', 'estab_year', 'intro_text', 'intro_sentence', 'activity_info', 'meeting_time', 'activity_location', 'activity_num', 'recruit_season', 'activity_period', 'recruit_process', 'recruit_num', 'recruit_site', 'president_name', 'president_contact', 'emergency_contact']
         var updateSql = ''
         for(var key in req.body){
             updateSql += `${key}='${req.body[key]}', `
@@ -219,10 +218,46 @@ app.get("/master", checkMasterAuth, (req, res) => {
 })
 
 // getData
-app.get("/getData", checkMasterAuth, (req, res) => {
+app.post("/getData", checkMasterAuth, (req, res) => {
   // param 전달받아서 sql로 필터처리하는 부분 구현!
+  let fcampus = req.body.campus
+  let fcategory = req.body.category
+  let fstatus = req.body.status
+  let fsearchCategory = req.body.searchCategory
+  let fsearchKey = req.body.searchKey
+
+  var sqlWhere = 'WHERE 1=1 '
+  if(fcampus){
+    sqlWhere += `AND campus=${fcampus} `
+  }
+
+  if(fcategory){
+    sqlWhere += `AND category1=${fcategory} `
+  }
+
+  if(fstatus){
+    if(fstatus === 'ok'){
+      sqlWhere += `AND authority NOT IN (0, 1) `
+    } else if (fstatus === 'hold'){
+      sqlWhere += `AND authority=0 `
+    } else if (fstatus === 'stop'){
+      sqlWhere += `AND authority=1 ` // 중지는 비공개로 돌리는 것.
+    }
+  }
+
+  if(fsearchKey){
+    if(fsearchCategory === 'contents'){
+      sqlWhere += `AND (intro_text||intro_sentence||activity_info) LIKE '%${fsearchKey}%' `  
+    } else {
+    sqlWhere += `AND ${fsearchCategory} LIKE '%${fsearchKey}%' `
+    }
+  }
+ 
+
   // table column추가
-  sql.generalQuery(`select cid, cname, category1, authority from club`, null, (err, results) => {
+
+  // ****  TEST DB에 적용중 *****
+  sql.generalQuery(`select cid, cname, category1, authority from club_test ${sqlWhere}`, null, (err, results) => {
     if (err) {
       console.log(err);
     } else {

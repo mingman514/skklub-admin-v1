@@ -7,23 +7,30 @@
         <!-- 검색조건 -->
         <div class="text-right">
             <form action="/search">
+                <select name="status">
+                    <option value="">승인여부</option>
+                    <option value="ok">승인</option>
+                    <option value="hold">대기</option>
+                    <option value="stop">정지</option>
+                </select>
                 <select name="campus">
-                    <option value="a">캠퍼스</option>
-                    <option value="mr">명륜</option>
-                    <option value="yj">율전</option>
+                    <option value="">캠퍼스</option>
+                    <option value="명륜">명륜</option>
+                    <option value="율전">율전</option>
                 </select>
-                <select name="category">
-                    <option value="c">모임구분</option>
-                    <option value="1">중앙동아리</option>
-                    <option value="2">준중앙동아리</option>
-                    <option value="3">독립동아리</option>
-                    <option value="4">소모임</option>
-                    <option value="5">기타단체</option>
+                <select name="category1">
+                    <option value="">모임구분</option>
+                    <option value="중앙동아리">중앙동아리</option>
+                    <option value="기타동아리">기타동아리</option>
+                    <option value="소모임">소모임</option>
+                    <option value="기타단체">기타단체</option>
                 </select>
-                <select name="authority">
-                    <option value="b">승인여부</option>
-                    <option value="1">미승인</option>
-                    <option value="2">승인</option>
+                <select name="searchCategory">
+                    <option value="cname">모임명</option>
+                    <option value="category2">중분류</option>
+                    <option value="category3">소분류</option>
+                    <option value="president_name">대표자명</option>
+                    <option value="contents">본문</option>
                 </select>
                 <input type="text" name="searchKey" id="searchKey">
                 <button id="search_btn" type="submit" class="fa fa-search"></button>
