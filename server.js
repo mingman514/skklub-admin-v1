@@ -15,6 +15,9 @@ const users = require("./data/skklubDB.json");
 const sql = require("./public/js/mysql-query");
 const createJsonDb = require("./public/js/createDB");
 const data = require("./data/skklubDB.json")
+const cors = require("cors")
+
+app.use(cors())
 
 /* To-do: Router 분리작업 */
 
