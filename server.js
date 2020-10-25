@@ -291,3 +291,6 @@ app.listen(process.env.PORT, () => {
     console.log(`listening on PORT http://localhost:${process.env.PORT}`)
 })
 
+app.get("/api", (req, res, next) => {
+  res.send(data);
+});
