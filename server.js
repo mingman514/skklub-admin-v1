@@ -93,59 +93,8 @@ app.post('/info/update', checkAuthenticated, (req, res) => {
         })
 })
 
-app.get('/account', checkAuthenticated, (req, res) => {
-    res.render('account.ejs', {cname: req.user.cname, flash: '', auth: req.user.authority })
-})
-app.post('/account', checkAuthenticated, (req, res) => {
-    var pw1 = req.body.pw1
-    var pw2 = req.body.pw2
-    var msg = ''
-    if(pw1 !== pw2){
-         msg += '변경할 비밀번호를 일치시켜주세요.\n'
 
-    }
-  });
-// 동아리정보 수정
-app.get("/info/update", checkAuthenticated, (req, res) => {
-  sql.generalQuery(
-    `select * from club where cid= ?;` +
-      `select distinct category1 from club;` +
-      `select distinct category2 from club;`,
-    [req.user.cid],
-    (err, results) => {
-      if (err) {
-        console.log(err);
-        res.redirect("/info");
-      } else {
-        res.render("clubupdate.ejs", {
-          result: results,
-          cname: req.user.cname,
-          auth: req.user.authority
-        });
-      }
-    }
-  );
-});
 
-app.post("/info/update", checkAuthenticated, (req, res) => {
-  //var columnList = ['cname', 'category1', 'category2', 'category3', 'campus', 'estab_year', 'intro_text', 'intro_sentence', 'activity_info', 'meeting_time', 'activity_location', 'activity_num', 'recruit_season', 'activity_period', 'recruit_process', 'recruit_num', 'recruit_site', 'president_name', 'president_contact', 'emergency_contact']
-  var updateSql = "";
-  for (var key in req.body) {
-    updateSql += `${key}='${req.body[key]}', `;
-  }
-  updateSql =
-    `UPDATE club SET ` + updateSql.slice(0, -2) + ` WHERE cid=${req.user.cid}`;
-  sql.generalQuery(updateSql, null, (err, results) => {
-    if (err) {
-      console.log(err);
-    } else {
-      createJsonDb(); // 세션정보 사라짐(writefile로 파일이 수정돼서 nodemon reload 작동)
-      msg = `${req.user.cname}의 정보가 변경되었습니다.\n다시 로그인해주세요.`;
-      req.flash("flash", msg);
-      res.render("login.ejs");
-    }
-  });
-});
 
 app.get("/account", checkAuthenticated, (req, res) => {
   res.render("account.ejs", { cname: req.user.cname, flash: "" });
@@ -228,11 +177,11 @@ app.post("/getData", checkMasterAuth, (req, res) => {
 
   var sqlWhere = 'WHERE 1=1 '
   if(fcampus){
-    sqlWhere += `AND campus=${fcampus} `
+    sqlWhere += `AND campus like '%${fcampus}%' `
   }
 
   if(fcategory){
-    sqlWhere += `AND category1=${fcategory} `
+    sqlWhere += `AND category1='${fcategory}' `
   }
 
   if(fstatus){
@@ -247,17 +196,17 @@ app.post("/getData", checkMasterAuth, (req, res) => {
 
   if(fsearchKey){
     if(fsearchCategory === 'contents'){
-      sqlWhere += `AND (intro_text||intro_sentence||activity_info) LIKE '%${fsearchKey}%' `  
+      sqlWhere += `AND (intro_text LIKE '%${fsearchKey}%' OR intro_sentence LIKE '%${fsearchKey}%' OR activity_info LIKE '%${fsearchKey}%')`  
     } else {
     sqlWhere += `AND ${fsearchCategory} LIKE '%${fsearchKey}%' `
     }
   }
- 
+ console.log('===================',sqlWhere)
 
   // table column추가
 
   // ****  TEST DB에 적용중 *****
-  sql.generalQuery(`select cid, cname, category1, authority from club_test ${sqlWhere}`, null, (err, results) => {
+  sql.generalQuery(`select campus, cname, category1, category2, category3, president_name, president_contact, authority from club_test ${sqlWhere}`, null, (err, results) => {
     if (err) {
       console.log(err);
     } else {
@@ -266,7 +215,6 @@ app.post("/getData", checkMasterAuth, (req, res) => {
     }
   }
 );
-  // res.json(results)
 })
 
 // register 구현 아직
