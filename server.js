@@ -14,7 +14,10 @@ const methodOverride = require("method-override");
 const users = require("./data/skklubDB.json");
 const sql = require("./public/js/mysql-query");
 const createJsonDb = require("./public/js/createDB");
-const data = require("./data/skklubDB.json")
+const data = require("./data/skklubDB.json");
+const cors = require("cors");
+
+app.use(cors());
 
 /* To-do: Router 분리작업 */
 
@@ -46,23 +49,27 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride("_method"));
 
-app.get('/', checkAuthenticated, (req, res) => {
-    res.render('index.ejs', { cname: req.user.cname, auth: req.user.authority }) // redirect to 동헌's main page
-})
+app.get("/", checkAuthenticated, (req, res) => {
+  res.render("index.ejs", { cname: req.user.cname, auth: req.user.authority }); // redirect to 동헌's main page
+});
 
 // 동아리정보 뷰
-app.get('/info', checkAuthenticated, (req, res) => {
-    sql.searchResult(req.user.cid, 'cid', (err, results) => {
-        // console.log(`result : ${results[0]['cid']}`)
-        if (err) {
-            console.log(err)
-            res.redirect('/')
-        } else {
-            // console.log('worked!\nresults:' + JSON.stringify(results[0]))
-            res.render('info.ejs', { result: results[0], cname: req.user.cname, auth: req.user.authority })
-        }
-    })
-})
+app.get("/info", checkAuthenticated, (req, res) => {
+  sql.searchResult(req.user.cid, "cid", (err, results) => {
+    // console.log(`result : ${results[0]['cid']}`)
+    if (err) {
+      console.log(err);
+      res.redirect("/");
+    } else {
+      // console.log('worked!\nresults:' + JSON.stringify(results[0]))
+      res.render("info.ejs", {
+        result: results[0],
+        cname: req.user.cname,
+        auth: req.user.authority,
+      });
+    }
+  });
+});
 // 동아리정보 수정
 app.get('/info/update', checkAuthenticated, (req, res) => {
     sql.generalQuery(`select * from club where cid= ?;` + `select distinct category1 from club;` + `select distinct category2 from club;`,[req.user.cid], (err, results) => {
@@ -92,7 +99,6 @@ app.post('/info/update', checkAuthenticated, (req, res) => {
             }
         })
 })
-
 
 
 
@@ -163,8 +169,11 @@ app.post(
 
 // master
 app.get("/master", checkMasterAuth, (req, res) => {
-    res.render("clublist.ejs", { cname: req.user.cname, auth: req.user.authority });
-})
+  res.render("clublist.ejs", {
+    cname: req.user.cname,
+    auth: req.user.authority,
+  });
+});
 
 // getData
 app.post("/getData", checkMasterAuth, (req, res) => {
@@ -217,6 +226,7 @@ app.post("/getData", checkMasterAuth, (req, res) => {
 );
 })
 
+
 // register 구현 아직
 app.get("/register", checkNotAuthenticated, (req, res) => {
   res.render("register.ejs");
@@ -262,15 +272,29 @@ function checkNotAuthenticated(req, res, next) {
 }
 
 function checkMasterAuth(req, res, next) {
-    // 마스터 계정이 아니면 index 페이지로
-    if (req.user.authority === 9) {
-      // login success
-      return next();
-    }
-    res.redirect("/");
+  // 마스터 계정이 아니면 index 페이지로
+  if (req.user.authority === 9) {
+    // login success
+    return next();
   }
+  res.redirect("/");
+}
 
 app.listen(process.env.PORT, () => {
-    console.log(`listening on PORT http://localhost:${process.env.PORT}`)
-})
+  console.log(`listening on PORT http://localhost:${process.env.PORT}`);
+});
 
+app.get("/api", (req, res, next) => {
+  res.send(data);
+});
+
+app.get("/api/:id", (req, res) => {
+  const clubId = parseInt(req.params.id, 10);
+  const club = data.find((_club) => _club.cid === clubId);
+
+  if (club) {
+    res.json(club);
+  } else {
+    res.json({ message: `club ${clubId} doesn't exist` });
+  }
+});
