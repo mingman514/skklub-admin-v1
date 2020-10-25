@@ -71,103 +71,36 @@ app.get("/info", checkAuthenticated, (req, res) => {
   });
 });
 // 동아리정보 수정
-app.get("/info/update", checkAuthenticated, (req, res) => {
-  sql.generalQuery(
-    `select * from club where cid= ?;` +
-      `select distinct category1 from club;` +
-      `select distinct category2 from club;`,
-    [req.user.cid],
-    (err, results) => {
-      if (err) {
-        console.log(err);
-        res.redirect("/info");
-      } else {
-        res.render("clubupdate.ejs", {
-          result: results,
-          cname: req.user.cname,
-          auth: req.user.authority,
-        });
-      }
-    }
-  );
-});
+app.get('/info/update', checkAuthenticated, (req, res) => {
+    sql.generalQuery(`select * from club where cid= ?;` + `select distinct category1 from club;` + `select distinct category2 from club;`,[req.user.cid], (err, results) => {
+        if (err) {
+                    console.log(err)
+                    res.redirect('/info')
+                } else {
+                    res.render('clubupdate.ejs', { result: results, cname: req.user.cname, auth: req.user.authority})
+                }
+    })
+})
 
-app.post("/info/update", checkAuthenticated, (req, res) => {
-  //var columnList = ['cname', 'category1', 'category2', 'category3', 'campus', 'estab_year', 'intro_text', 'intro_sentence', 'activity_info', 'meeting_time', 'activity_location', 'activity_num', 'recruit_season', 'activity_period', 'recruit_process', 'recruit_num', 'recruit_site', 'president_name', 'president_contact', 'emergency_contact']
-  var updateSql = "";
-  for (var key in req.body) {
-    updateSql += `${key}='${req.body[key]}', `;
-  }
-  updateSql =
-    `UPDATE club SET ` + updateSql.slice(0, -2) + ` WHERE cid=${req.user.cid}`;
-  sql.generalQuery(updateSql, null, (err, results) => {
-    if (err) {
-      console.log(err);
-    } else {
-      createJsonDb(); // 세션정보 사라짐(writefile로 파일이 수정돼서 nodemon reload 작동)
-      msg = `${req.user.cname}의 정보가 변경되었습니다.\n다시 로그인해주세요.`;
-      req.flash("flash", msg);
-      res.render("login.ejs");
-    }
-  });
-});
+app.post('/info/update', checkAuthenticated, (req, res) => {
+        var updateSql = ''
+        for(var key in req.body){
+            updateSql += `${key}='${req.body[key]}', `
+        }
+        updateSql = `UPDATE club SET ` + updateSql.slice(0, -2) + ` WHERE cid=${req.user.cid}`
+        sql.generalQuery(updateSql, null, (err, results) => {
+            if (err) {
+                console.log(err)
+            } else {
+                createJsonDb() // 세션정보 사라짐(writefile로 파일이 수정돼서 nodemon reload 작동)
+                msg = `${req.user.cname}의 정보가 변경되었습니다.\n다시 로그인해주세요.`
+                req.flash('flash',msg)
+                res.render('login.ejs')
+            }
+        })
+})
 
-app.get("/account", checkAuthenticated, (req, res) => {
-  res.render("account.ejs", {
-    cname: req.user.cname,
-    flash: "",
-    auth: req.user.authority,
-  });
-});
-app.post("/account", checkAuthenticated, (req, res) => {
-  var pw1 = req.body.pw1;
-  var pw2 = req.body.pw2;
-  var msg = "";
-  if (pw1 !== pw2) {
-    msg += "변경할 비밀번호를 일치시켜주세요.\n";
-  }
-});
-// 동아리정보 수정
-app.get("/info/update", checkAuthenticated, (req, res) => {
-  sql.generalQuery(
-    `select * from club where cid= ?;` +
-      `select distinct category1 from club;` +
-      `select distinct category2 from club;`,
-    [req.user.cid],
-    (err, results) => {
-      if (err) {
-        console.log(err);
-        res.redirect("/info");
-      } else {
-        res.render("clubupdate.ejs", {
-          result: results,
-          cname: req.user.cname,
-          auth: req.user.authority,
-        });
-      }
-    }
-  );
-});
 
-app.post("/info/update", checkAuthenticated, (req, res) => {
-  //var columnList = ['cname', 'category1', 'category2', 'category3', 'campus', 'estab_year', 'intro_text', 'intro_sentence', 'activity_info', 'meeting_time', 'activity_location', 'activity_num', 'recruit_season', 'activity_period', 'recruit_process', 'recruit_num', 'recruit_site', 'president_name', 'president_contact', 'emergency_contact']
-  var updateSql = "";
-  for (var key in req.body) {
-    updateSql += `${key}='${req.body[key]}', `;
-  }
-  updateSql =
-    `UPDATE club SET ` + updateSql.slice(0, -2) + ` WHERE cid=${req.user.cid}`;
-  sql.generalQuery(updateSql, null, (err, results) => {
-    if (err) {
-      console.log(err);
-    } else {
-      createJsonDb(); // 세션정보 사라짐(writefile로 파일이 수정돼서 nodemon reload 작동)
-      msg = `${req.user.cname}의 정보가 변경되었습니다.\n다시 로그인해주세요.`;
-      req.flash("flash", msg);
-      res.render("login.ejs");
-    }
-  });
-});
 
 app.get("/account", checkAuthenticated, (req, res) => {
   res.render("account.ejs", { cname: req.user.cname, flash: "" });
@@ -243,23 +176,56 @@ app.get("/master", checkMasterAuth, (req, res) => {
 });
 
 // getData
-app.get("/getData", checkMasterAuth, (req, res) => {
+app.post("/getData", checkMasterAuth, (req, res) => {
   // param 전달받아서 sql로 필터처리하는 부분 구현!
-  // table column추가
-  sql.generalQuery(
-    `select cid, cname, category1, authority from club`,
-    null,
-    (err, results) => {
-      if (err) {
-        console.log(err);
-      } else {
-        var obj_result = { data: results };
-        res.json(obj_result);
-      }
+  let fcampus = req.body.campus
+  let fcategory = req.body.category
+  let fstatus = req.body.status
+  let fsearchCategory = req.body.searchCategory
+  let fsearchKey = req.body.searchKey
+
+  var sqlWhere = 'WHERE 1=1 '
+  if(fcampus){
+    sqlWhere += `AND campus like '%${fcampus}%' `
+  }
+
+  if(fcategory){
+    sqlWhere += `AND category1='${fcategory}' `
+  }
+
+  if(fstatus){
+    if(fstatus === 'ok'){
+      sqlWhere += `AND authority NOT IN (0, 1) `
+    } else if (fstatus === 'hold'){
+      sqlWhere += `AND authority=0 `
+    } else if (fstatus === 'stop'){
+      sqlWhere += `AND authority=1 ` // 중지는 비공개로 돌리는 것.
     }
-  );
-  // res.json(results)
-});
+  }
+
+  if(fsearchKey){
+    if(fsearchCategory === 'contents'){
+      sqlWhere += `AND (intro_text LIKE '%${fsearchKey}%' OR intro_sentence LIKE '%${fsearchKey}%' OR activity_info LIKE '%${fsearchKey}%')`  
+    } else {
+    sqlWhere += `AND ${fsearchCategory} LIKE '%${fsearchKey}%' `
+    }
+  }
+ console.log('===================',sqlWhere)
+
+  // table column추가
+
+  // ****  TEST DB에 적용중 *****
+  sql.generalQuery(`select campus, cname, category1, category2, category3, president_name, president_contact, authority from club_test ${sqlWhere}`, null, (err, results) => {
+    if (err) {
+      console.log(err);
+    } else {
+      var obj_result = { data: results }
+      res.json(obj_result)
+    }
+  }
+);
+})
+
 
 // register 구현 아직
 app.get("/register", checkNotAuthenticated, (req, res) => {
