@@ -42,3 +42,15 @@ input#admin_id, input#password, button#sign-in, input#pw1, input#pw2, button#pwc
         width: 80% !important;
     }
 }
+
+
+/* datatable */
+.clublist .dt-center {
+    min-width:70px;
+}
+
+.clublist tbody tr:hover{
+    color: white;
+    background-color: rgb(75, 75, 75);
+    cursor: pointer;
+}

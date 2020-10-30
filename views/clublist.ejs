@@ -40,6 +40,7 @@
         <table class="table clublist">
             <thead>
                 <tr>
+                    <th><input type="checkbox" id="selectAllClub"></th>
                     <th>상태</th>
                     <th>캠퍼스</th>
                     <th>모임명</th>
@@ -54,6 +55,7 @@
             <tbody>
                 <tr>
                     <td>1</td>
+                    <td>1</td>
                     <td>몰라</td>
                     <td>몰라</td>
                     <td>중앙동아리</td>
@@ -66,6 +68,146 @@
         </table>
     </div>
 </div>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#clubDetailModal">
+    Launch demo modal
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="clubDetailModal" tabindex="-1" role="dialog" aria-labelledby="clubDetailLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">모임 상세정보</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <table class="table table-hover table-bordered" id="info-table-modal">
+                <colgroup>
+                    <col width="25%" />
+                    <col width="40%" />
+                    <col width="35%" />
+                </colgroup>
+                <tr>
+                    <td class="text-center indigo lighten-1 text-white" colspan="3">기본정보</td>
+                </tr>
+                <tr>
+                    <td>동아리명</td>
+                    <td id="dt-cname"> </td>
+                    <td rowspan="5"></td>
+                </tr>
+                <tr>
+                    <td>대분류</td>
+                    <td id="dt-category1"></td>
+                </tr>
+                <tr>
+                    <td>중분류</td>
+                    <td id="dt-category2"></td>
+                </tr>
+                <tr>
+                    <td>소분류</td>
+                    <td id="dt-category3"></td>
+                </tr>
+                <tr>
+                    <td>캠퍼스</td>
+                    <td id="dt-campus"></td>
+                </tr>
+                <tr>
+                    <td>설립연도</td>
+                    <td id="dt-estab_year"></td>
+                    <td>로고 </td>
+                </tr>
+    
+                <tr>
+                    <td class="text-center indigo lighten-1 text-white" colspan="3">모임 소개</td>
+                </tr>
+                <tr>
+                    <td>소개글</td>
+                    <td colspan="2" id="dt-intro_text"> </td>
+                </tr>
+                <tr>
+                    <td>핵심 소개문구</td>
+                    <td colspan="2" id="dt-intro_sentence"></td>
+                </tr>
+                <tr>
+                    <td>활동내용</td>
+                    <td colspan="2" id="dt-activity_info"></td>
+                </tr>
+                <tr>
+                    <td>모임시간</td>
+                    <td colspan="2" id="dt-meeting_time"></td>
+                </tr>
+                <tr>
+                    <td>모임장소</td>
+                    <td colspan="2" id="dt-activity_location"></td>
+                </tr>
+                <tr>
+                    <td>활동인원</td>
+                    <td colspan="2" id="dt-activity_num"> </td>
+                </tr>
+    
+                <tr>
+                    <td class="text-center indigo lighten-1 text-white" colspan="3">리쿠르팅 정보</td>
+                </tr>
+                <tr>
+                    <td>모집시기</td>
+                    <td colspan="2" id="dt-recruit_season"></td>
+                </tr>
+                <tr>
+                    <td>의무활동기간</td>
+                    <td colspan="2" id="dt-activity_period"></td>
+                </tr>
+                <tr>
+                    <td>모집방식</td>
+                    <td colspan="2" id="dt-recruit_process"></td>
+                </tr>
+                <tr>
+                    <td>모집인원</td>
+                    <td colspan="2" id="dt-recruit_num"></td>
+                </tr>
+                <tr>
+                    <td>리쿠르팅 사이트</td>
+                    <td colspan="2" id="dt-recruit_site"></td>
+                </tr>
+    
+                <tr>
+                    <td class="text-center indigo lighten-1 text-white" colspan="3">연락처/사이트</td>
+                </tr>
+                <tr>
+                    <td>대표자 이름</td>
+                    <td colspan="2" id="dt-president_name"></td>
+                </tr>
+                <tr>
+                    <td>대표자 연락처</td>
+                    <td colspan="2" id="dt-president_contact"></td>
+                </tr>
+                <tr>
+                    <td>긴급연락처</td>
+                    <td colspan="2" id="dt-emergency_contact"></td>
+                </tr>
+                <tr>
+                    <td>동아리 웹페이지 1</td>
+                    <td colspan="2" id="dt-website_link"></td>
+                </tr>
+                <tr>
+                    <td>동아리 웹페이지 2</td>
+                    <td colspan="2" id="dt-website_link2"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 
 <%- include('./partials/scripts.ejs'); %>
 <script src="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"></script>

@@ -28,7 +28,7 @@ dataTable = _dom.DataTable({
    language: lang_kor,
    serverSide: false,
    processing: true,
-   responsive: false,
+   responsive: true,
    searching: false,
    lengthChange: true,
    ordering: true,
@@ -37,7 +37,7 @@ dataTable = _dom.DataTable({
    stateSave: true,
    scrollX : true,
    ajax: {
-      "url": '/getData',
+      "url": '/getClubList',
       "type": 'POST',
       "data": function (d) {
          d.campus = $("select[name='campus']").val();
@@ -47,7 +47,15 @@ dataTable = _dom.DataTable({
          d.searchKey = $("#searchKey").val();
       }
    },
-   columns: [{
+   columns: [
+      {
+         'data': 'cid',
+         'render' : function(data){
+            let _chkbox = `<input type="checkbox" class="clubChkbox" data-clubid="${data}">`
+            return _chkbox
+         }
+     },
+      {
       'data': 'authority',
        "render": function ( data, type, row ) {
                   let auth = Number(data)
@@ -83,9 +91,8 @@ dataTable = _dom.DataTable({
          'data': 'president_contact'
       },
       {
-         data: null,
-         defaultContent: '',
-         className: 'select-checkbox'
+         'data': 'authority',
+         'defaultContent': 'test'
      },
    ],
    columnDefs: [
@@ -97,36 +104,32 @@ dataTable = _dom.DataTable({
 });
 
 
-_dom.find("tbody").off("click").on("click", "tr", function () {
-   console.log('click table row!')
-   // 한 번 클릭 시 이동 version
-   /*o2.$.map.clear();
-             if ($(this).hasClass("selected") == false) {
-                dataTable.$("tr.selected").removeClass("selected");
-                $(this).addClass("selected");
-             }else{
-                return false;
-             }
-             var _data = dataTable.rows(".selected").data();
-             if (_data.length > 0) {
-                var data = _data[0];
-                var sessionId = data.SESSION_ID;
-                dmas.util.API.setMakerSession(sessionId);
-                dmas.cmmn.main.setSessionInfo(data);
- 
-                dmas.cmmn.main.clearClickResource();
- 
-                dmas.util.API.makeGraph(sessionId).done(function(r) {
-                   if (r.SUCCESS == true) {
-                      var pattern = new dmas.panel.AnalysisPattern();
-                      var options = {SESSION_ID : sessionId}
-                      pattern.setData(options);
-                      $('a[href="#tab3"]').removeClass("disabled");
-                   }
-                });
- 
-                $(this).addClass("selected");
-             }*/
+_dom.find("tbody").off("click").on("click", "tr", function () { // $([selector]).on("click", "tr")를 통해 이벤트를 한 번만 생성하여 처리
+   let _cid = $(this).find('.clubChkbox').data('clubid'); // get cid from 'data-clubid property'
+   $.ajax({
+      url:'/getClubDetail',
+      type: 'POST',
+      data: {cid : _cid},
+      dataType: 'JSON'
+  }).done(function(result){
+      console.log('RESULT : ', result[0]);
+      var obj_result = result[0]
+      // Draw Page
+      var modalTable = $('#info-table-modal');
+      for (key in obj_result){
+         if($('#dt-'+key) !== null){
+            modalTable.find('#dt-'+key).text(obj_result[key])
+         }
+      }
+    
+      $('#clubDetailModal').modal();
+  }).fail(function(){
+     alert("요청에 실패하였습니다. 다시 시도해주십시오.")
+  }).always(function(){
+     console.log('통신이 종료되었습니다.')
+  })
+
+
 });
 
 // 검색

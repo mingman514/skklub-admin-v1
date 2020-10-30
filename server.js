@@ -176,7 +176,7 @@ app.get("/master", checkMasterAuth, (req, res) => {
 });
 
 // getData
-app.post("/getData", checkMasterAuth, (req, res) => {
+app.post("/getClubList", checkMasterAuth, (req, res) => {
   // param 전달받아서 sql로 필터처리하는 부분 구현!
   let fcampus = req.body.campus
   let fcategory = req.body.category
@@ -215,17 +215,32 @@ app.post("/getData", checkMasterAuth, (req, res) => {
   // table column추가
 
   // ****  TEST DB에 적용중 *****
-  sql.generalQuery(`select campus, cname, category1, category2, category3, president_name, president_contact, authority from club_test ${sqlWhere}`, null, (err, results) => {
+  sql.generalQuery(`SELECT cid, campus, cname, category1, category2, category3, president_name, president_contact, authority FROM club_test ${sqlWhere}`, null, (err, results) => {
     if (err) {
       console.log(err);
     } else {
-      var obj_result = { data: results }
+      let obj_result = { data: results }
       res.json(obj_result)
     }
   }
 );
 })
 
+/* 모임정보 조회 */ 
+app.post("/getClubDetail", checkMasterAuth, (req, res) => {
+  let _cid = req.body.cid;
+  console.log('cid = ',_cid);
+  sql.generalQuery(`SELECT * FROM club_test WHERE cid=${_cid}`, null, (err, results) => {
+    if (err) {
+      console.log(err);
+    } else {
+      let obj_result = { data: results }
+      res.json(results)
+    }
+  }
+);
+
+})
 
 // register 구현 아직
 app.get("/register", checkNotAuthenticated, (req, res) => {
