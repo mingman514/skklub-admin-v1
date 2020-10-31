@@ -180,7 +180,8 @@ app.post("/getClubList", checkMasterAuth, (req, res) => {
   // param 전달받아서 sql로 필터처리하는 부분 구현!
   let fcampus = req.body.campus
   let fcategory = req.body.category
-  let fstatus = req.body.status
+  let fshow = req.body.show
+  let fedit = req.body.edit
   let fsearchCategory = req.body.searchCategory
   let fsearchKey = req.body.searchKey
 
@@ -193,13 +194,19 @@ app.post("/getClubList", checkMasterAuth, (req, res) => {
     sqlWhere += `AND category1='${fcategory}' `
   }
 
-  if(fstatus){
-    if(fstatus === 'ok'){
+  if(fshow){
+    if(fshow === 'yes'){
+      sqlWhere += `AND authority NOT IN (0, 2) `
+    } else if (fshow === 'no'){
+      sqlWhere += `AND authority IN (0, 2) `
+    }
+  }
+
+  if(fedit){
+    if(fedit === 'yes'){
       sqlWhere += `AND authority NOT IN (0, 1) `
-    } else if (fstatus === 'hold'){
-      sqlWhere += `AND authority=0 `
-    } else if (fstatus === 'stop'){
-      sqlWhere += `AND authority=1 ` // 중지는 비공개로 돌리는 것.
+    } else if (fedit === 'no'){
+      sqlWhere += `AND authority IN (0, 1) `
     }
   }
 
@@ -230,7 +237,10 @@ app.post("/getClubList", checkMasterAuth, (req, res) => {
 app.post("/getClubDetail", checkMasterAuth, (req, res) => {
   let _cid = req.body.cid;
   console.log('cid = ',_cid);
-  sql.generalQuery(`SELECT * FROM club_test WHERE cid=${_cid}`, null, (err, results) => {
+  sql.generalQuery(`SELECT *,
+                          date_format(recent_change_date,'%Y-%m-%d %H:%i') AS rec_chg_date,
+                          date_format(registration_date,'%Y-%m-%d %H:%i') AS reg_date
+                    FROM club_test WHERE cid=${_cid}`, null, (err, results) => {
     if (err) {
       console.log(err);
     } else {

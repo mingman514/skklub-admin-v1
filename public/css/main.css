@@ -52,5 +52,8 @@ input#admin_id, input#password, button#sign-in, input#pw1, input#pw2, button#pwc
 .clublist tbody tr:hover{
     color: white;
     background-color: rgb(75, 75, 75);
+}
+
+span.viewDetail:hover{
     cursor: pointer;
 }

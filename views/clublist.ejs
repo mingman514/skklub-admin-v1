@@ -4,14 +4,23 @@
 <div class="card">
     <div class="card-body">
         <h3 class="text-center"> 스클럽 동아리 명단 </h3>
+        <!-- 모드 변환 -->
+        <div class="custom-control custom-switch text-right">
+            <input type="checkbox" class="custom-control-input" id="adminModeSwitch">
+            <label class="custom-control-label" for="adminModeSwitch">관리모드</label>
+          </div>
         <!-- 검색조건 -->
         <div class="text-right">
             <form action="/search" id="filterform">
-                <select name="status">
-                    <option value="">승인여부</option>
-                    <option value="ok">승인</option>
-                    <option value="hold">대기</option>
-                    <option value="stop">중지</option>
+                <select name="show">
+                    <option value="">공개여부</option>
+                    <option value="yes">공개중</option>
+                    <option value="no">비공개</option>
+                </select>
+                <select name="edit">
+                    <option value="">수정권한</option>
+                    <option value="yes">수정가능</option>
+                    <option value="no">수정불가</option>
                 </select>
                 <select name="campus">
                     <option value="">캠퍼스</option>
@@ -33,14 +42,15 @@
                     <option value="contents">본문</option>
                 </select>
                 <input type="text" name="searchKey" id="searchKey">
-                <button id="search_btn" type="submit" class="fa fa-search"></button>
-                <input type="reset" id="reset_filter">
+                <button class="btn btn-dark btn-sm" id="search_btn" type="submit" title="검색"><span class="fas fa-search"></span></button>
+                <button class="btn btn-dark btn-sm" type="reset" id="reset_filter" title="초기화"><span class="fas fa-sync"></span></button>
             </form>
         </div>
         <table class="table clublist">
             <thead>
                 <tr>
                     <th><input type="checkbox" id="selectAllClub"></th>
+                    <th><span class="fas fa-search-plus"></span></th>
                     <th>상태</th>
                     <th>캠퍼스</th>
                     <th>모임명</th>
@@ -55,6 +65,7 @@
             <tbody>
                 <tr>
                     <td>1</td>
+                    <td><span class="far fa-plus-square"></span></td>
                     <td>1</td>
                     <td>몰라</td>
                     <td>몰라</td>
@@ -80,128 +91,186 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">모임 상세정보</h5>
+          <h5 class="modal-title" id="exampleModalLabel"><span id="dt-title" style="font-weight:bold;"></span>의 상세정보</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-            <table class="table table-hover table-bordered" id="info-table-modal">
-                <colgroup>
-                    <col width="25%" />
-                    <col width="40%" />
-                    <col width="35%" />
-                </colgroup>
-                <tr>
-                    <td class="text-center indigo lighten-1 text-white" colspan="3">기본정보</td>
-                </tr>
-                <tr>
-                    <td>동아리명</td>
-                    <td id="dt-cname"> </td>
-                    <td rowspan="5"></td>
-                </tr>
-                <tr>
-                    <td>대분류</td>
-                    <td id="dt-category1"></td>
-                </tr>
-                <tr>
-                    <td>중분류</td>
-                    <td id="dt-category2"></td>
-                </tr>
-                <tr>
-                    <td>소분류</td>
-                    <td id="dt-category3"></td>
-                </tr>
-                <tr>
-                    <td>캠퍼스</td>
-                    <td id="dt-campus"></td>
-                </tr>
-                <tr>
-                    <td>설립연도</td>
-                    <td id="dt-estab_year"></td>
-                    <td>로고 </td>
-                </tr>
-    
-                <tr>
-                    <td class="text-center indigo lighten-1 text-white" colspan="3">모임 소개</td>
-                </tr>
-                <tr>
-                    <td>소개글</td>
-                    <td colspan="2" id="dt-intro_text"> </td>
-                </tr>
-                <tr>
-                    <td>핵심 소개문구</td>
-                    <td colspan="2" id="dt-intro_sentence"></td>
-                </tr>
-                <tr>
-                    <td>활동내용</td>
-                    <td colspan="2" id="dt-activity_info"></td>
-                </tr>
-                <tr>
-                    <td>모임시간</td>
-                    <td colspan="2" id="dt-meeting_time"></td>
-                </tr>
-                <tr>
-                    <td>모임장소</td>
-                    <td colspan="2" id="dt-activity_location"></td>
-                </tr>
-                <tr>
-                    <td>활동인원</td>
-                    <td colspan="2" id="dt-activity_num"> </td>
-                </tr>
-    
-                <tr>
-                    <td class="text-center indigo lighten-1 text-white" colspan="3">리쿠르팅 정보</td>
-                </tr>
-                <tr>
-                    <td>모집시기</td>
-                    <td colspan="2" id="dt-recruit_season"></td>
-                </tr>
-                <tr>
-                    <td>의무활동기간</td>
-                    <td colspan="2" id="dt-activity_period"></td>
-                </tr>
-                <tr>
-                    <td>모집방식</td>
-                    <td colspan="2" id="dt-recruit_process"></td>
-                </tr>
-                <tr>
-                    <td>모집인원</td>
-                    <td colspan="2" id="dt-recruit_num"></td>
-                </tr>
-                <tr>
-                    <td>리쿠르팅 사이트</td>
-                    <td colspan="2" id="dt-recruit_site"></td>
-                </tr>
-    
-                <tr>
-                    <td class="text-center indigo lighten-1 text-white" colspan="3">연락처/사이트</td>
-                </tr>
-                <tr>
-                    <td>대표자 이름</td>
-                    <td colspan="2" id="dt-president_name"></td>
-                </tr>
-                <tr>
-                    <td>대표자 연락처</td>
-                    <td colspan="2" id="dt-president_contact"></td>
-                </tr>
-                <tr>
-                    <td>긴급연락처</td>
-                    <td colspan="2" id="dt-emergency_contact"></td>
-                </tr>
-                <tr>
-                    <td>동아리 웹페이지 1</td>
-                    <td colspan="2" id="dt-website_link"></td>
-                </tr>
-                <tr>
-                    <td>동아리 웹페이지 2</td>
-                    <td colspan="2" id="dt-website_link2"></td>
-                </tr>
-            </table>
+            <ul class="nav nav-tabs" id="clubDetailTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="basicInfoTab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo"
+                    aria-selected="true">스클럽 정보</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="accountInfoTab" data-toggle="tab" href="#accountInfo" role="tab" aria-controls="accountInfo"
+                    aria-selected="false">계정 관리</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="clubDetailTabContent">
+                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                    <table class="table table-hover table-bordered" id="info-table-modal">
+                        <colgroup>
+                            <col width="25%" />
+                            <col width="40%" />
+                            <col width="35%" />
+                        </colgroup>
+                        <tr>
+                            <td class="text-center indigo lighten-1 text-white" colspan="3">기본정보</td>
+                        </tr>
+                        <tr>
+                            <td>동아리명</td>
+                            <td id="dt-cname"> </td>
+                            <td rowspan="5"></td>
+                        </tr>
+                        <tr>
+                            <td>대분류</td>
+                            <td id="dt-category1"></td>
+                        </tr>
+                        <tr>
+                            <td>중분류</td>
+                            <td id="dt-category2"></td>
+                        </tr>
+                        <tr>
+                            <td>소분류</td>
+                            <td id="dt-category3"></td>
+                        </tr>
+                        <tr>
+                            <td>캠퍼스</td>
+                            <td id="dt-campus"></td>
+                        </tr>
+                        <tr>
+                            <td>설립연도</td>
+                            <td id="dt-estab_year"></td>
+                            <td>로고 </td>
+                        </tr>
+            
+                        <tr>
+                            <td class="text-center indigo lighten-1 text-white" colspan="3">모임 소개</td>
+                        </tr>
+                        <tr>
+                            <td>소개글</td>
+                            <td colspan="2" id="dt-intro_text"> </td>
+                        </tr>
+                        <tr>
+                            <td>핵심 소개문구</td>
+                            <td colspan="2" id="dt-intro_sentence"></td>
+                        </tr>
+                        <tr>
+                            <td>활동내용</td>
+                            <td colspan="2" id="dt-activity_info"></td>
+                        </tr>
+                        <tr>
+                            <td>모임시간</td>
+                            <td colspan="2" id="dt-meeting_time"></td>
+                        </tr>
+                        <tr>
+                            <td>모임장소</td>
+                            <td colspan="2" id="dt-activity_location"></td>
+                        </tr>
+                        <tr>
+                            <td>활동인원</td>
+                            <td colspan="2" id="dt-activity_num"> </td>
+                        </tr>
+            
+                        <tr>
+                            <td class="text-center indigo lighten-1 text-white" colspan="3">리쿠르팅 정보</td>
+                        </tr>
+                        <tr>
+                            <td>모집시기</td>
+                            <td colspan="2" id="dt-recruit_season"></td>
+                        </tr>
+                        <tr>
+                            <td>의무활동기간</td>
+                            <td colspan="2" id="dt-activity_period"></td>
+                        </tr>
+                        <tr>
+                            <td>모집방식</td>
+                            <td colspan="2" id="dt-recruit_process"></td>
+                        </tr>
+                        <tr>
+                            <td>모집인원</td>
+                            <td colspan="2" id="dt-recruit_num"></td>
+                        </tr>
+                        <tr>
+                            <td>리쿠르팅 사이트</td>
+                            <td colspan="2" id="dt-recruit_site"></td>
+                        </tr>
+            
+                        <tr>
+                            <td class="text-center indigo lighten-1 text-white" colspan="3">연락처/사이트</td>
+                        </tr>
+                        <tr>
+                            <td>대표자 이름</td>
+                            <td colspan="2" id="dt-president_name"></td>
+                        </tr>
+                        <tr>
+                            <td>대표자 연락처</td>
+                            <td colspan="2" id="dt-president_contact"></td>
+                        </tr>
+                        <tr>
+                            <td>동아리 웹페이지 1</td>
+                            <td colspan="2" id="dt-website_link"></td>
+                        </tr>
+                        <tr>
+                            <td>동아리 웹페이지 2</td>
+                            <td colspan="2" id="dt-website_link2"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="accountInfo" role="tabpanel" aria-labelledby="accountInfo-tab">
+                    <table class="table table-hover table-bordered" id="info-table-modal2">
+                        <colgroup>
+                            <col width="25%" />
+                            <col width="40%" />
+                            <col width="35%" />
+                        </colgroup>
+                        <tr>
+                            <td class="text-center indigo lighten-1 text-white" colspan="3">계정정보</td>
+                        </tr>
+                        <tr>
+                            <td>계정 ID</td>
+                            <td colspan="2" id="dt-admin_id"></td>
+                        </tr>
+                        <tr>
+                            <td>계정 식별코드</td>
+                            <td colspan="2" id="dt-cid"></td>
+                        </tr>
+                        <tr>
+                            <td>대표자 이름</td>
+                            <td colspan="2" id="dt-president_name"></td>
+                        </tr>
+                        <tr>
+                            <td>대표자 연락처</td>
+                            <td colspan="2" id="dt-president_contact"></td>
+                        </tr>
+                        <tr>
+                            <td>긴급연락처</td>
+                            <td colspan="2" id="dt-emergency_contact"></td>
+                        </tr>
+                        <tr>
+                            <td>최근 업데이트 일자</td>
+                            <td colspan="2" id="dt-rec_chg_date"></td>
+                        </tr>
+                        <tr>
+                            <td>계정 등록 일자</td>
+                            <td colspan="2" id="dt-reg_date"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-center">
+                                <button type="button" class="btn btn-warning">비밀번호 재설정</button>
+                                <button type="button" class="btn btn-danger">계정 삭제</button>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+              
+            
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>
