@@ -430,29 +430,3 @@ app.get("/api/:category/:campus/:name", (req, res, next) => {
    }
   );
 });
-
-/*app.get("/api/id/:id", (req, res) => {
-  const clubId = parseInt(req.params.id, 10);
-  const club = data.find((_club) => _club.cid === clubId);
-
-  if (club) {
-    res.json(club);
-  } else {
-    res.json({ message: `club ${clubId} doesn't exist` });
-  }
-});
-
-app.get("/api/location/:campus", (req, res) => {
-  const clubCampus = req.params.campus;
-  const publicData = data.filter((_club) => [1,3].includes(_club.authority))
-  const club = publicData.filter((_club) => _club.campus === clubCampus);
-
-  if (club) {
-    res.json(club);
-  } else {
-    console.log(clubCampus);
-    res.json({
-      message: `error: location is wrong. Either type seoul or suwon`,
-    });
-  }
-});*/
