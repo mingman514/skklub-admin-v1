@@ -388,10 +388,10 @@ app.get("/api/:category/:campus", (req, res, next) => {
   );
 });
 
-app.get("/api/:category/:campus/:name", (req, res, next) => {
+app.get("/api/:category/:campus/:cid", (req, res, next) => {
   const clubCategory = req.params.category;
   const clubCampus = req.params.campus;
-  const clubName = req.params.name;
+  const clubId = req.params.cid;
   
   let API_sql = `SELECT 
                   cid,
@@ -418,7 +418,7 @@ app.get("/api/:category/:campus/:name", (req, res, next) => {
                   recruit_process,
                   activity_location
             FROM club_test 
-            WHERE category1='${clubCategory}' AND campus='${clubCampus}' AND cname='${clubName}'`
+            WHERE category1='${clubCategory}' AND campus='${clubCampus}' AND cid='${clubId}'`
     sql.generalQuery(API_sql, null, (err, results) => {
       if (err) {
         console.log(err);
