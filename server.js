@@ -342,12 +342,13 @@ app.get("/api/id/:id", (req, res) => {
 
 app.get("/api/location/:campus", (req, res) => {
   const clubCampus = req.params.campus;
-  const club = data.filter((_club) => _club.campus === clubCampus);
+  const publicData = data.filter((_club) => [1,3].includes(_club.authority))
+  const club = publicData.filter((_club) => _club.campus === clubCampus);
 
   if (club) {
     res.json(club);
   } else {
-    console.log(clubCampus)
+    console.log(clubCampus);
     res.json({
       message: `error: location is wrong. Either type seoul or suwon`,
     });
