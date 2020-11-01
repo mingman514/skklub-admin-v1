@@ -12,38 +12,40 @@
         <!-- 검색조건 -->
         <div class="text-right">
             <form action="/search" id="filterform">
-                <select name="show">
+                <select name="show" class="filtSelect custom-select-sm">
                     <option value="">공개여부</option>
                     <option value="yes">공개중</option>
                     <option value="no">비공개</option>
                 </select>
-                <select name="edit">
+                <select name="edit" class="filtSelect custom-select-sm">
                     <option value="">수정권한</option>
                     <option value="yes">수정가능</option>
                     <option value="no">수정불가</option>
                 </select>
-                <select name="campus">
+                <select name="campus" class="filtSelect custom-select-sm">
                     <option value="">캠퍼스</option>
                     <option value="명륜">명륜</option>
                     <option value="율전">율전</option>
                 </select>
-                <select name="category1">
+                <select name="category1" class="filtSelect custom-select-sm">
                     <option value="">모임구분</option>
                     <option value="중앙동아리">중앙동아리</option>
                     <option value="기타동아리">기타동아리</option>
                     <option value="소모임">소모임</option>
                     <option value="기타단체">기타단체</option>
                 </select>
-                <select name="searchCategory">
-                    <option value="cname">모임명</option>
-                    <option value="category2">중분류</option>
-                    <option value="category3">소분류</option>
-                    <option value="president_name">대표자명</option>
-                    <option value="contents">본문</option>
-                </select>
-                <input type="text" name="searchKey" id="searchKey">
-                <button class="btn btn-dark btn-sm" id="search_btn" type="submit" title="검색"><span class="fas fa-search"></span></button>
-                <button class="btn btn-dark btn-sm" type="reset" id="reset_filter" title="초기화"><span class="fas fa-sync"></span></button>
+                <div style="display:inline-block; margin: 5px 0;">
+                    <select name="searchCategory" class="filtSelect">
+                        <option value="cname">모임명</option>
+                        <option value="category2">중분류</option>
+                        <option value="category3">소분류</option>
+                        <option value="president_name">대표자명</option>
+                        <option value="contents">본문</option>
+                    </select>
+                    <input type="text" name="searchKey" id="searchKey" class="filtTxt" placeholder="search">
+                    <button class="btn btn-dark btn-sm" id="search_btn" type="submit" title="검색"><span class="fas fa-search"></span></button>
+                    <button class="btn btn-dark btn-sm" type="reset" id="reset_filter" title="초기화"><span class="fas fa-sync"></span></button>
+                </div>
             </form>
         </div>
         <table class="table clublist">

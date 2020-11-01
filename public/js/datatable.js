@@ -68,7 +68,6 @@ dataTable = _dom.DataTable({
        'render': function ( data, type, row ) {
                   let auth = Number(data)
                   let txtcontent = ''
-
                   if(isShown(auth)){
                      txtcontent += '<span class="badge badge-pill badge-success">공개중</span> '
                   } else {
@@ -106,29 +105,25 @@ dataTable = _dom.DataTable({
          'data': 'authority',
          'render': function ( data, type, row ) {
                      let auth = Number(data)
-                     let switchContent = '';
+                     let showchk = ''
+                     let editchk = ''
                      if(isShown(auth)){
-                        switchContent += `<div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input showSwitch" checked>
-                        <label class="custom-control-label">공개</label>
-                      </div>`
-                     } else {
-                        switchContent += `<div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input showSwitch">
-                        <label class="custom-control-label">공개</label>
-                      </div>`
+                        showchk = ' checked';
                      }
                      if(isEditable(auth)){
-                        switchContent += `<div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input editSwitch" checked>
-                        <label class="custom-control-label">수정</label>
-                      </div>`
-                     } else {
-                        switchContent += `<div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input editSwitch">
-                        <label class="custom-control-label">수정</label>
-                      </div>`
+                        editchk = ' checked'
                      }
+                     let switchContent = `
+                        <div class="custom-control custom-switch">
+                           <input type="checkbox" id="showSwitch_${row.cid}" class="custom-control-input showSwitch"${showchk}>
+                           <label class="custom-control-label" for="showSwitch_${row.cid}">공개</label>
+                        </div>
+                        
+                        <div class="custom-control custom-switch">
+                           <input type="checkbox" id="editSwitch_${row.cid}" class="custom-control-input editSwitch"${editchk}>
+                           <label class="custom-control-label" for="editSwitch_${row.cid}">수정</label>
+                        </div>
+                        `
                      return switchContent;
                   }
          
@@ -144,6 +139,7 @@ dataTable = _dom.DataTable({
 
 
 _dom.find("tbody").off("click").on("click", ".viewDetail", function () { // $([selector]).on("click", "tr")를 통해 이벤트를 한 번만 생성하여 처리
+console.log('clicked!')
    let _cid = $(this).data('clubid'); // get cid from 'data-clubid property'
       $.ajax({
          url:'/getClubDetail',
@@ -217,9 +213,79 @@ $('a.toggle-vis').on( 'click', function (e) {
 } );
 
 
+// 공개/수정 권한변경
+_dom.find("tbody").off("change").on("change", ".custom-control-input", function () {
+   let chgcid = $(this).attr('id').split('_')[1]
+   let showauth = 0;
+   let editauth = 0;
+   if($('#showSwitch_'+chgcid+':checked').length){
+      showauth = 1;
+   }
+   if($('#editSwitch_'+chgcid+':checked').length){
+      editauth = 1;
+   }
+
+   // 선택한 모임의 권한 불러오기
+   let _cid = $(this).closest('tr').find('.clubChkbox').data('clubid'); // get cid from 'data-clubid property'
+
+   // 권한
+   $.ajaxSettings.traditional = true;
+   $.ajax({
+      url:'/getTargetFeature',
+      type: 'POST',
+      data: {
+         cid : _cid,
+         reqColumn : ['authority'] },
+      dataType: 'JSON',
+      error:function(request,error){
+         alert("message:"+request.responseText);
+        }
+   }).then(function(result){
+      let newauth = calcAuth(result['authority'], showauth, editauth);
+      // 권한변경 요청 ajax
+      $.ajax({
+         url:'/updateAuth',
+         type: 'POST',
+         data: {
+            newauth : newauth,
+            target : [_cid]
+         },
+         dataType: 'text'
+      })
+   }).then(function(result){
+      dataTable.ajax.reload();
+   })
+   // <then과 done의 차이>
+   // $.ajax().then(resolvedCallback(), rejectedCallback())  ===  $.ajax().done(sucess()).fail(failure());
+})
+
+
+// Checkbox Func
+// check all
+$('#selectAllClub').off('click').on('click', () => {
+   // 이미 모두 체크시, 체크 해제
+   if($('#selectAllClub').is(':checked')){
+      $('.clubChkbox').prop('checked', true);
+   } else {
+      $('.clubChkbox').prop('checked', false);
+   }
+})
+
+_dom.find("tbody").on('click', '.clubChkbox', () => {
+   // 모두 체크시, 전체선택박스 체크
+   if($('.clubChkbox').length === $('.clubChkbox:checked').length){
+      $('#selectAllClub').prop('checked', true)
+   } else {
+      $('#selectAllClub').prop('checked', false)
+   }
+})
+
+
+// Function Declarations
+
 function isShown(auth){
    let binNum = auth.toString(2)
-   if(binNum >= 4 || binNum[binNum.length-1] === '1'){ // 관리자급부턴 기본권한 허용
+   if(auth >= 4 || binNum[binNum.length-1] === '1'){ // 관리자급부턴 기본권한 허용
       return true;
    }
    return false;
@@ -227,8 +293,17 @@ function isShown(auth){
 
 function isEditable(auth){
    let binNum = auth.toString(2)
-   if(binNum >= 4 || binNum[binNum.length-2] === '1'){
+   if(auth >= 4 || binNum[binNum.length-2] === '1'){
       return true;
    }
    return false;
+}
+
+function calcAuth(prevauth, showauth, editauth){
+   if(prevauth>3){
+      return prevauth;
+   }
+   let binNum = showauth + (editauth << 1);
+
+   return binNum
 }

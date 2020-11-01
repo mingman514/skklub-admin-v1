@@ -240,17 +240,63 @@ app.post("/getClubDetail", checkMasterAuth, (req, res) => {
   sql.generalQuery(`SELECT *,
                           date_format(recent_change_date,'%Y-%m-%d %H:%i') AS rec_chg_date,
                           date_format(registration_date,'%Y-%m-%d %H:%i') AS reg_date
-                    FROM club_test WHERE cid=${_cid}`, null, (err, results) => {
+                    FROM club_test
+                    WHERE cid=${_cid}`, null, (err, results) => {
     if (err) {
       console.log(err);
     } else {
-      let obj_result = { data: results }
       res.json(results)
     }
   }
 );
-
 })
+
+/* 특정정보 조회 */ 
+app.post("/getTargetFeature", checkMasterAuth, (req, res) => {
+  let _cid = req.body.cid;
+  let reqColumn = req.body.reqColumn.split(','); // 배열을 string 형태로 전송하므로 split으로 배열화 시켜줌
+  let reqColumnSql = '';
+  if(reqColumn){
+    for(var i in reqColumn){
+      reqColumnSql += reqColumn[i] + ','
+    }
+    reqColumnSql = reqColumnSql.substr(0, reqColumnSql.length -1);
+  }
+  sql.generalQuery(`SELECT ${reqColumnSql} FROM club_test WHERE cid=${_cid}`, null, (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(results)
+      }
+    }
+  );
+})
+
+app.post("/updateAuth", checkMasterAuth, (req, res) => {
+  let newauth = req.body.newauth;
+  let target = req.body.target.split(',');
+  let targetSql = ''
+  if(target){
+    for(var i in target){
+      targetSql += target[i] + ','
+    }
+    targetSql = targetSql.substr(0, targetSql.length -1);
+  }
+  // UPDATE club_test SET (authority=${newauth}) WHERE cid IN (${targetSql})
+  //UPDATE club SET ` + updateSql.slice(0, -2) + ` WHERE cid=${req.user.cid}`
+  sql.generalQuery(`UPDATE club_test SET authority=${newauth} WHERE cid IN (${targetSql})`, null, (err, results) => {
+    if (err) {
+      console.log(err);
+      res.send('FAIL')
+    } else {
+      console.log(`UPDATE SUCCESS (${target.length} clubs => Auth "${newauth}")`)
+      res.send('SUCCESS')
+    }
+  }
+);
+})
+
+
 
 // register 구현 아직
 app.get("/register", checkNotAuthenticated, (req, res) => {
@@ -298,7 +344,7 @@ function checkNotAuthenticated(req, res, next) {
 
 function checkMasterAuth(req, res, next) {
   // 마스터 계정이 아니면 index 페이지로
-  if (req.user.authority === 9) {
+  if (req.user.authority > 3) {
     // login success
     return next();
   }
