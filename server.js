@@ -16,6 +16,7 @@ const sql = require("./public/js/mysql-query");
 const createJsonDb = require("./public/js/createDB");
 const data = require("./data/skklubDB.json");
 const cors = require("cors");
+const url = require("url")
 
 app.use(cors());
 
@@ -370,11 +371,67 @@ app.listen(process.env.PORT, () => {
 
 //api 코드
 
-app.get("/api", (req, res, next) => {
-  res.send(data);
+app.get("/api/:category/:campus", (req, res, next) => {
+  const clubCategory = req.params.category;
+  const clubCampus = req.params.campus;
+  
+  let  API_sql = `SELECT cid, cname, category3, campus FROM club_test WHERE category1='${clubCategory}' AND campus='${clubCampus}'`
+    sql.generalQuery(API_sql, null, (err, results) => {
+      if (err) {
+        console.log(err);
+        res.send('FAIL')
+      } else {
+        console.log('SUCCESS')
+        res.json(results);
+      }
+   }
+  );
 });
 
-app.get("/api/id/:id", (req, res) => {
+app.get("/api/:category/:campus/:name", (req, res, next) => {
+  const clubCategory = req.params.category;
+  const clubCampus = req.params.campus;
+  const clubName = req.params.name;
+  
+  let API_sql = `SELECT 
+                  cid,
+                  cname,
+                  campus,
+                  authority,
+                  category1,
+                  category2,
+                  category3,
+                  logo_path,
+                  estab_year,
+                  intro_text,
+                  recruit_num,
+                  activity_num,
+                  meeting_time,
+                  recruit_site,
+                  website_link,
+                  activity_info,
+                  website_link2,
+                  intro_sentence,
+                  president_name,
+                  recruit_season,
+                  activity_period,
+                  recruit_process,
+                  activity_location
+            FROM club_test 
+            WHERE category1='${clubCategory}' AND campus='${clubCampus}' AND cname='${clubName}'`
+    sql.generalQuery(API_sql, null, (err, results) => {
+      if (err) {
+        console.log(err);
+        res.send('FAIL')
+      } else {
+        console.log('SUCCESS')
+        res.json(results);
+      }
+   }
+  );
+});
+
+/*app.get("/api/id/:id", (req, res) => {
   const clubId = parseInt(req.params.id, 10);
   const club = data.find((_club) => _club.cid === clubId);
 
@@ -398,4 +455,4 @@ app.get("/api/location/:campus", (req, res) => {
       message: `error: location is wrong. Either type seoul or suwon`,
     });
   }
-});
+});*/
