@@ -71,36 +71,45 @@ app.get("/info", checkAuthenticated, (req, res) => {
   });
 });
 // 동아리정보 수정
-app.get('/info/update', checkAuthenticated, (req, res) => {
-    sql.generalQuery(`select * from club where cid= ?;` + `select distinct category1 from club;` + `select distinct category2 from club;`,[req.user.cid], (err, results) => {
-        if (err) {
-                    console.log(err)
-                    res.redirect('/info')
-                } else {
-                    res.render('clubupdate.ejs', { result: results, cname: req.user.cname, auth: req.user.authority})
-                }
-    })
-})
+app.get("/info/update", checkAuthenticated, (req, res) => {
+  sql.generalQuery(
+    `select * from club where cid= ?;` +
+      `select distinct category1 from club;` +
+      `select distinct category2 from club;`,
+    [req.user.cid],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        res.redirect("/info");
+      } else {
+        res.render("clubupdate.ejs", {
+          result: results,
+          cname: req.user.cname,
+          auth: req.user.authority,
+        });
+      }
+    }
+  );
+});
 
-app.post('/info/update', checkAuthenticated, (req, res) => {
-        var updateSql = ''
-        for(var key in req.body){
-            updateSql += `${key}='${req.body[key]}', `
-        }
-        updateSql = `UPDATE club SET ` + updateSql.slice(0, -2) + ` WHERE cid=${req.user.cid}`
-        sql.generalQuery(updateSql, null, (err, results) => {
-            if (err) {
-                console.log(err)
-            } else {
-                createJsonDb() // 세션정보 사라짐(writefile로 파일이 수정돼서 nodemon reload 작동)
-                msg = `${req.user.cname}의 정보가 변경되었습니다.\n다시 로그인해주세요.`
-                req.flash('flash',msg)
-                res.render('login.ejs')
-            }
-        })
-})
-
-
+app.post("/info/update", checkAuthenticated, (req, res) => {
+  var updateSql = "";
+  for (var key in req.body) {
+    updateSql += `${key}='${req.body[key]}', `;
+  }
+  updateSql =
+    `UPDATE club SET ` + updateSql.slice(0, -2) + ` WHERE cid=${req.user.cid}`;
+  sql.generalQuery(updateSql, null, (err, results) => {
+    if (err) {
+      console.log(err);
+    } else {
+      createJsonDb(); // 세션정보 사라짐(writefile로 파일이 수정돼서 nodemon reload 작동)
+      msg = `${req.user.cname}의 정보가 변경되었습니다.\n다시 로그인해주세요.`;
+      req.flash("flash", msg);
+      res.render("login.ejs");
+    }
+  });
+});
 
 app.get("/account", checkAuthenticated, (req, res) => {
   res.render("account.ejs", { cname: req.user.cname, flash: "" });
@@ -178,66 +187,70 @@ app.get("/master", checkMasterAuth, (req, res) => {
 // getData
 app.post("/getClubList", checkMasterAuth, (req, res) => {
   // param 전달받아서 sql로 필터처리하는 부분 구현!
-  let fcampus = req.body.campus
-  let fcategory = req.body.category
-  let fshow = req.body.show
-  let fedit = req.body.edit
-  let fsearchCategory = req.body.searchCategory
-  let fsearchKey = req.body.searchKey
+  let fcampus = req.body.campus;
+  let fcategory = req.body.category;
+  let fshow = req.body.show;
+  let fedit = req.body.edit;
+  let fsearchCategory = req.body.searchCategory;
+  let fsearchKey = req.body.searchKey;
 
-  var sqlWhere = 'WHERE 1=1 '
-  if(fcampus){
-    sqlWhere += `AND campus like '%${fcampus}%' `
+  var sqlWhere = "WHERE 1=1 ";
+  if (fcampus) {
+    sqlWhere += `AND campus like '%${fcampus}%' `;
   }
 
-  if(fcategory){
-    sqlWhere += `AND category1='${fcategory}' `
+  if (fcategory) {
+    sqlWhere += `AND category1='${fcategory}' `;
   }
 
-  if(fshow){
-    if(fshow === 'yes'){
-      sqlWhere += `AND authority NOT IN (0, 2) `
-    } else if (fshow === 'no'){
-      sqlWhere += `AND authority IN (0, 2) `
+  if (fshow) {
+    if (fshow === "yes") {
+      sqlWhere += `AND authority NOT IN (0, 2) `;
+    } else if (fshow === "no") {
+      sqlWhere += `AND authority IN (0, 2) `;
     }
   }
 
-  if(fedit){
-    if(fedit === 'yes'){
-      sqlWhere += `AND authority NOT IN (0, 1) `
-    } else if (fedit === 'no'){
-      sqlWhere += `AND authority IN (0, 1) `
+  if (fedit) {
+    if (fedit === "yes") {
+      sqlWhere += `AND authority NOT IN (0, 1) `;
+    } else if (fedit === "no") {
+      sqlWhere += `AND authority IN (0, 1) `;
     }
   }
 
-  if(fsearchKey){
-    if(fsearchCategory === 'contents'){
-      sqlWhere += `AND (intro_text LIKE '%${fsearchKey}%' OR intro_sentence LIKE '%${fsearchKey}%' OR activity_info LIKE '%${fsearchKey}%')`  
+  if (fsearchKey) {
+    if (fsearchCategory === "contents") {
+      sqlWhere += `AND (intro_text LIKE '%${fsearchKey}%' OR intro_sentence LIKE '%${fsearchKey}%' OR activity_info LIKE '%${fsearchKey}%')`;
     } else {
-    sqlWhere += `AND ${fsearchCategory} LIKE '%${fsearchKey}%' `
+      sqlWhere += `AND ${fsearchCategory} LIKE '%${fsearchKey}%' `;
     }
   }
- console.log('===================',sqlWhere)
+  console.log("===================", sqlWhere);
 
   // table column추가
 
   // ****  TEST DB에 적용중 *****
-  sql.generalQuery(`SELECT cid, campus, cname, category1, category2, category3, president_name, president_contact, authority FROM club_test ${sqlWhere}`, null, (err, results) => {
-    if (err) {
-      console.log(err);
-    } else {
-      let obj_result = { data: results }
-      res.json(obj_result)
+  sql.generalQuery(
+    `SELECT cid, campus, cname, category1, category2, category3, president_name, president_contact, authority FROM club_test ${sqlWhere}`,
+    null,
+    (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        let obj_result = { data: results };
+        res.json(obj_result);
+      }
     }
-  }
-);
-})
+  );
+});
 
-/* 모임정보 조회 */ 
+/* 모임정보 조회 */
 app.post("/getClubDetail", checkMasterAuth, (req, res) => {
   let _cid = req.body.cid;
-  console.log('cid = ',_cid);
-  sql.generalQuery(`SELECT *,
+  console.log("cid = ", _cid);
+  sql.generalQuery(
+    `SELECT *,
                           date_format(recent_change_date,'%Y-%m-%d %H:%i') AS rec_chg_date,
                           date_format(registration_date,'%Y-%m-%d %H:%i') AS reg_date
                     FROM club_test
@@ -355,11 +368,13 @@ app.listen(process.env.PORT, () => {
   console.log(`listening on PORT http://localhost:${process.env.PORT}`);
 });
 
+//api 코드
+
 app.get("/api", (req, res, next) => {
   res.send(data);
 });
 
-app.get("/api/:id", (req, res) => {
+app.get("/api/id/:id", (req, res) => {
   const clubId = parseInt(req.params.id, 10);
   const club = data.find((_club) => _club.cid === clubId);
 
@@ -367,5 +382,20 @@ app.get("/api/:id", (req, res) => {
     res.json(club);
   } else {
     res.json({ message: `club ${clubId} doesn't exist` });
+  }
+});
+
+app.get("/api/location/:campus", (req, res) => {
+  const clubCampus = req.params.campus;
+  const publicData = data.filter((_club) => [1,3].includes(_club.authority))
+  const club = publicData.filter((_club) => _club.campus === clubCampus);
+
+  if (club) {
+    res.json(club);
+  } else {
+    console.log(clubCampus);
+    res.json({
+      message: `error: location is wrong. Either type seoul or suwon`,
+    });
   }
 });
