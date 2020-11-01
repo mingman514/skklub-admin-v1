@@ -375,7 +375,7 @@ app.get("/api/:category/:campus", (req, res, next) => {
   const clubCategory = req.params.category;
   const clubCampus = req.params.campus;
   
-  let  API_sql = `SELECT cid, cname, category3, campus FROM club_test WHERE category1='${clubCategory}' AND campus='${clubCampus}'`
+  let  API_sql = `SELECT cid, cname, category1, category2, category3, campus FROM club_test WHERE category1='${clubCategory}' AND campus='${clubCampus}'`
     sql.generalQuery(API_sql, null, (err, results) => {
       if (err) {
         console.log(err);
