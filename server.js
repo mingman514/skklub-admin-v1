@@ -385,17 +385,39 @@ app.get("/api/id/:id", (req, res) => {
   }
 });
 
-app.get("/api/location/:campus", (req, res) => {
-  const clubCampus = req.params.campus;
+app.get("/api/:category/:campus", (req, res) => {
   const publicData = data.filter((_club) => [1,3].includes(_club.authority))
-  const club = publicData.filter((_club) => _club.campus === clubCampus);
+  const clubCategory = req.params.category;
+  const clubCampus = req.params.campus;
+  const categoryFilter = publicData.filter((_club) => _club.category1 === clubCategory);
+  const club = categoryFilter.filter((_club) => _club.campus === clubCampus);
 
   if (club) {
     res.json(club);
   } else {
     console.log(clubCampus);
     res.json({
-      message: `error: location is wrong. Either type seoul or suwon`,
+      message: `Error: wrong api request. Please check your request. /api/분류/캠퍼스`,
+    });
+  }
+});
+
+app.get("/api/:category/:campus/:name", (req, res) => {
+  const publicData = data.filter((_club) => [1,3].includes(_club.authority))
+  const clubCategory = req.params.category;
+  const clubCampus = req.params.campus;
+  const clubName = req.params.name;
+  
+  const categoryFilter = publicData.filter((_club) => _club.category1 === clubCategory);
+  const campusFilter = categoryFilter.filter((_club) => _club.campus === clubCampus);
+  const club = campusFilter.find((_club) => _club.cname === clubName);
+
+  if (club) {
+    res.json(club);
+  } else {
+    console.log(clubCampus);
+    res.json({
+      message: `Error: ${clubName} not found. 존재하지 않는 클럽 이름입니다.`,
     });
   }
 });
