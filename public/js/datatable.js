@@ -172,6 +172,12 @@ console.log('clicked!')
          } else {
             txtcontent += '<span class="badge badge-pill badge-danger">수정불가</span>'
          }
+
+         // Account Managing
+         let _cid = obj_result['cid']
+         $('.resetPassword').attr('id',`reset_${_cid}`)
+         $('.deleteAccount').attr('id',`delete_${_cid}`)
+
          modalTable.find('#dt-cname').append(txtcontent);
 
          // Call Modal
@@ -185,7 +191,19 @@ console.log('clicked!')
 
 });
 
-// 검색
+// 비밀번호 재설정
+$('#clubDetailTabContent').find('.resetPassword').off('click').on('click', () => {
+   //**** 11/1 여기부터 - 재설정 버튼 외 콘솔 오류나??
+   let resetcid = $(this).attr('id').split('_')[1]
+   console.log(resetcid)
+})
+
+
+// 계정 삭제
+
+
+
+// 검색 이벤트
 $("#search_btn").click(function (e) {
    e.preventDefault();
    dataTable.ajax.reload()
@@ -199,6 +217,8 @@ $("#reset_filter").click(function (e) {
    dataTable.ajax.reload()
 });
 
+
+// 관리모드시 특정 컬럼 보이기/숨기기
 // dataTable.columns([0,9]).visible(false);
 
 // 모드 전환
