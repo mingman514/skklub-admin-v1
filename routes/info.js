@@ -1,9 +1,41 @@
 const express = require('express');
 const router = express.Router();
 
+
 const sql = require("../public/js/mysql-query");
 const check = require('../public/js/check')
 const createJsonDb = require("../public/js/createDB");   // needs update
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/img/logo/') // 전송된 파일 저장 디렉토리 설정
+  },
+  filename: function (req, file, cb) {
+
+    var _cid = req.user.cid;
+    var mimeType;
+
+    switch (file.mimetype) {
+      case "image/jpeg":
+        mimeType = "jpg";
+      break;
+      case "image/png":
+        mimeType = "png";
+      break;
+      case "image/gif":
+        mimeType = "gif";
+      break;
+      case "image/bmp":
+        mimeType = "bmp";
+      break;
+      default:
+        mimeType = "jpg";
+      break;
+    }
+    cb(null, _cid + '.' + mimeType) // 전송된 파일 이름 설정
+  }
+})
+const upload = multer({ storage: storage })
 
 // info
 router.get("/", check.checkAuthenticated, (req, res) => {
@@ -42,7 +74,12 @@ router
       }
     )
   })
-  .post(check.checkAuthenticated, (req, res) => {
+  .post(check.checkAuthenticated, upload.single('logoUpload'), (req, res) => {
+    // FILE UPDATE
+    
+
+
+    // TEXT UPDATE
     var updateSql = "";
     for (var key in req.body) {
       updateSql += `${key}='${req.body[key]}', `;

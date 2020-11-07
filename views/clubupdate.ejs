@@ -13,7 +13,7 @@
 <div class="card">
     <div class="card-body">
         <h3 class="text-center"> <span style="font-weight: bold;">< <%= cname %> ></span> 동아리정보 수정 </h3>
-        <form action="/info/update" method="POST">
+        <form action="/info/update" method="POST" enctype="multipart/form-data">
             <div class="text-center">
                 <a href="/"><button type="button" class="btn btn-amber btn-sm">메인으로</button></a>
                 <a href="/info"><button type="button" class="btn btn-yellow btn-sm">이전으로</button></a>
@@ -76,7 +76,10 @@
                     <td>설립연도</td>
                     <td><input type="text" name="estab_year" value="<%= result[0][0]['estab_year'] %>"
                             placeholder="설립연도"> </td>
-                    <td><%= cname %>의 로고 <span style="color:rgb(255, 130, 130)">(사진수정은 준비중이에요...)</span></td>
+                    <td>
+                        <div><%= cname %>의 로고</div>
+                        <div><input type="file" name="logoUpload" id="logoUpload"></div>
+                    </td>
                 </tr>
 
                 <tr>
