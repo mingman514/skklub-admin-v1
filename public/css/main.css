@@ -58,6 +58,12 @@ span.viewDetail:hover{
     cursor: pointer;
 }
 
+#info-table, #info-table-modal{
+    word-break: break-all;
+}
+
+
+/* filter */
 #filterform .filtSelect{
         display: inline-block;
         height: calc(1.8125rem + 2px);

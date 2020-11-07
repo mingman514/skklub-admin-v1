@@ -139,7 +139,6 @@ dataTable = _dom.DataTable({
 
 
 _dom.find("tbody").off("click").on("click", ".viewDetail", function () { // $([selector]).on("click", "tr")를 통해 이벤트를 한 번만 생성하여 처리
-console.log('clicked!')
    let _cid = $(this).data('clubid'); // get cid from 'data-clubid property'
       $.ajax({
          url:'/getClubDetail',
@@ -147,16 +146,15 @@ console.log('clicked!')
          data: {cid : _cid},
          dataType: 'JSON'
    }).done(function(result){
-         // console.log('RESULT : ', result[0]);
          var obj_result = result[0]
-         // Draw Page --- logo 추가
+
          var modalTable = $('#info-table-modal, #info-table-modal2');
 
-         $('#dt-title').text(obj_result['cname']);
-         
+         $('#dt-title, #logo-cname').text(obj_result['cname']+' ');                              // title, logo cname
+         $('#dt-logo').find('img').attr('src', `../img/logo/${obj_result['logo_path']}`)     // logo path
          for (key in obj_result){
             if($('#dt-'+key) !== null){
-               modalTable.find('#dt-'+key).text(obj_result[key])
+               modalTable.find('#dt-'+key).text(obj_result[key])                              // else
             }
          }
          // Show Status Badge
