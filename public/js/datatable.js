@@ -37,7 +37,7 @@ dataTable = _dom.DataTable({
    stateSave: false,
    scrollX : true,
    ajax: {
-      "url": '/getClubList',
+      "url": '/master/getClubList',
       "type": 'POST',
       "data": function (d) {
          d.campus = $("select[name='campus']").val();
@@ -141,7 +141,7 @@ dataTable = _dom.DataTable({
 _dom.find("tbody").off("click").on("click", ".viewDetail", function () { // $([selector]).on("click", "tr")를 통해 이벤트를 한 번만 생성하여 처리
    let _cid = $(this).data('clubid'); // get cid from 'data-clubid property'
       $.ajax({
-         url:'/getClubDetail',
+         url:'/master/getClubDetail',
          type: 'POST',
          data: {cid : _cid},
          dataType: 'JSON'
@@ -249,7 +249,7 @@ _dom.find("tbody").off("change").on("change", ".custom-control-input", function 
    // 권한
    $.ajaxSettings.traditional = true;
    $.ajax({
-      url:'/getTargetFeature',
+      url:'/master/getTargetFeature',
       type: 'POST',
       data: {
          cid : _cid,
@@ -262,7 +262,7 @@ _dom.find("tbody").off("change").on("change", ".custom-control-input", function 
       let newauth = calcAuth(result['authority'], showauth, editauth);
       // 권한변경 요청 ajax
       $.ajax({
-         url:'/updateAuth',
+         url:'/master/updateAuth',
          type: 'POST',
          data: {
             newauth : newauth,
