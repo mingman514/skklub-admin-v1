@@ -35,7 +35,10 @@ const storage = multer.diskStorage({
     cb(null, _cid + '.' + mimeType) // 전송된 파일 이름 설정
   }
 })
-const upload = multer({ storage: storage })
+const upload = multer({ 
+  storage: storage, 
+  limits: { fileSize : 256 * 1024 } // 256KB로 크기 제한
+}).single('logoUpload'); // 용량제한 시 에러핸들링 위해 직접 실행
 
 // info
 router.get("/", check.checkAuthenticated, (req, res) => {
@@ -74,10 +77,15 @@ router
       }
     )
   })
-  .post(check.checkAuthenticated, upload.single('logoUpload'), (req, res) => {
+  .post(check.checkAuthenticated, (req, res) => {
     // FILE UPDATE
-    
-
+    upload(req, res, function(err){
+      if(err){
+        msg = `로고 업로드 중 오류가 발생하였습니다. 이미지 크기는 256KB를 넘기지 말아주세요.\n${err}`;
+        req.flash("flash", msg);
+        res.render("login.ejs");
+      }
+    })
 
     // TEXT UPDATE
     var updateSql = "";
