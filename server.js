@@ -64,9 +64,6 @@ app.use(passport.session());
 app.use(methodOverride("_method"));
 
 
-//=================================================
-//===============  INDEX PAGE =====================
-//=================================================
 app.get("/", check.checkAuthenticated, (req, res) => {
   res.render("index.ejs", { cname: req.user.cname, auth: req.user.authority });
 });

@@ -120,9 +120,16 @@ router
 
 // Update Authority (Switch)
 router
-    .post("/updateAuth", check.checkMasterAuth, (req, res) => {
+    .post("/update", check.checkMasterAuth, (req, res) => {
+      let categorySql = '';
+      if(req.body.category1){
+        categorySql = `, category1='${req.body.category1}'`;
+      }
       let newauth = req.body.newauth;
-      let target = req.body.target.split(',');
+      let target = req.body.target;               // target이 1개면 string으로, 여러개면 array로 넘어옴
+      if(Array.isArray(target) === false){
+        target = target.split(',');
+      }
       let targetSql = ''
       if(target){
         for(var i in target){
@@ -131,7 +138,9 @@ router
         targetSql = targetSql.substr(0, targetSql.length -1);
       }
 
-      sql.generalQuery(`UPDATE club_test SET authority=${newauth} WHERE cid IN (${targetSql})`, null, (err, results) => {
+      sql.generalQuery(`UPDATE club_test
+                        SET authority=${newauth}${categorySql}
+                        WHERE cid IN (${targetSql})`, null, (err, results) => {
         if (err) {
           console.log(err);
           res.send('FAIL')

@@ -247,7 +247,7 @@ _dom.find("tbody").off("change").on("change", ".custom-control-input", function 
    let _cid = $(this).closest('tr').find('.clubChkbox').data('clubid'); // get cid from 'data-clubid property'
 
    // 권한
-   $.ajaxSettings.traditional = true;
+   $.ajaxSettings.traditional = true;        // 배열 형식대로 전달
    $.ajax({
       url:'/master/getTargetFeature',
       type: 'POST',
@@ -262,7 +262,7 @@ _dom.find("tbody").off("change").on("change", ".custom-control-input", function 
       let newauth = calcAuth(result['authority'], showauth, editauth);
       // 권한변경 요청 ajax
       $.ajax({
-         url:'/master/updateAuth',
+         url:'/master/update',
          type: 'POST',
          data: {
             newauth : newauth,
@@ -278,7 +278,9 @@ _dom.find("tbody").off("change").on("change", ".custom-control-input", function 
 })
 
 
-// Checkbox Func
+/**
+ * Checkbox Func
+ */ 
 // check all
 $('#selectAllClub').off('click').on('click', () => {
    // 이미 모두 체크시, 체크 해제
@@ -287,16 +289,76 @@ $('#selectAllClub').off('click').on('click', () => {
    } else {
       $('.clubChkbox').prop('checked', false);
    }
+   let checkedbox = $('.clubChkbox:checked').length;
+   if(checkedbox){
+      $('#settingMode').show();
+      $('#settingMode h5 span').text(checkedbox)
+   } else {
+      $('#settingMode').hide();
+   }
 })
 
 _dom.find("tbody").on('click', '.clubChkbox', () => {
+   let allbox = $('.clubChkbox').length;
+   let checkedbox = $('.clubChkbox:checked').length;
    // 모두 체크시, 전체선택박스 체크
-   if($('.clubChkbox').length === $('.clubChkbox:checked').length){
+   if(allbox === checkedbox){
       $('#selectAllClub').prop('checked', true)
    } else {
       $('#selectAllClub').prop('checked', false)
    }
+
+   // 하나라도 체크 시, 다중선택 설정창 표시
+   if(checkedbox){
+      $('#settingMode').show();
+      $('#settingMode h5 span').text(checkedbox)
+   } else {
+      $('#settingMode').hide();
+   }
 })
+
+/**
+ * Setting Mode Func
+ */ 
+
+// Close button
+ $('#settingMode').find('.btn-warning').on('click', () => {
+   $('.clubChkbox:checked').prop('checked', false);
+   $('#settingMode').hide();
+ })
+
+ // Apply button
+ $('#settingMode').find('.btn-info').off('click').on('click', () => {
+   let $category1 = $('#multiCategory1').val();
+   let $multiShow = Number($('#multiShow').val());
+   let $multiEdit = Number($('#multiEdit').val());
+   
+   let $targetClubs = [];
+   $('.clubChkbox:checked').each(function(){       // check된 것들 cid 배열
+      $targetClubs.push($(this).data('clubid'));
+      console.log($targetClubs);
+   })
+
+   $.ajaxSettings.traditional = true;
+   $.ajax({
+      url:'/master/update',
+      type: 'POST',
+      data: {
+         category1 : $category1,
+         newauth : calcAuth(0, $multiShow, $multiEdit),
+         target : $targetClubs
+      },
+      dataType: 'text'
+   }).then(function(result){
+      // 성공적으로 변경되었다는 popup 추가!!!
+      console.log(result);      
+      dataTable.ajax.reload();
+      $('#selectAllClub').prop('checked', false);
+      $('#settingMode').hide();
+   })
+ })
+
+
 
 
 // Function Declarations
