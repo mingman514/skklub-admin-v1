@@ -37,7 +37,7 @@ dataTable = _dom.DataTable({
    stateSave: false,
    scrollX : true,
    ajax: {
-      "url": '/getClubList',
+      "url": '/master/getClubList',
       "type": 'POST',
       "data": function (d) {
          d.campus = $("select[name='campus']").val();
@@ -139,24 +139,22 @@ dataTable = _dom.DataTable({
 
 
 _dom.find("tbody").off("click").on("click", ".viewDetail", function () { // $([selector]).on("click", "tr")를 통해 이벤트를 한 번만 생성하여 처리
-console.log('clicked!')
    let _cid = $(this).data('clubid'); // get cid from 'data-clubid property'
       $.ajax({
-         url:'/getClubDetail',
+         url:'/master/getClubDetail',
          type: 'POST',
          data: {cid : _cid},
          dataType: 'JSON'
    }).done(function(result){
-         // console.log('RESULT : ', result[0]);
          var obj_result = result[0]
-         // Draw Page --- logo 추가
+
          var modalTable = $('#info-table-modal, #info-table-modal2');
 
-         $('#dt-title').text(obj_result['cname']);
-         
+         $('#dt-title, #logo-cname').text(obj_result['cname']+' ');                              // title, logo cname
+         $('#dt-logo').find('img').attr('src', `../img/logo/${obj_result['logo_path']}`)     // logo path
          for (key in obj_result){
             if($('#dt-'+key) !== null){
-               modalTable.find('#dt-'+key).text(obj_result[key])
+               modalTable.find('#dt-'+key).text(obj_result[key])                              // else
             }
          }
          // Show Status Badge
@@ -172,6 +170,12 @@ console.log('clicked!')
          } else {
             txtcontent += '<span class="badge badge-pill badge-danger">수정불가</span>'
          }
+
+         // Account Managing
+         let _cid = obj_result['cid']
+         $('.resetPassword').attr('id',`reset_${_cid}`)
+         $('.deleteAccount').attr('id',`delete_${_cid}`)
+
          modalTable.find('#dt-cname').append(txtcontent);
 
          // Call Modal
@@ -185,7 +189,19 @@ console.log('clicked!')
 
 });
 
-// 검색
+// 비밀번호 재설정
+$('#clubDetailTabContent').find('.resetPassword').off('click').on('click', () => {
+   //**** 11/1 여기부터 - 재설정 버튼 외 콘솔 오류나??
+   let resetcid = $(this).attr('id').split('_')[1]
+   console.log(resetcid)
+})
+
+
+// 계정 삭제
+
+
+
+// 검색 이벤트
 $("#search_btn").click(function (e) {
    e.preventDefault();
    dataTable.ajax.reload()
@@ -199,6 +215,8 @@ $("#reset_filter").click(function (e) {
    dataTable.ajax.reload()
 });
 
+
+// 관리모드시 특정 컬럼 보이기/숨기기
 // dataTable.columns([0,9]).visible(false);
 
 // 모드 전환
@@ -229,9 +247,9 @@ _dom.find("tbody").off("change").on("change", ".custom-control-input", function 
    let _cid = $(this).closest('tr').find('.clubChkbox').data('clubid'); // get cid from 'data-clubid property'
 
    // 권한
-   $.ajaxSettings.traditional = true;
+   $.ajaxSettings.traditional = true;        // 배열 형식대로 전달
    $.ajax({
-      url:'/getTargetFeature',
+      url:'/master/getTargetFeature',
       type: 'POST',
       data: {
          cid : _cid,
@@ -244,7 +262,7 @@ _dom.find("tbody").off("change").on("change", ".custom-control-input", function 
       let newauth = calcAuth(result['authority'], showauth, editauth);
       // 권한변경 요청 ajax
       $.ajax({
-         url:'/updateAuth',
+         url:'/master/update',
          type: 'POST',
          data: {
             newauth : newauth,
@@ -260,7 +278,9 @@ _dom.find("tbody").off("change").on("change", ".custom-control-input", function 
 })
 
 
-// Checkbox Func
+/**
+ * Checkbox Func
+ */ 
 // check all
 $('#selectAllClub').off('click').on('click', () => {
    // 이미 모두 체크시, 체크 해제
@@ -269,16 +289,76 @@ $('#selectAllClub').off('click').on('click', () => {
    } else {
       $('.clubChkbox').prop('checked', false);
    }
+   let checkedbox = $('.clubChkbox:checked').length;
+   if(checkedbox){
+      $('#settingMode').show();
+      $('#settingMode h5 span').text(checkedbox)
+   } else {
+      $('#settingMode').hide();
+   }
 })
 
 _dom.find("tbody").on('click', '.clubChkbox', () => {
+   let allbox = $('.clubChkbox').length;
+   let checkedbox = $('.clubChkbox:checked').length;
    // 모두 체크시, 전체선택박스 체크
-   if($('.clubChkbox').length === $('.clubChkbox:checked').length){
+   if(allbox === checkedbox){
       $('#selectAllClub').prop('checked', true)
    } else {
       $('#selectAllClub').prop('checked', false)
    }
+
+   // 하나라도 체크 시, 다중선택 설정창 표시
+   if(checkedbox){
+      $('#settingMode').show();
+      $('#settingMode h5 span').text(checkedbox)
+   } else {
+      $('#settingMode').hide();
+   }
 })
+
+/**
+ * Setting Mode Func
+ */ 
+
+// Close button
+ $('#settingMode').find('.btn-warning').on('click', () => {
+   $('.clubChkbox:checked').prop('checked', false);
+   $('#settingMode').hide();
+ })
+
+ // Apply button
+ $('#settingMode').find('.btn-info').off('click').on('click', () => {
+   let $category1 = $('#multiCategory1').val();
+   let $multiShow = Number($('#multiShow').val());
+   let $multiEdit = Number($('#multiEdit').val());
+   
+   let $targetClubs = [];
+   $('.clubChkbox:checked').each(function(){       // check된 것들 cid 배열
+      $targetClubs.push($(this).data('clubid'));
+      console.log($targetClubs);
+   })
+
+   $.ajaxSettings.traditional = true;
+   $.ajax({
+      url:'/master/update',
+      type: 'POST',
+      data: {
+         category1 : $category1,
+         newauth : calcAuth(0, $multiShow, $multiEdit),
+         target : $targetClubs
+      },
+      dataType: 'text'
+   }).then(function(result){
+      // 성공적으로 변경되었다는 popup 추가!!!
+      console.log(result);      
+      dataTable.ajax.reload();
+      $('#selectAllClub').prop('checked', false);
+      $('#settingMode').hide();
+   })
+ })
+
+
 
 
 // Function Declarations
