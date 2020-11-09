@@ -16,7 +16,7 @@ const sql = require("./public/js/mysql-query");
 const createJsonDb = require("./public/js/createDB");
 const data = require("./data/skklubDB.json");
 const cors = require("cors");
-const url = require("url")
+const url = require("url");
 
 app.use(cors());
 
@@ -255,62 +255,70 @@ app.post("/getClubDetail", checkMasterAuth, (req, res) => {
                           date_format(recent_change_date,'%Y-%m-%d %H:%i') AS rec_chg_date,
                           date_format(registration_date,'%Y-%m-%d %H:%i') AS reg_date
                     FROM club_test
-                    WHERE cid=${_cid}`, null, (err, results) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(results)
-    }
-  }
-);
-})
-
-/* 특정정보 조회 */ 
-app.post("/getTargetFeature", checkMasterAuth, (req, res) => {
-  let _cid = req.body.cid;
-  let reqColumn = req.body.reqColumn.split(','); // 배열을 string 형태로 전송하므로 split으로 배열화 시켜줌
-  let reqColumnSql = '';
-  if(reqColumn){
-    for(var i in reqColumn){
-      reqColumnSql += reqColumn[i] + ','
-    }
-    reqColumnSql = reqColumnSql.substr(0, reqColumnSql.length -1);
-  }
-  sql.generalQuery(`SELECT ${reqColumnSql} FROM club_test WHERE cid=${_cid}`, null, (err, results) => {
+                    WHERE cid=${_cid}`,
+    null,
+    (err, results) => {
       if (err) {
         console.log(err);
       } else {
-        res.json(results)
+        res.json(results);
       }
     }
   );
-})
+});
+
+/* 특정정보 조회 */
+app.post("/getTargetFeature", checkMasterAuth, (req, res) => {
+  let _cid = req.body.cid;
+  let reqColumn = req.body.reqColumn.split(","); // 배열을 string 형태로 전송하므로 split으로 배열화 시켜줌
+  let reqColumnSql = "";
+  if (reqColumn) {
+    for (var i in reqColumn) {
+      reqColumnSql += reqColumn[i] + ",";
+    }
+    reqColumnSql = reqColumnSql.substr(0, reqColumnSql.length - 1);
+  }
+  sql.generalQuery(
+    `SELECT ${reqColumnSql} FROM club_test WHERE cid=${_cid}`,
+    null,
+    (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
 
 app.post("/updateAuth", checkMasterAuth, (req, res) => {
   let newauth = req.body.newauth;
-  let target = req.body.target.split(',');
-  let targetSql = ''
-  if(target){
-    for(var i in target){
-      targetSql += target[i] + ','
+  let target = req.body.target.split(",");
+  let targetSql = "";
+  if (target) {
+    for (var i in target) {
+      targetSql += target[i] + ",";
     }
-    targetSql = targetSql.substr(0, targetSql.length -1);
+    targetSql = targetSql.substr(0, targetSql.length - 1);
   }
   // UPDATE club_test SET (authority=${newauth}) WHERE cid IN (${targetSql})
   //UPDATE club SET ` + updateSql.slice(0, -2) + ` WHERE cid=${req.user.cid}`
-  sql.generalQuery(`UPDATE club_test SET authority=${newauth} WHERE cid IN (${targetSql})`, null, (err, results) => {
-    if (err) {
-      console.log(err);
-      res.send('FAIL')
-    } else {
-      console.log(`UPDATE SUCCESS (${target.length} clubs => Auth "${newauth}")`)
-      res.send('SUCCESS')
+  sql.generalQuery(
+    `UPDATE club_test SET authority=${newauth} WHERE cid IN (${targetSql})`,
+    null,
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        res.send("FAIL");
+      } else {
+        console.log(
+          `UPDATE SUCCESS (${target.length} clubs => Auth "${newauth}")`
+        );
+        res.send("SUCCESS");
+      }
     }
-  }
-);
-})
-
-
+  );
+});
 
 // register 구현 아직
 app.get("/register", checkNotAuthenticated, (req, res) => {
@@ -374,25 +382,24 @@ app.listen(process.env.PORT, () => {
 app.get("/api/:category/:campus", (req, res, next) => {
   const clubCategory = req.params.category;
   const clubCampus = req.params.campus;
-  
-  let  API_sql = `SELECT cid, cname, category1, category2, category3, campus FROM club_test WHERE category1='${clubCategory}' AND campus='${clubCampus}'`
-    sql.generalQuery(API_sql, null, (err, results) => {
-      if (err) {
-        console.log(err);
-        res.send('FAIL')
-      } else {
-        console.log('SUCCESS')
-        res.json(results);
-      }
-   }
-  );
+
+  let API_sql = `SELECT cid, cname, authority, category1, category2, category3, campus FROM club_test WHERE category1='${clubCategory}' AND campus='${clubCampus}' AND NOT (authority='0' OR authority='1')`;
+  sql.generalQuery(API_sql, null, (err, results) => {
+    if (err) {
+      console.log(err);
+      res.send("FAIL");
+    } else {
+      console.log("SUCCESS");
+      res.json(results);
+    }
+  });
 });
 
 app.get("/api/:category/:campus/:cid", (req, res, next) => {
   const clubCategory = req.params.category;
   const clubCampus = req.params.campus;
   const clubId = req.params.cid;
-  
+
   let API_sql = `SELECT 
                   cid,
                   cname,
@@ -418,15 +425,14 @@ app.get("/api/:category/:campus/:cid", (req, res, next) => {
                   recruit_process,
                   activity_location
             FROM club_test 
-            WHERE category1='${clubCategory}' AND campus='${clubCampus}' AND cid='${clubId}'`
-    sql.generalQuery(API_sql, null, (err, results) => {
-      if (err) {
-        console.log(err);
-        res.send('FAIL')
-      } else {
-        console.log('SUCCESS')
-        res.json(results);
-      }
-   }
-  );
+            WHERE category1='${clubCategory}' AND campus='${clubCampus}' AND cid='${clubId}'`;
+  sql.generalQuery(API_sql, null, (err, results) => {
+    if (err) {
+      console.log(err);
+      res.send("FAIL");
+    } else {
+      console.log("SUCCESS");
+      res.json(results);
+    }
+  });
 });
