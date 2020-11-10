@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const check = require('../public/js/check')
-const sql = require("../public/js/mysql-query");
+const sql = require("../public/js/mysql-query")
+const encrypt = require('../public/js/encrypt')
 
 // master
 router.get("/", check.checkMasterAuth, (req, res) => {
@@ -125,7 +126,7 @@ router
       if(req.body.category1){
         categorySql = `, category1='${req.body.category1}'`;
       }
-      let newauth = req.body.newauth;
+      const newauth = req.body.newauth;
       let target = req.body.target;               // target이 1개면 string으로, 여러개면 array로 넘어옴
       if(Array.isArray(target) === false){
         target = target.split(',');
@@ -148,12 +149,43 @@ router
           console.log(`UPDATE SUCCESS (${target.length} clubs => Auth "${newauth}")`)
           res.send('SUCCESS')
         }
-      }
-    );
+      });
+  })
+
+
+router
+  .post("/resetPassword", check.checkMasterAuth, (req, res) => {
+    const _target = req.body.cid
+
+    var newPassword = String(getRandomInt(100000, 999999));
+
+    encrypt.hashItem(newPassword, (hashedPassword) => {
+      
+      sql.generalQuery(`UPDATE club_test
+                        SET admin_pw='${hashedPassword}'
+                        WHERE cid=${_target}`, null, (err, results) => {
+        if (err) {
+          console.log(err);
+          res.send('FAIL')
+        } else {
+          console.log(`RESET SUCCESS => ${newPassword}`)
+          res.send(newPassword)
+        }
+      });
+      
+    })
+    
+
   })
 
 
 
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
+  }
 
 
   module.exports = router;

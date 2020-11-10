@@ -172,15 +172,15 @@ _dom.find("tbody").off("click").on("click", ".viewDetail", function () { // $([s
             txtcontent += '<span class="badge badge-pill badge-danger">수정불가</span>'
          }
 
-         // Account Managing
+         // Data Hiding for Account Managing
          let _cid = obj_result['cid']
-         $('.resetPassword').attr('id',`reset_${_cid}`)
-         $('.deleteAccount').attr('id',`delete_${_cid}`)
+         $('#dt-admin_id').data('hiddenCid', _cid)    // hide in #dt-admin_id
 
          modalTable.find('#dt-cname').append(txtcontent);
 
          // Call Modal
          $('#clubDetailModal').modal();
+
    }).fail(function(){
       alert("요청에 실패하였습니다. 다시 시도해주십시오.")
    }).always(function(){
@@ -191,10 +191,30 @@ _dom.find("tbody").off("click").on("click", ".viewDetail", function () { // $([s
 });
 
 // 비밀번호 재설정
-$('#clubDetailTabContent').find('.resetPassword').off('click').on('click', () => {
-   //**** 11/1 여기부터 - 재설정 버튼 외 콘솔 오류나??
-   let resetcid = $(this).attr('id').split('_')[1]
-   console.log(resetcid)
+$('.resetPassword').off('click').on('click', (e) => {
+   let _target = $('#dt-title').text()
+   let target_cid = $('#dt-admin_id').data('hiddenCid')
+
+   Util.showAlert({
+      alertMsg : `[ ${_target} ]의 비밀번호를 재설정하시겠습니까?`
+   })
+   
+   .done((result) => {
+      $.ajax({
+         url:'/master/resetPassword',
+         type: 'POST',
+         data: {cid : target_cid},
+         dataType: 'text'
+      })
+   
+      .done((newPassword) => {
+         alert(newPassword);
+         Util.closeAlert();
+      })
+      .fail((msg) => {
+         alert(msg)
+      })
+   })
 })
 
 

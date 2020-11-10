@@ -1,10 +1,14 @@
  const Util = {
-
+    // -----------------------------------------------------------------
+    // **** 자체 Alert Msg 사용법 ****
+    // 원하는 비동기 처리 앞에 showAlert 넣고 .then((data)=>{ 비동기 }) 처리한다.
+    // parameter로 alertTitle과 alertMsg의 option 주면 메시지 수정 가능하다.
+    // -----------------------------------------------------------------
     showAlert: function(option){
         option = option || {};
 
         if($('#alertModal').length === 0){        // when alertModal is not yet created
-            createAlertModal(option.alertTitle ? option.alertTitle : '', option.alertMsg ? option.alertMsg : '').then(()=>{
+            createAlertModal(option.alertTitle, option.alertMsg).then(()=>{
                 $('#alertModal').modal();
             });
         } else {
@@ -57,8 +61,50 @@
 
     closeAlert : function(){
         $('#alertModal').modal('hide');
+    },
+
+
+
+    showConfirmModal : function(){
+
+
+        function createConfirmModal(modalTitle, modalMsg){
+            let dfd = $.Deferred();
+
+            let modalHTML = `
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            `
+            $('body').append(modalHTML);
+
+            dfd.resolve();            
+            return dfd.promise();
+        }
+    },
+
+
+    showAlertSmall : function(){
+
+
+        function createConfirmModal(modalTitle, modalMsg){
+            let dfd = $.Deferred();
+
+            let modalHTML = `
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            `
+            $('body').append(modalHTML);
+
+            dfd.resolve();            
+            return dfd.promise();
+        }
     }
 }
-
-
-// export default Util;
