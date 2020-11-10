@@ -1,3 +1,4 @@
+
 var _dom = $(".table.clublist");
 
 const lang_kor = {
@@ -323,38 +324,52 @@ _dom.find("tbody").on('click', '.clubChkbox', () => {
 
 // Close button
  $('#settingMode').find('.btn-warning').on('click', () => {
-   $('.clubChkbox:checked').prop('checked', false);
+   $('.clubChkbox:checked, #selectAllClub').prop('checked', false);     // 모든 체크 해제
    $('#settingMode').hide();
  })
 
  // Apply button
  $('#settingMode').find('.btn-info').off('click').on('click', () => {
+   
+   // Update Info
    let $category1 = $('#multiCategory1').val();
    let $multiShow = Number($('#multiShow').val());
    let $multiEdit = Number($('#multiEdit').val());
-   
+
    let $targetClubs = [];
    $('.clubChkbox:checked').each(function(){       // check된 것들 cid 배열
       $targetClubs.push($(this).data('clubid'));
       console.log($targetClubs);
    })
+   Util.showAlert({
+      alertMsg : `
+      <b>${$targetClubs.length}개 모임</b>을 다음과 같이 변경합니다.<br><br>
+      <div class="mb-3">
+      <span style="font-size: 20px; padding: 0.7rem 3rem; border: 1px solid gray;">
+         ${$category1 === '' ? '' : $category1 + ' / ' }${$multiShow ? '공개' : '비공개' } / ${$multiEdit ? '수정가능' : '수정불가'}
+      </span>
+      </div>
+   `})
+   .then(function(data){
+      Util.closeAlert();
 
-   $.ajaxSettings.traditional = true;
-   $.ajax({
-      url:'/master/update',
-      type: 'POST',
-      data: {
-         category1 : $category1,
-         newauth : calcAuth(0, $multiShow, $multiEdit),
-         target : $targetClubs
-      },
-      dataType: 'text'
-   }).then(function(result){
-      // 성공적으로 변경되었다는 popup 추가!!!
-      console.log(result);      
-      dataTable.ajax.reload();
-      $('#selectAllClub').prop('checked', false);
-      $('#settingMode').hide();
+      $.ajaxSettings.traditional = true;
+      $.ajax({
+         url:'/master/update',
+         type: 'POST',
+         data: {
+            category1 : $category1,
+            newauth : calcAuth(0, $multiShow, $multiEdit),
+            target : $targetClubs
+         },
+         dataType: 'text'
+      }).then(function(result){
+         // 성공적으로 변경되었다는 popup 추가!!!
+         console.log(result);      
+         dataTable.ajax.reload();
+         $('#selectAllClub').prop('checked', false);
+         $('#settingMode').hide();
+      })
    })
  })
 

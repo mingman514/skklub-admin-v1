@@ -10,7 +10,7 @@ router
         const clubCategory = req.params.category;
         const clubCampus = req.params.campus;
         
-        let API_sql = `SELECT cid, cname, authority, category1, category2, category3, campus FROM club_test WHERE category1='${clubCategory}' AND campus='${clubCampus}' AND NOT (authority='0' OR authority='1')`;
+        let API_sql = `SELECT cid, cname, authority, category1, category2, category3, campus FROM club WHERE category1='${clubCategory}' AND campus='${clubCampus}' AND NOT (authority='0' OR authority='1')`;
         sql.generalQuery(API_sql, null, (err, results) => {
             if (err) {
                 console.log(err);
@@ -54,7 +54,7 @@ router
                         activity_period,
                         recruit_process,
                         activity_location
-                FROM club_test 
+                FROM club 
                 WHERE category1='${clubCategory}' AND campus='${clubCampus}' AND cid='${clubId}'`
                 
         sql.generalQuery(API_sql, null, (err, results) => {
