@@ -10,7 +10,7 @@ router
         const clubCategory = req.params.category;
         const clubCampus = req.params.campus;
         
-        let API_sql = `SELECT cid, cname, authority, category1, category2, category3, campus FROM club WHERE category1='${clubCategory}' AND campus='${clubCampus}' AND (authority='1' OR authority='3')`;
+        let API_sql = `SELECT cid, cname, authority, category1, category2, category3, campus FROM club WHERE category1='${clubCategory}' AND campus='${clubCampus}' AND authority IN (1,3,9)`;
         sql.generalQuery(API_sql, null, (err, results) => {
             if (err) {
                 console.log(err);
