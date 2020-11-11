@@ -7,13 +7,9 @@
     showAlert: function(option){
         option = option || {};
 
-        if($('#alertModal').length === 0){        // when alertModal is not yet created
-            createAlertModal(option.alertTitle, option.alertMsg).then(()=>{
-                $('#alertModal').modal();
-            });
-        } else {
+        createAlertModal(option.alertTitle, option.alertMsg).then(()=>{
             $('#alertModal').modal();
-        }
+        });
 
         let dfd = $.Deferred();
         
@@ -30,7 +26,7 @@
             let dfd = $.Deferred();
 
             let alertHTML = `
-            <div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alert-title" aria-hidden="true">
+            <div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alert-title" aria-hidden="true" data-backdrop="false">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
@@ -52,7 +48,7 @@
             </div>
             </div>
             `
-            $('body').append(alertHTML);
+            $('#moduleArea').html(alertHTML);
 
             dfd.resolve();            
             return dfd.promise();
@@ -65,46 +61,86 @@
 
 
 
-    showConfirmModal : function(){
+    showToast : function(option){
+        // https://codeseven.github.io/toastr/demo.html   Toast Generator
+        // REQUIRE => toastr.js, toastr.css
+        option = option || {};
 
-
-        function createConfirmModal(modalTitle, modalMsg){
-            let dfd = $.Deferred();
-
-            let modalHTML = `
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            `
-            $('body').append(modalHTML);
-
-            dfd.resolve();            
-            return dfd.promise();
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
         }
+        let _title = option.title ? option.title : '알림';
+        let _content = option.content ? option.content : '성공적으로 반영하였습니다.';
+        
+        switch (option.type){
+            case 'info':
+                toastr.info(_content, _title);
+                break;
+            case 'warning':
+                toastr.warning(_content, _title);
+                break;
+            case 'error':
+                toastr.error(_content, _title);
+                break;
+            case 'success':
+            default:
+                toastr.success(_content, _title);   
+        }
+        
     },
 
 
-    showAlertSmall : function(){
+    showNoticeModal : function(option){
+        // 정보제공용 모달
+        option = option || {};
 
+        createNoticeModal(option.modalTitle, option.modalMsg).then(()=>{
+            $('#noticeModal').modal();
+        });
 
-        function createConfirmModal(modalTitle, modalMsg){
-            let dfd = $.Deferred();
+        function createNoticeModal(modalTitle, modalMsg){
+            const deferred = $.Deferred();
 
             let modalHTML = `
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <div class="modal fade top" id="noticeModal" tabindex="-1" role="dialog" aria-labelledby="notice-title" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notice-title">
+                        ${modalTitle? modalTitle : '알림'}
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
-                </button>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    ${modalMsg? modalMsg : '확인하였습니다.'}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                </div>
+                </div>
+            </div>
             </div>
             `
-            $('body').append(modalHTML);
+            $('#moduleArea').html(modalHTML);
+            deferred.resolve();
 
-            dfd.resolve();            
-            return dfd.promise();
+            return deferred.promise();
         }
     }
 }

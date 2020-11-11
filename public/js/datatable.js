@@ -208,11 +208,17 @@ $('.resetPassword').off('click').on('click', (e) => {
       })
    
       .done((newPassword) => {
-         alert(newPassword);
          Util.closeAlert();
+         Util.showNoticeModal({
+            'modalTitle' : '비밀번호 재설정 완료', 
+            'modalMsg' : `[ ${_target} ] 새로운 비밀번호는 <b>${newPassword}</b> 입니다.`
+         })
       })
       .fail((msg) => {
-         alert(msg)
+         Util.showToast({
+            'type' : 'error',
+            'content' : `비밀번호 초기화에 실패하였습니다!`
+         })
       })
    })
 })
@@ -384,7 +390,12 @@ _dom.find("tbody").on('click', '.clubChkbox', () => {
          },
          dataType: 'text'
       }).then(function(result){
-         // 성공적으로 변경되었다는 popup 추가!!!
+         Util.showToast({
+            'type' : 'success',
+            'title' : `작업 완료`,
+            'content' : `성공적으로 변경되었습니다.`
+         })
+         
          console.log(result);      
          dataTable.ajax.reload();
          $('#selectAllClub').prop('checked', false);
