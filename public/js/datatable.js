@@ -1,4 +1,10 @@
 
+
+
+// ==================================
+// Datatable
+// ==================================
+
 var _dom = $(".table.clublist");
 
 const lang_kor = {
@@ -139,6 +145,10 @@ dataTable = _dom.DataTable({
 });
 
 
+
+// ==================================
+// 개별 모임정보 확인
+// ==================================
 _dom.find("tbody").off("click").on("click", ".viewDetail", function () { // $([selector]).on("click", "tr")를 통해 이벤트를 한 번만 생성하여 처리
    let _cid = $(this).data('clubid'); // get cid from 'data-clubid property'
       $.ajax({
@@ -190,7 +200,12 @@ _dom.find("tbody").off("click").on("click", ".viewDetail", function () { // $([s
 
 });
 
+
+
+// ==================================
 // 비밀번호 재설정
+// ==================================
+
 $('.resetPassword').off('click').on('click', (e) => {
    let _target = $('#dt-title').text()
    let target_cid = $('#dt-admin_id').data('hiddenCid')
@@ -224,11 +239,42 @@ $('.resetPassword').off('click').on('click', (e) => {
 })
 
 
+
+// ==================================
 // 계정 삭제
+// ==================================
 
+$('.deleteAccount').off('click').on('click', (e) => {
+   let _target = $('#dt-title').text()
+   let target_cid = $('#dt-admin_id').data('hiddenCid')
 
+   Util.showAlert({
+      alertTitle: '경고!',
+      alertMsg : `[ ${_target} ]의 계정을 삭제하시겠습니까?`
+   })
+   
+   .done((result) => {
+      $.ajax({
+         url:'/master/deleteAccount',
+         type: 'POST',
+         data: {cid : target_cid},
+         dataType: 'text'
+      })
+   
+      .done((result) => {
+         Util.closeAlert();
+         Util.showNoticeModal({
+            'type' : 'warning',
+            'modalTitle' : '계정삭제 완료', 
+            'modalMsg' : `[ ${_target} ]의 계정이 삭제되었습니다.`
+         })
+      })
+   })
+})
 
+// ==================================
 // 검색 이벤트
+// ==================================
 $("#search_btn").click(function (e) {
    e.preventDefault();
    dataTable.ajax.reload()
@@ -258,7 +304,9 @@ $('a.toggle-vis').on( 'click', function (e) {
 } );
 
 
-// 공개/수정 권한변경
+// ==================================
+// 개별 공개-수정 권한변경
+// ==================================
 _dom.find("tbody").off("change").on("change", ".custom-control-input", function () {
    let chgcid = $(this).attr('id').split('_')[1]
    let showauth = 0;
@@ -305,9 +353,10 @@ _dom.find("tbody").off("change").on("change", ".custom-control-input", function 
 })
 
 
-/**
- * Checkbox Func
- */ 
+// ==================================
+// Checkbox Func
+// ==================================
+
 // check all
 $('#selectAllClub').off('click').on('click', () => {
    // 이미 모두 체크시, 체크 해제
@@ -344,9 +393,9 @@ _dom.find("tbody").on('click', '.clubChkbox', () => {
    }
 })
 
-/**
- * Setting Mode Func
- */ 
+// ==================================
+// Multi-Setting Mode Func
+// ================================== 
 
 // Close button
  $('#settingMode').find('.btn-warning').on('click', () => {
@@ -406,8 +455,9 @@ _dom.find("tbody").on('click', '.clubChkbox', () => {
 
 
 
-
+// ==================================
 // Function Declarations
+// ==================================
 
 function isShown(auth){
    let binNum = auth.toString(2)
