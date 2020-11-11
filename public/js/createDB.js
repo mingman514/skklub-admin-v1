@@ -44,7 +44,7 @@ module.exports = function () {
             'website_link2', website_link2, 
             'recent_change_date', recent_change_date, 
             'registration_date', registration_date
-            )) from club;`,
+            )) from CLUB;`,
 
         function (error, results, fields) {
             if (error) {

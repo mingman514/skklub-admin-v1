@@ -11,7 +11,7 @@ router
         const clubCampus = req.params.campus;
         
         let API_sql = `SELECT cid, cname, authority, category1, category2, category3, campus
-                       FROM club
+                       FROM CLUB
                        WHERE category1='${clubCategory}' AND campus='${clubCampus}' AND authority NOT IN (0, 2, 4, 6)`;
 
         sql.generalQuery(API_sql, null, (err, results) => {
@@ -57,11 +57,7 @@ router
                         activity_period,
                         recruit_process,
                         activity_location
-<<<<<<< HEAD
-                FROM club 
-=======
-                FROM club
->>>>>>> 63bea68e47861b63960ef7750542c35ad501bebe
+                FROM CLUB
                 WHERE category1='${clubCategory}' AND campus='${clubCampus}' AND cid='${clubId}'`
                 
         sql.generalQuery(API_sql, null, (err, results) => {

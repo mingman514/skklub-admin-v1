@@ -61,7 +61,7 @@ router
   .route("/update")
   .get(check.checkAuthenticated, (req, res) => {
     sql.generalQuery(
-      `select * from club where cid= ?;` + `select distinct category1 from club;` + `select distinct category2 from club;`,
+      `select * from CLUB where cid= ?;` + `select distinct category1 from CLUB;` + `select distinct category2 from CLUB;`,
       [req.user.cid],
       (err, results) => {
         if (err) {

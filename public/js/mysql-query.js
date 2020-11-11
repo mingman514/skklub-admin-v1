@@ -21,7 +21,7 @@ module.exports = {
         })
     },
     // entireData: function () {
-    //     connection.query(`select * from club`, function (error, results, fields) {
+    //     connection.query(`select * from CLUB`, function (error, results, fields) {
     //         if (error) {
     //             console.log(error);
     //         } else {
@@ -32,7 +32,7 @@ module.exports = {
     //     connection.end()
     // },
     searchResult: function (input,searchColumn,callback) {
-        connection.query(`select * from club where ${searchColumn}='${input}'`, (error, results, fields) => {
+        connection.query(`select * from CLUB where ${searchColumn}='${input}'`, (error, results, fields) => {
             if (error) {
                 callback(error, null)
             } else {
@@ -41,7 +41,7 @@ module.exports = {
         })
     },
     existingOptionList: function(callback){
-        connection.query(`select distinct category1, category2 from club`, (error, results, fields) => {
+        connection.query(`select distinct category1, category2 from CLUB`, (error, results, fields) => {
             if (error) {
                 callback(error, null)
             } else {
