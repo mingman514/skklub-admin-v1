@@ -58,7 +58,7 @@ router
                         recruit_process,
                         activity_location
                 FROM CLUB
-                WHERE category1='${clubCategory}' AND campus='${clubCampus}' AND cid='${clubId}'`
+                WHERE category1='${clubCategory}' AND campus LIKE '%${clubCampus}%' AND cid='${clubId}'`
                 
         sql.generalQuery(API_sql, null, (err, results) => {
             if (err) {
