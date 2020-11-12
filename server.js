@@ -31,6 +31,7 @@ const accountRouter = require('./routes/account');
 const loginRouter = require('./routes/login');
 const masterRouter = require('./routes/master');
 const apiRouter = require('./routes/api');
+const registerRouter = require('./routes/register');
 
 
 
@@ -76,6 +77,7 @@ app.use('/account', accountRouter);
 app.use('/login', loginRouter);
 app.use('/master', masterRouter);
 app.use('/api', apiRouter);
+app.use('/register', registerRouter);
 
 
 
