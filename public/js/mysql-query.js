@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 const mysql = require('mysql')
 var connection = mysql.createConnection({
     host: process.env.HOST_NAME,
@@ -21,7 +19,7 @@ module.exports = {
         })
     },
     // entireData: function () {
-    //     connection.query(`select * from CLUB`, function (error, results, fields) {
+    //     connection.query(`select * from ${process.env.PROCESSING_DB}`, function (error, results, fields) {
     //         if (error) {
     //             console.log(error);
     //         } else {
@@ -32,7 +30,7 @@ module.exports = {
     //     connection.end()
     // },
     searchResult: function (input,searchColumn,callback) {
-        connection.query(`select * from CLUB where ${searchColumn}='${input}'`, (error, results, fields) => {
+        connection.query(`SELECT * FROM ${process.env.PROCESSING_DB} WHERE ${searchColumn}='${input}'`, (error, results, fields) => {
             if (error) {
                 callback(error, null)
             } else {
@@ -41,7 +39,7 @@ module.exports = {
         })
     },
     existingOptionList: function(callback){
-        connection.query(`select distinct category1, category2 from CLUB`, (error, results, fields) => {
+        connection.query(`SELECT DISTINCT category1, category2 FROM ${process.env.PROCESSING_DB}`, (error, results, fields) => {
             if (error) {
                 callback(error, null)
             } else {

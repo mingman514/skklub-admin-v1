@@ -1,7 +1,5 @@
 // mysql DB to json file
 
-require('dotenv').config()
-
 const fs = require('fs')
 const mysql = require('mysql')
 const path = require('path')
@@ -44,7 +42,7 @@ module.exports = function () {
             'website_link2', website_link2, 
             'recent_change_date', recent_change_date, 
             'registration_date', registration_date
-            )) from CLUB;`,
+            )) FROM ${process.env.PROCESSIING_DB};`,
 
         function (error, results, fields) {
             if (error) {

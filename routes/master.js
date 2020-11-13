@@ -60,7 +60,7 @@ router
       console.log("===================", sqlWhere);
             // ****  TEST DB에 적용중 *****
       sql.generalQuery(
-        `SELECT cid, campus, cname, category1, category2, category3, president_name, president_contact, authority FROM CLUB_TEST ${sqlWhere}`,
+        `SELECT cid, campus, cname, category1, category2, category3, president_name, president_contact, authority FROM ${process.env.PROCESSING_DB} ${sqlWhere}`,
         null,
         (err, results) => {
           if (err) {
@@ -83,7 +83,7 @@ router
         `SELECT *,
                 date_format(recent_change_date,'%Y-%m-%d %H:%i') AS rec_chg_date,
                 date_format(registration_date,'%Y-%m-%d %H:%i') AS reg_date
-        FROM CLUB_TEST
+        FROM ${process.env.PROCESSING_DB}
         WHERE cid=${_cid}`, null, (err, results) => {
           if (err) {
             console.log(err);
@@ -108,7 +108,7 @@ router
         }
         reqColsSql = reqColsSql.substr(0, reqColsSql.length -1);
       }
-      sql.generalQuery(`SELECT ${reqColsSql} FROM CLUB_TEST WHERE cid=${_cid}`, null, (err, results) => {
+      sql.generalQuery(`SELECT ${reqColsSql} FROM ${process.env.PROCESSING_DB} WHERE cid=${_cid}`, null, (err, results) => {
           if (err) {
             console.log(err);
           } else {
@@ -139,7 +139,7 @@ router
         targetSql = targetSql.substr(0, targetSql.length -1);
       }
 
-      sql.generalQuery(`UPDATE CLUB_TEST
+      sql.generalQuery(`UPDATE ${process.env.PROCESSING_DB}
                         SET authority=${newauth}${categorySql}
                         WHERE cid IN (${targetSql})`, null, (err, results) => {
         if (err) {
@@ -161,7 +161,7 @@ router
 
     encrypt.hashItem(newPassword, (hashedPassword) => {
       
-      sql.generalQuery(`UPDATE CLUB_TEST
+      sql.generalQuery(`UPDATE ${process.env.PROCESSING_DB}
                         SET admin_pw='${hashedPassword}'
                         WHERE cid=${_target}`, null, (err, results) => {
         if (err) {
@@ -180,8 +180,8 @@ router
   .post("/deleteAccount", check.checkMasterAuth, (req, res) => {
     const _target = req.body.cid
 
-    const backupSql = `INSERT INTO DELETED_CLUB SELECT * FROM CLUB_TEST WHERE cid=${_target};`
-    const deleteSql = `DELETE FROM CLUB_TEST WHERE cid=${_target};`
+    const backupSql = `INSERT INTO DELETED_CLUB SELECT * FROM ${process.env.PROCESSING_DB} WHERE cid=${_target};`
+    const deleteSql = `DELETE FROM ${process.env.PROCESSING_DB} WHERE cid=${_target};`
 
     sql.generalQuery(backupSql + deleteSql, null, (err, results) => {
         if (err) {

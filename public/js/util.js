@@ -48,7 +48,7 @@
             </div>
             </div>
             `
-            $('#moduleArea').html(alertHTML);
+            $('#modalArea').html(alertHTML);
 
             dfd.resolve();            
             return dfd.promise();
@@ -137,7 +137,7 @@
             </div>
             </div>
             `
-            $('#moduleArea').html(modalHTML);
+            $('#modalArea').html(modalHTML);
             deferred.resolve();
 
             return deferred.promise();

@@ -13,7 +13,7 @@
 <div class="card">
     <div class="card-body">
         <h3 class="text-center"> <span style="font-weight: bold;">< <%= cname %> ></span> 동아리정보 수정 </h3>
-        <form action="/info/update" method="POST" enctype="multipart/form-data">
+        <form id="updateForm" action="/info/update" method="POST">
             <div class="text-center">
                 <a href="/"><button type="button" class="btn btn-amber btn-sm">메인으로</button></a>
                 <a href="/info"><button type="button" class="btn btn-yellow btn-sm">이전으로</button></a>
@@ -30,7 +30,7 @@
                 <tr>
                     <td>동아리명</td>
                     <td><input type="text" name="cname" value="<%= result[0][0]['cname'] %>" placeholder="모임이름"> </td>
-                    <td rowspan="5"><img style="width:100%;" src="/img/logo/<%= result[0][0]['logo_path'] %>" alt="">
+                    <td rowspan="5"><img id="clubLogo" style="width:100%;" src="/img/logo/<%= result[0][0]['logo_path'] %>" alt="">
                     </td>
                 </tr>
                 <tr>
@@ -77,8 +77,16 @@
                     <td><input type="text" name="estab_year" value="<%= result[0][0]['estab_year'] %>"
                             placeholder="설립연도"> </td>
                     <td>
-                        <div><%= cname %>의 로고</div>
-                        <div><input type="file" name="logoUpload" id="logoUpload"></div>
+                        <div>
+                            <input type="file" name="logoUpload" id="logoUpload">
+                            <div style="display: none;" class="text-right">
+                                <span id="saveState">
+                                    <i class="fa fa-exclamation-circle fa-lg"></i>
+                                    <span style="font-size: smaller;color:red;"> 업로드 되지 않음</span>
+                                </span>
+                                <button type="button" id="saveUpdateBtn" class="btn btn-deep-orange btn-sm">사진 업로드</button>
+                            </div>
+                        </div>
                     </td>
                 </tr>
 
@@ -184,12 +192,128 @@
                 </tr>
             </table>
             <div class="text-center">
-                <button type="submit" class="btn btn-deep-orange btn-sm">저장하기</button>
+                <button id="saveTextBtn" type="submit" class="btn btn-deep-orange btn-sm">저장하기</button>
             </div>
         </form>
     </div>
 </div>
 </div>
 
+<div id="modalArea"></div>
 
 <%- include('./partials/scripts.ejs'); %>
+
+<script>
+
+    // Save Logo Button Toggle
+    $('#logoUpload').change( function(){
+        if($('#logoUpload').prop('files').length){
+            $('#saveUpdateBtn').parent().css('display', 'block')
+
+            // save state
+            $('#saveState i').removeClass('fa-check-circle')
+                                .addClass('fa-exclamation-circle')
+                                .css('color', 'red');
+            $('#saveState span').text(' 업로드 되지 않음')
+                                .css('color', 'red')
+
+            readURL(this);      // preview
+
+        } else {
+            $('#saveUpdateBtn').parent().css('display', 'none')
+        }
+    })
+    // Preview Logo
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        
+        reader.onload = function (e) {
+        $('#clubLogo').attr('src', e.target.result);  
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Update Ajax
+    $('#saveUpdateBtn').on('click', function(){
+
+        var data = new FormData();
+        
+        
+        var uploadedFile = $('#logoUpload').prop('files')[0];
+
+
+        // file 유효성 검사
+        var fileForm = /(.*?)\.(jpg|jpeg|png|gif|bmp|pdf)$/;
+        var maxSize = 256 * 1024        // bytes
+        if(!$('#logoUpload').val().match(fileForm)){     // file format
+            // alert('img only')
+            Util.showToast({
+                'type': 'warning',
+                'title': '경고',
+                'content': '이미지 파일만 업로드할 수 있습니다.'
+            })
+            return false;
+        } else if(uploadedFile.size > maxSize ){   // 256KB 제한
+            // 문구
+            Util.showToast({
+                'type': 'warning',
+                'title': '경고',
+                'content': `${maxSize/1024}KB 이하의 파일만 업로드할 수 있습니다.`
+            })
+            return false;
+        }
+        
+
+        Util.showAlert({
+                'alertTitle' : '알림',
+                'alertMsg' : '이미지를 업로드하시겠습니까?\n(기존 이미지는 삭제됩니다.)'
+        }).then((result) => {
+            // data binding (key-value)
+            data.append('logoUpload', uploadedFile);
+
+            $.ajax({
+                type: 'POST',               
+                processData: false, // important
+                contentType: false, // important
+                data: data,
+                url: '/info/update/logo',
+                dataType : 'json',  
+                
+                success: function(jsonData){
+                    // save state
+                    $('#saveState i').removeClass('fa-exclamation-circle')
+                                        .addClass('fa-check-circle')
+                                        .css('color', 'green');
+                    $('#saveState span').text(' 업로드 완료')
+                                        .css('color', 'black')
+                    Util.showToast({
+                    'title': '작업완료',
+                    'content': `성공적으로 업로드 되었습니다.`
+                    })
+                }
+            });
+            
+            Util.closeAlert();
+        }) 
+    });
+
+    // save text
+    $('#saveTextBtn').on('click', function(e){
+        if($('#logoUpload').val() && $('#saveState i').hasClass('fa-exclamation-circle')){      // 첨부한 파일이 존재하면서 업로드 전일때
+            e.preventDefault();
+
+            Util.showAlert({
+                'alertTitle' : '경고',
+                'alertMsg' : '로고파일이 업로드 되지 않았습니다.\n그래도 계속하시겠습니까?'
+            }).then((result) => {
+                $('#updateForm').submit()
+            })
+        } else {
+            $('#updateForm').submit()
+        }
+    })
+
+</script>

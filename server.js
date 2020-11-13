@@ -20,8 +20,6 @@ const check = require('./public/js/check')
  * Local DB
  */
 const users = require("./data/skklubDB.json");
-const createJsonDb = require("./public/js/createDB");
-
 
 /**
  *  Router 
@@ -36,15 +34,7 @@ const registerRouter = require('./routes/register');
 
 
 const initializePassport = require("./public/js/passport-config");
-initializePassport(
-  passport,
-  (admin_id) => {
-    return users.find((user) => user.admin_id === admin_id);
-  },
-  (cid) => {
-    return users.find((user) => user.cid === cid);
-  }
-  );
+initializePassport(passport);
 
   
 app.use(cors());
@@ -111,4 +101,5 @@ app.delete("/logout", (req, res) => {
 
 app.listen(process.env.PORT, () => {
   console.log(`listening on PORT http://localhost:${process.env.PORT}`);
+  console.log(`CURRENT DATABASE : ${process.env.PROCESSING_DB}`)
 });

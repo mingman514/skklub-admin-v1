@@ -4,7 +4,6 @@ const router = express.Router();
 
 const sql = require("../public/js/mysql-query");
 const check = require('../public/js/check')
-const createJsonDb = require("../public/js/createDB");   // needs update
 const multer = require("multer");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -32,13 +31,29 @@ const storage = multer.diskStorage({
         mimeType = "jpg";
       break;
     }
+    /*
+    var date = new Date();
+    var mm = date.getMonth() + 1; // getMonth() is zero-based
+    var dd = date.getDate();
+    var hh = date.getHours();
+    var mm = date.getDate();
+
+    var fullDate = [date.getFullYear(),
+                    (mm>9 ? '' : '0') + mm,
+                    (dd>9 ? '' : '0') + dd,
+                    '_',
+                    (hh>9 ? '' : '0') + hh,
+                    (mm>9 ? '' : '0') + mm
+                  ].join('');
+                  */                          // **** 나중에 여러 이미지 관리시를 대비
+    // cb(null, fullDate + '_' + _cid + '.' + mimeType)
+
     cb(null, _cid + '.' + mimeType) // 전송된 파일 이름 설정
   }
 })
 const upload = multer({ 
-  storage: storage, 
-  limits: { fileSize : 256 * 1024 } // 256KB로 크기 제한
-}).single('logoUpload'); // 용량제한 시 에러핸들링 위해 직접 실행
+  storage: storage
+}); // 용량제한 시 에러핸들링 위해 직접 실행
 
 // info
 router.get("/", check.checkAuthenticated, (req, res) => {
@@ -61,7 +76,7 @@ router
   .route("/update")
   .get(check.checkAuthenticated, (req, res) => {
     sql.generalQuery(
-      `select * from CLUB where cid= ?;` + `select distinct category1 from CLUB;` + `select distinct category2 from CLUB;`,
+      `SELECT * FROM ${process.env.PROCESSING_DB} WHERE cid= ?;` + `SELECT DISTINCT category1 FROM ${process.env.PROCESSING_DB};` + `SELECT DISTINCT category2 FROM ${process.env.PROCESSING_DB};`,
       [req.user.cid],
       (err, results) => {
         if (err) {
@@ -78,35 +93,31 @@ router
     )
   })
   .post(check.checkAuthenticated, (req, res) => {
-    // FILE UPDATE
-    upload(req, res, function(err){
-      if(err){
-        msg = `로고 업로드 중 오류가 발생하였습니다. 이미지 크기는 256KB를 넘기지 말아주세요.\n${err}`;
-        req.flash("flash", msg);
-        res.render("login.ejs");
-      }
-    })
-
     // TEXT UPDATE
     var updateSql = "";
     for (var key in req.body) {
+      if(key === 'logoUpload') continue;
       updateSql += `${key}='${req.body[key]}', `;
     }
-    updateSql =
-      `UPDATE club SET ` + updateSql.slice(0, -2) + ` WHERE cid=${req.user.cid}`;
+    updateSql = `UPDATE ${process.env.PROCESSING_DB} SET ${updateSql.slice(0, -2)} WHERE cid=${req.user.cid}`;
     sql.generalQuery(updateSql, null, (err, results) => {
       if (err) {
         console.log(err);
       } else {
-        createJsonDb(); // 세션정보 사라짐(writefile로 파일이 수정돼서 nodemon reload 작동)
-        msg = `${req.user.cname}의 정보가 변경되었습니다.\n다시 로그인해주세요.`;
-        req.flash("flash", msg);
-        res.render("login.ejs");
+        res.redirect("/info");
       }
     })
   })
 
 
 
+  // DB반영 추가!!
+// LOGO UPDATE
+router
+  .route("/update/logo")
+  .post(check.checkAuthenticated, upload.single('logoUpload'), (req, res) => {
+
+    res.json({SUCCESS: 'success'});
+})
 
 module.exports = router;

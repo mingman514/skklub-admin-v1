@@ -15,6 +15,10 @@ module.exports = {
             console.log(error);
             
         }
+    },
+
+    isHashMatched : async function(unhashedItem, hashedItem){
+        return await bcrypt.compare(unhashedItem, hashedItem)
     }
     
 
