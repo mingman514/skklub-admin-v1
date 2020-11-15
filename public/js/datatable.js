@@ -211,7 +211,7 @@ $('.resetPassword').off('click').on('click', (e) => {
    let target_cid = $('#dt-admin_id').data('hiddenCid')
 
    Util.showAlert({
-      alertMsg : `[ ${_target} ]의 비밀번호를 재설정하시겠습니까?`
+      'content' : `[ ${_target} ]의 비밀번호를 재설정하시겠습니까?`
    })
    
    .done((result) => {
@@ -225,8 +225,8 @@ $('.resetPassword').off('click').on('click', (e) => {
       .done((newPassword) => {
          Util.closeAlert();
          Util.showNoticeModal({
-            'modalTitle' : '비밀번호 재설정 완료', 
-            'modalMsg' : `[ ${_target} ] 새로운 비밀번호는 <b>${newPassword}</b> 입니다.`
+            'title' : '비밀번호 재설정 완료', 
+            'content' : `[ ${_target} ] 새로운 비밀번호는 <b>${newPassword}</b> 입니다.`
          })
       })
       .fail((msg) => {
@@ -249,8 +249,8 @@ $('.deleteAccount').off('click').on('click', (e) => {
    let target_cid = $('#dt-admin_id').data('hiddenCid')
 
    Util.showAlert({
-      alertTitle: '경고!',
-      alertMsg : `[ ${_target} ]의 계정을 삭제하시겠습니까?`
+      'title': '경고!',
+      'content' : `[ ${_target} ]의 계정을 삭제하시겠습니까?`
    })
    
    .done((result) => {
@@ -265,8 +265,8 @@ $('.deleteAccount').off('click').on('click', (e) => {
          Util.closeAlert();
          Util.showNoticeModal({
             'type' : 'warning',
-            'modalTitle' : '계정삭제 완료', 
-            'modalMsg' : `[ ${_target} ]의 계정이 삭제되었습니다.`
+            'title' : '계정삭제 완료', 
+            'content' : `[ ${_target} ]의 계정이 삭제되었습니다.`
          })
       })
    })
@@ -417,7 +417,7 @@ _dom.find("tbody").on('click', '.clubChkbox', () => {
       console.log($targetClubs);
    })
    Util.showAlert({
-      alertMsg : `
+      'content' : `
       <b>${$targetClubs.length}개 모임</b>을 다음과 같이 변경합니다.<br><br>
       <div class="mb-3">
       <span style="font-size: 20px; padding: 0.7rem 3rem; border: 1px solid gray;">

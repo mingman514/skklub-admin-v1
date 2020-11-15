@@ -7,7 +7,7 @@
     showAlert: function(option){
         option = option || {};
 
-        createAlertModal(option.alertTitle, option.alertMsg).then(()=>{
+        createAlertModal(option.title, option.content).then(()=>{
             $('#alertModal').modal();
         });
 
@@ -22,7 +22,7 @@
         
 
         // Create Alert
-        function createAlertModal(alertTitle, alertMsg){
+        function createAlertModal(title, content){
             let dfd = $.Deferred();
 
             let alertHTML = `
@@ -31,14 +31,14 @@
                 <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title w-100" id="alert-title">
-                        ${alertTitle? alertTitle : '알림'}
+                        ${title? title : '알림'}
                     </h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="alertModal-body text-center mt-4" id="alert-msg">
-                    ${alertMsg ? alertMsg : '작업을 계속하시겠습니까?'}
+                    ${content ? content : '작업을 계속하시겠습니까?'}
                 </div>
                 <div class="alertModal-footer text-center p-2">
                     <button type="button" class="btn btn-primary" id="alert-continue">예</button>
@@ -108,11 +108,11 @@
         // 정보제공용 모달
         option = option || {};
 
-        createNoticeModal(option.modalTitle, option.modalMsg).then(()=>{
+        createNoticeModal(option.title, option.content).then(()=>{
             $('#noticeModal').modal();
         });
 
-        function createNoticeModal(modalTitle, modalMsg){
+        function createNoticeModal(title, content){
             const deferred = $.Deferred();
 
             let modalHTML = `
@@ -121,14 +121,14 @@
                 <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="notice-title">
-                        ${modalTitle? modalTitle : '알림'}
+                        ${title? title : '알림'}
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body text-center">
-                    ${modalMsg? modalMsg : '확인하였습니다.'}
+                    ${content? content : '확인하였습니다.'}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>

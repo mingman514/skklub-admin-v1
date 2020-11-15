@@ -268,8 +268,8 @@
         
 
         Util.showAlert({
-                'alertTitle' : '알림',
-                'alertMsg' : '이미지를 업로드하시겠습니까?\n(기존 이미지는 삭제됩니다.)'
+                'title' : '알림',
+                'content' : '이미지를 업로드하시겠습니까?\n(기존 이미지는 삭제됩니다.)'
         }).then((result) => {
             // data binding (key-value)
             data.append('logoUpload', uploadedFile);
@@ -306,8 +306,8 @@
             e.preventDefault();
 
             Util.showAlert({
-                'alertTitle' : '경고',
-                'alertMsg' : '로고파일이 업로드 되지 않았습니다.\n그래도 계속하시겠습니까?'
+                'title' : '경고',
+                'content' : '로고파일이 업로드 되지 않았습니다.\n그래도 계속하시겠습니까?'
             }).then((result) => {
                 $('#updateForm').submit()
             })
