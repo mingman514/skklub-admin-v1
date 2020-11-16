@@ -4,9 +4,9 @@
 <script>
     window.onload = function(){
         // 사전입력 정보 불러오기 기능
-        document.querySelector(`#category1 option[value="<%= result[0][0]['category1']%>"]`).selected = true
-        document.querySelector(`#category2 option[value="<%= result[0][0]['category2']%>"]`).selected = true
-        document.querySelector(`#campus input[value="<%= result[0][0]['campus']%>"]`).checked = true
+        document.querySelector(`#category1 option[value="<%= result.category1 %>"]`).selected = true
+        document.querySelector(`#category2 option[value="<%= result.category2 %>"]`).selected = true
+        document.querySelector(`#campus input[value="<%= result.campus %>"]`).checked = true
     }
 </script>
 
@@ -29,18 +29,15 @@
                 </tr>
                 <tr>
                     <td>동아리명</td>
-                    <td><input type="text" name="cname" value="<%= result[0][0]['cname'] %>" placeholder="모임이름" disabled> </td>
-                    <td rowspan="5"><img id="clubLogo" style="width:100%;" src="/img/logo/<%= result[0][0]['logo_path'] %>" onerror="this.src = '/img/logo/alt.jpg'">
+                    <td><input type="text" name="cname" value="<%= result.cname %>" placeholder="모임이름" disabled> </td>
+                    <td rowspan="5"><img id="clubLogo" style="width:100%;" src="/img/logo/<%= result.logo_path %>" onerror="this.src = '/img/logo/alt.jpg'">
                     </td>
                 </tr>
                 <tr>
                     <td>대분류</td>
                     <td>
                         <select name="category1" id="category1">
-                            <% var category1 = result[1] %>
-                            <% for(var i=0;i<category1.length;i++){ %>
-                            <option value="<%= category1[i]['category1'] %>"><%= category1[i]['category1'] %> </option>
-                            <% } %>
+                            
                         </select>
                     </td>
                 </tr>
@@ -48,16 +45,13 @@
                     <td>중분류</td>
                     <td>
                         <select name="category2" id="category2">
-                            <% var category2 = result[2] %>
-                            <% for(var i=0;i<category2.length;i++){ %>
-                            <option value="<%= category2[i]['category2'] %>"><%= category2[i]['category2'] %> </option>
-                            <% } %>
+                           
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td>소분류</td>
-                    <td><input type="text" name="category3" value="<%= result[0][0]['category3'] %>"
+                    <td><input type="text" name="category3" value="<%= result.category3 %>"
                             placeholder="동아리 활동내용 요약"> </td>
                 </tr>
                 <tr>
@@ -74,7 +68,7 @@
                 </tr>
                 <tr>
                     <td>설립연도</td>
-                    <td><input type="text" name="estab_year" value="<%= result[0][0]['estab_year'] %>"
+                    <td><input type="text" name="estab_year" value="<%= result.estab_year %>"
                             placeholder="설립연도"> </td>
                     <td>
                         <div>
@@ -97,37 +91,37 @@
                     <td>소개글</td>
                     <td colspan="2">
                         <textarea type="text" name="intro_text"
-                            style="width:100%; min-height: 400px; padding: 15px 10px;"><%= result[0][0]['intro_text'] %></textarea>
+                            style="width:100%; min-height: 400px; padding: 15px 10px;"><%= result.intro_text %></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>핵심 소개문구</td>
                     <td colspan="2"><input type="text" name="intro_sentence"
-                            value="<%= result[0][0]['intro_sentence'] %>" style="width:80%;" placeholder="표어, 캐치프레이즈 등">
+                            value="<%= result.intro_sentence %>" style="width:80%;" placeholder="표어, 캐치프레이즈 등">
                     </td>
                 </tr>
                 <tr>
                     <td>활동내용</td>
                     <td colspan="2"><textarea type="text" name="activity_info"
-                            style="width:100%; min-height: 300px; padding: 15px 10px;"><%= result[0][0]['activity_info'] %></textarea>
+                            style="width:100%; min-height: 300px; padding: 15px 10px;"><%= result.activity_info %></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>모임시간</td>
                     <td colspan="2"><textarea type="text" name="meeting_time"
-                            style="width:100%; min-height: 100px; padding: 15px 10px;"><%= result[0][0]['meeting_time'] %></textarea>
+                            style="width:100%; min-height: 100px; padding: 15px 10px;"><%= result.meeting_time %></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>모임장소</td>
                     <td colspan="2"><input type="text" name="activity_location"
-                            value="<%= result[0][0]['activity_location'] %>" style="width:80%;"
+                            value="<%= result.activity_location %>" style="width:80%;"
                             placeholder="활동 또는 모임장소">
                     </td>
                 </tr>
                 <tr>
                     <td>활동인원</td>
-                    <td colspan="2"><input type="text" name="activity_num" value="<%= result[0][0]['activity_num'] %>"
+                    <td colspan="2"><input type="text" name="activity_num" value="<%= result.activity_num %>"
                             placeholder="대략적인 활동인원"></td>
                 </tr>
 
@@ -137,28 +131,28 @@
                 <tr>
                     <td>모집시기</td>
                     <td colspan="2"><input type="text" name="recruit_season"
-                            value="<%= result[0][0]['recruit_season'] %>" placeholder="매학기/상반기/상시모집 등">
+                            value="<%= result.recruit_season %>" placeholder="매학기/상반기/상시모집 등">
                     </td>
                 </tr>
                 <tr>
                     <td>의무활동기간</td>
                     <td colspan="2"><input type="text" name="activity_period"
-                            value="<%= result[0][0]['activity_period'] %>" placeholder="1년/3학기/없음 등"></td>
+                            value="<%= result.activity_period %>" placeholder="1년/3학기/없음 등"></td>
                 </tr>
                 <tr>
                     <td>모집방식</td>
                     <td colspan="2"><input type="text" name="recruit_process"
-                            value="<%= result[0][0]['recruit_process'] %>" placeholder="자유가입/서류/면접/실기 등">
+                            value="<%= result.recruit_process %>" placeholder="자유가입/서류/면접/실기 등">
                     </td>
                 </tr>
                 <tr>
                     <td>모집인원</td>
-                    <td colspan="2"><input type="text" name="recruit_num" value="<%= result[0][0]['recruit_num'] %>"
+                    <td colspan="2"><input type="text" name="recruit_num" value="<%= result.recruit_num %>"
                             placeholder="OO명/변동 등"></td>
                 </tr>
                 <tr>
                     <td>리쿠르팅 사이트</td>
-                    <td colspan="2"><input type="text" name="recruit_site" value="<%= result[0][0]['recruit_site'] %>"
+                    <td colspan="2"><input type="text" name="recruit_site" value="<%= result.recruit_site %>"
                             style="min-width:80%;" placeholder="구글폼, 자체사이트 등"></td>
                 </tr>
 
@@ -168,27 +162,27 @@
                 <tr>
                     <td>대표자 이름</td>
                     <td colspan="2"><input type="text" name="president_name"
-                            value="<%= result[0][0]['president_name'] %>" placeholder="모임장/대표자 이름"> </td>
+                            value="<%= result.president_name %>" placeholder="모임장/대표자 이름"> </td>
                 </tr>
                 <tr>
                     <td>대표자 연락처</td>
                     <td colspan="2"><input type="text" name="president_contact"
-                            value="<%= result[0][0]['president_contact'] %>" placeholder="모임장/대표자 연락처"> </td>
+                            value="<%= result.president_contact %>" placeholder="모임장/대표자 연락처"> </td>
                 </tr>
                 <tr>
                     <td>긴급연락처</td>
                     <td colspan="2"><input type="text" name="emergency_contact"
-                            value="<%= result[0][0]['emergency_contact'] %>" placeholder="긴급연락처"> </td>
+                            value="<%= result.emergency_contact %>" placeholder="긴급연락처"> </td>
                 </tr>
                 <tr>
                     <td>동아리 웹페이지 1</td>
                     <td colspan="2"><input type="text" name="website_link"
-                            value="<%= result[0][0]['website_link'] %>" style="min-width:80%;" placeholder="페이스북, 인스타, 블로그 등"> </td>
+                            value="<%= result.website_link %>" style="min-width:80%;" placeholder="페이스북, 인스타, 블로그 등"> </td>
                 </tr>
                 <tr>
                     <td>동아리 웹페이지 2</td>
                     <td colspan="2"><input type="text" name="website_link2"
-                            value="<%= result[0][0]['website_link2'] %>" style="min-width:80%;" placeholder="페이스북, 인스타, 블로그 등"> </td>
+                            value="<%= result.website_link2 %>" style="min-width:80%;" placeholder="페이스북, 인스타, 블로그 등"> </td>
                 </tr>
             </table>
             <div class="text-center">

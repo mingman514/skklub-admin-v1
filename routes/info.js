@@ -76,7 +76,8 @@ router
   .route("/update")
   .get(check.checkAuthenticated, (req, res) => {
     sql.generalQuery(
-      `SELECT * FROM ${process.env.PROCESSING_DB} WHERE cid= ?;` + `SELECT DISTINCT category1 FROM ${process.env.PROCESSING_DB};` + `SELECT DISTINCT category2 FROM ${process.env.PROCESSING_DB};`,
+      // `SELECT * FROM ${process.env.PROCESSING_DB} WHERE cid= ?;` + `SELECT DISTINCT category1 FROM ${process.env.PROCESSING_DB};` + `SELECT DISTINCT category2 FROM ${process.env.PROCESSING_DB};`,
+      `SELECT * FROM ${process.env.PROCESSING_DB} WHERE cid= ?;`,
       [req.user.cid],
       (err, results) => {
         if (err) {
@@ -84,7 +85,7 @@ router
           res.redirect("/info");
         } else {
           res.render("clubupdate.ejs", {
-            result: results,
+            result: results[0],
             cname: req.user.cname,
             auth: req.user.authority,
           });

@@ -181,7 +181,8 @@ router
         encrypt.hashItem(adminPw, (hashedPassword) => {
             // INSERT ACCOUNT (Default Auth = 3)
             sql.generalQuery(
-                `INSERT INTO ${process.env.PROCESSING_DB}(cname, admin_id, admin_pw, authority) VALUES('${cname}', '${adminId}', '${hashedPassword}', 3);
+                `INSERT INTO ${process.env.PROCESSING_DB}(cname, admin_id, admin_pw, authority, category1, campus)
+                VALUES('${cname}', '${adminId}', '${hashedPassword}', 3, (SELECT CATEGORY FROM REG_REGIST WHERE ID=${targetId}), (SELECT CAMPUS FROM REG_REGIST WHERE ID=${targetId}));
                 UPDATE REG_REGIST SET COMPLETED=1 WHERE ID=${targetId};`,
                 null, (err, results) => {
                             if (err) {
