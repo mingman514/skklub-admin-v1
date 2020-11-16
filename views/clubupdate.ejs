@@ -30,7 +30,7 @@
                 <tr>
                     <td>동아리명</td>
                     <td><input type="text" name="cname" value="<%= result[0][0]['cname'] %>" placeholder="모임이름"> </td>
-                    <td rowspan="5"><img id="clubLogo" style="width:100%;" src="/img/logo/<%= result[0][0]['logo_path'] %>" alt="">
+                    <td rowspan="5"><img id="clubLogo" style="width:100%;" src="/img/logo/<%= result[0][0]['logo_path'] %>" onerror="this.src = '/img/logo/alt.jpg'">
                     </td>
                 </tr>
                 <tr>

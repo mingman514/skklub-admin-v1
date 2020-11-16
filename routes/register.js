@@ -63,8 +63,8 @@ router
                                     res.json({'RESULT':'NOT_EXIST'})
                                 } else if(result.COMPLETED){
                                     res.json({'RESULT' : 'ALREADY_EXIST'})
-                                // } else if(result.TRIAL_NUM > 10){
-                                //     res.json({'RESULT' : 'OVER_TRY_LIMIT'})
+                                } else if(result.TRIAL_NUM > 10){
+                                    res.json({'RESULT' : 'OVER_TRY_LIMIT'})
                                 } else {
                                     res.json({'RESULT' : 'NEXT_STEP', 'ID' : result.ID})
                                 }
@@ -89,7 +89,8 @@ router
 
         // Update Database
         sql.generalQuery(
-            `UPDATE REG_REGIST SET VERIF_NUM=${veriCode} WHERE ID='${targetId}'; `,
+            
+            `UPDATE REG_REGIST SET VERIF_NUM=${veriCode}, VERIF_REQ_TIME=CURRENT_TIMESTAMP(), TRIAL_NUM=TRIAL_NUM+1 WHERE ID='${targetId}'; `,
             null,
             (err, results) => {
                 if (err) {
@@ -122,8 +123,75 @@ router
         const verifCode = req.body.verif_code       // 사용자가 보낸 인증번호
         
         // DB에서 인증번호 비교 후 업데이트!
+        sql.generalQuery(
+            `SELECT VERIF_NUM, VERIF_REQ_TIME FROM REG_REGIST WHERE ID=${targetId};`,
+            null,
+            (err, results) => {
+                if (err) {
+                    console.log(err);
+                    res.json({'RESULT':'FAIL'})
+                } else {
+                    var result = results[0]
+                    let _now = new Date()
+                    let timeLapsed = Math.floor( ( _now.getTime() - result.VERIF_REQ_TIME.getTime() ) / 1000 )
+                    // 시간 초과 (180 sec)
+                    if(timeLapsed > 180){
+                        res.json({'RESULT' : 'TIME_OVER'})
+                    }
+                    // 인증번호 
+                    else if(result.VERIF_NUM !== Number(verifCode)){
+                        res.json({'RESULT' : 'WRONG_CODE'})
+                    } else {
+                        res.json({'RESULT' : 'SUCCESS', 'ID' : targetId})
+                    }
+                }
+            })
+
+    })
 
 
+router
+    .post('/checkExistId', (req, res) => {
+        const adminId = req.body.adminId
+        const targetId = req.body.id
+        sql.generalQuery(
+            `SELECT EXISTS (SELECT * FROM ${process.env.PROCESSING_DB} WHERE admin_id='${adminId}') AS SUCCESS`,
+            null, (err, results) => {
+                        if (err) {
+                            console.log(err);
+                            res.json({'RESULT':'FAIL'})
+                        } else {
+                            if(results[0].SUCCESS){
+                                res.json({'RESULT':'ALREADY_EXIST'})
+                            } else {
+                                res.json({'RESULT' : 'NEXT', 'ID' : targetId})
+                            }
+                        }
+        })
+    })
+
+router
+    .post('/createAccount', (req, res) => {
+        const targetId = req.body.id
+        const cname = req.body.cname
+        const adminId = req.body.adminId
+        const adminPw = req.body.adminPw
+
+        // Encrypt adminPw
+        encrypt.hashItem(adminPw, (hashedPassword) => {
+            // INSERT ACCOUNT (Default Auth = 3)
+            sql.generalQuery(
+                `INSERT INTO ${process.env.PROCESSING_DB}(cname, admin_id, admin_pw, authority) VALUES('${cname}', '${adminId}', '${hashedPassword}', 3);
+                UPDATE REG_REGIST SET COMPLETED=1 WHERE ID=${targetId};`,
+                null, (err, results) => {
+                            if (err) {
+                                console.log(err);
+                                res.json({'RESULT':'FAIL'})
+                            } else {
+                            res.json({'RESULT':'SUCCESS'})
+                            }
+                        })
+        })
     })
 
 
@@ -134,5 +202,19 @@ function getRandomInt(min, max) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
     }
+
+
+function dateDiff(_date1, _date2) {
+    var diffDate_1 = _date1 instanceof Date ? _date1 :new Date(_date1);
+    var diffDate_2 = _date2 instanceof Date ? _date2 :new Date(_date2);
+    
+    diffDate_1 = new Date(diffDate_1.getFullYear(), diffDate_1.getMonth()+1, diffDate_1.getDate());
+    diffDate_2 = new Date(diffDate_2.getFullYear(), diffDate_2.getMonth()+1, diffDate_2.getDate());
+    
+    var diff = Math.abs(diffDate_2.getTime() - diffDate_1.getTime());
+    diff = Math.floor(diff / (1000));   // 결과를 초단위로 받아 내림
+    
+    return diff;
+}
 
 module.exports = router;
