@@ -116,8 +116,16 @@ router
 router
   .route("/update/logo")
   .post(check.checkAuthenticated, upload.single('logoUpload'), (req, res) => {
-
-    res.json({SUCCESS: 'success'});
+    sql.generalQuery(
+      `UPDATE ${process.env.PROCESSING_DB} SET logo_path='${req.file.filename}' WHERE cid= ?;`,
+      [req.user.cid],
+      (err, results) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.json({SUCCESS: 'success'});
+        }
+      })
 })
 
 module.exports = router;
