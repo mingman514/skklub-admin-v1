@@ -127,13 +127,12 @@
                 <tr>
                     <td>캠퍼스</td>
                     <td id="campus">
-                        <input type="radio" id="mr" name="campus" value="명륜">
+                        <input type="radio" id="mr" name="campus" value="명륜" disabled>
                         <label for="mr">명륜</label>
-                        <input type="radio" id="yj" name="campus" value="율전">
+                        <input type="radio" id="yj" name="campus" value="율전" disabled>
                         <label for="yj">율전</label><br>
-                        <input type="radio" id="both" name="campus" value="명륜, 율전">
-                        <label for="both">명륜/율전 통합</label><span style="font-size: smaller;color:red;">(명륜/율전 통합관리계정의 경우만
-                            선택)</span>
+                        <input type="radio" id="both" name="campus" value="명륜, 율전" disabled>
+                        <label for="both">명륜/율전 통합</label><span style="font-size: smaller;color:red;">(명륜/율전 통합관리계정)</span>
                     </td>
                 </tr>
                 <tr>
@@ -142,7 +141,7 @@
                             placeholder="설립연도"> </td>
                     <td>
                         <div>
-                            <input type="file" name="logoUpload" id="logoUpload">
+                            <input type="file" name="logoUpload" id="logoUpload" style="overflow:hidden; width:100%;">
                             <div style="display: none;" class="text-right">
                                 <span id="saveState">
                                     <i class="fa fa-exclamation-circle fa-lg"></i>
@@ -223,7 +222,7 @@
                 <tr>
                     <td>리쿠르팅 사이트</td>
                     <td colspan="2"><input type="text" name="recruit_site" value="<%= result.recruit_site %>"
-                            style="min-width:80%;" placeholder="구글폼, 자체사이트 등"></td>
+                            placeholder="구글폼, 자체사이트 등"></td>
                 </tr>
 
                 <tr>
@@ -247,12 +246,12 @@
                 <tr>
                     <td>동아리 웹페이지 1</td>
                     <td colspan="2"><input type="text" name="website_link"
-                            value="<%= result.website_link %>" style="min-width:80%;" placeholder="페이스북, 인스타, 블로그 등"> </td>
+                            value="<%= result.website_link %>" placeholder="페이스북, 인스타, 블로그 등"> </td>
                 </tr>
                 <tr>
                     <td>동아리 웹페이지 2</td>
                     <td colspan="2"><input type="text" name="website_link2"
-                            value="<%= result.website_link2 %>" style="min-width:80%;" placeholder="페이스북, 인스타, 블로그 등"> </td>
+                            value="<%= result.website_link2 %>" placeholder="페이스북, 인스타, 블로그 등"> </td>
                 </tr>
             </table>
             <div class="text-center">

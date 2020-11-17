@@ -87,7 +87,8 @@ router
 
           res.render("clubupdate.ejs", {
             result: results[0],
-            // user : req.user     // passport-config.js의 getUserByColumn 함수의 쿼리결과
+            cname: req.user.cname,
+            auth: req.user.authority,
           });
         }
       }
