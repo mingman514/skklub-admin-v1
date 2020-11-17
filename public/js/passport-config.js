@@ -26,7 +26,7 @@ function initialize(passport){
     passport.use(new LocalStrategy({ usernameField : 'admin_id'}, authenticateUser))
     passport.serializeUser((user, done) => done(null,user.cid))     // Save user info in Session
     passport.deserializeUser((cid, done) => {
-        getUserByColumn(cid, 'cid').then( user => {
+        getUserByColumn(cid, 'cid').then( user => {     // 여기 user를 매번 req에 담게 됨
             return done(null, user);
         })
     })
@@ -37,7 +37,7 @@ function getUserByColumn(inputValue, columnName){
     // User 정보 불러온 뒤 실행위해 Promise 객체 반환
     return new Promise( (resolve, reject) => {
         sql.generalQuery(
-            `SELECT admin_id, admin_pw, cid, cname, authority FROM ${process.env.PROCESSING_DB} WHERE ${columnName}='${inputValue}'`,
+            `SELECT admin_id, admin_pw, cid, cname, authority, category1, campus FROM ${process.env.PROCESSING_DB} WHERE ${columnName}='${inputValue}'`,
             null,
             (err, results) => {
                 if (err) {

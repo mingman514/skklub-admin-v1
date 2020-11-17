@@ -84,10 +84,10 @@ router
           console.log(err);
           res.redirect("/info");
         } else {
+
           res.render("clubupdate.ejs", {
             result: results[0],
-            cname: req.user.cname,
-            auth: req.user.authority,
+            // user : req.user     // passport-config.js의 getUserByColumn 함수의 쿼리결과
           });
         }
       }
@@ -97,10 +97,15 @@ router
     // TEXT UPDATE
     var updateSql = "";
     for (var key in req.body) {
-      if(key === 'logoUpload') continue;
+      if(['logoUpload', 'category2_1', 'category2_2'].includes(key)) continue;
       updateSql += `${key}='${req.body[key]}', `;
     }
-    updateSql = `UPDATE ${process.env.PROCESSING_DB} SET ${updateSql.slice(0, -2)} WHERE cid=${req.user.cid}`;
+    updateSql = `UPDATE ${process.env.PROCESSING_DB} SET ${updateSql.slice(0, -2)} WHERE cid=${req.user.cid};`;
+    // category2 직접 추가
+    let comma = req.body.category2_1 && req.body.category2_2 ? ', ' : '';
+    updateSql += `UPDATE ${process.env.PROCESSING_DB}
+                  SET category2='${blankIfNotExist(req.body['category2_1']) + comma + blankIfNotExist(req.body['category2_2'])}'
+                  WHERE cid=${req.user.cid};`
     sql.generalQuery(updateSql, null, (err, results) => {
       if (err) {
         console.log(err);
@@ -128,5 +133,14 @@ router
         }
       })
 })
+
+
+
+function blankIfNotExist(str){
+  if(str === null || str === undefined){
+    return '';
+  }
+  return str;
+}
 
 module.exports = router;
