@@ -74,6 +74,15 @@ span.viewDetail:hover{
     word-break: break-all;
 }
 
+#DataTables_Table_0_wrapper #DataTables_Table_0_paginate{
+    text-align: right;
+}
+
+#DataTables_Table_0_wrapper .paginate_button{
+    margin: 0 3px;
+}
+
+
 
 /* Master Page */
 

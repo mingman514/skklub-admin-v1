@@ -8,7 +8,7 @@
 var _dom = $(".table.clublist");
 
 const lang_kor = {
-   "decimal": "",
+   "decimal": " ",
    "emptyTable": "데이터가 없습니다.",
    "info": "총 _TOTAL_ 건",
    "infoEmpty": "0 건",
@@ -41,6 +41,7 @@ dataTable = _dom.DataTable({
    ordering: true,
    pageLength: 10,
    paging: true,
+   pagingType: "simple_numbers",
    stateSave: false,
    scrollX : true,
    autoWidth: false,
@@ -141,11 +142,17 @@ dataTable = _dom.DataTable({
       {
          "targets" : '_all',
          "className" : 'dt-center'
-      }
+      },
+      {
+         "targets": [ 0 ],
+         "visible": false,
+     },
+     {
+         "targets": [ 10 ],
+         "visible": false
+     }
    ]
 });
-
-dataTable.wrap('<div class="dataTables_scroll" style="overflow:auto;" />');
 
 // ==================================
 // 개별 모임정보 확인
@@ -291,18 +298,15 @@ $("#reset_filter").click(function (e) {
 
 
 // 관리모드시 특정 컬럼 보이기/숨기기
-// dataTable.columns([0,9]).visible(false);
-
-// 모드 전환
-$('a.toggle-vis').on( 'click', function (e) {
-   e.preventDefault();
-
-   // Get the column API object
-   var column = dataTable.column();
-
-   // Toggle the visibility
-   column.visible( ! column.visible() );
-} );
+$('#adminModeSwitch').off('click').on('click', (e) => {
+   if($(e.target).prop('checked') === true){   // e.target = clicked element
+      dataTable.columns([0,10]).visible(true);
+   } else {
+      $('.clubChkbox:checked, #selectAllClub').prop('checked', false);     // 모든 체크 해제
+      $('#settingMode').hide();
+      dataTable.columns([0,10]).visible(false);
+   }
+})
 
 
 // ==================================
