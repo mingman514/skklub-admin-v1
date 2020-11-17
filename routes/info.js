@@ -98,7 +98,7 @@ router
     // TEXT UPDATE
     var updateSql = "";
     for (var key in req.body) {
-      if(['logoUpload', 'category2_1', 'category2_2'].includes(key)) continue;
+      if(['logoUpload', 'category1', 'category2_1', 'category2_2', 'campus'].includes(key)) continue;
       updateSql += `${key}='${req.body[key]}', `;
     }
     updateSql = `UPDATE ${process.env.PROCESSING_DB} SET ${updateSql.slice(0, -2)} WHERE cid=${req.user.cid};`;
