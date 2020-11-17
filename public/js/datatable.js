@@ -8,7 +8,7 @@
 var _dom = $(".table.clublist");
 
 const lang_kor = {
-   "decimal": " ",
+   "decimal": "",
    "emptyTable": "데이터가 없습니다.",
    "info": "총 _TOTAL_ 건",
    "infoEmpty": "0 건",
