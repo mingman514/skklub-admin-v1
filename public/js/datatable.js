@@ -43,6 +43,7 @@ dataTable = _dom.DataTable({
    paging: true,
    stateSave: false,
    scrollX : true,
+   autoWidth: false,
    ajax: {
       "url": '/master/getClubList',
       "type": 'POST',
@@ -144,7 +145,7 @@ dataTable = _dom.DataTable({
    ]
 });
 
-
+dataTable.wrap('<div class="dataTables_scroll" style="overflow:auto;" />');
 
 // ==================================
 // 개별 모임정보 확인
