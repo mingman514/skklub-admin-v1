@@ -57,8 +57,15 @@ router
           sqlWhere += `AND ${fsearchCategory} LIKE '%${fsearchKey}%' `;
         }
       }
+
+      // 마스터 세부 권한 필터
+      if (req.user.authority > 3 && req.user.authority <= 6) {   // 중간관리자
+        sqlWhere += `AND authority <= 3 AND campus LIKE '%${req.user.campus}%' `;
+      } else if(req.user.authority > 6 && req.user.authority <= 8) {   // 동연관리자
+        sqlWhere += `AND authority <= 6 AND campus LIKE '%${req.user.campus}%' `;
+      }
       console.log("===================", sqlWhere);
-            // ****  TEST DB에 적용중 *****
+      
       sql.generalQuery(
         `SELECT cid, campus, cname, category1, category2, category3, president_name, president_contact, authority FROM ${process.env.PROCESSING_DB} ${sqlWhere}`,
         null,

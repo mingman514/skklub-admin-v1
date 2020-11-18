@@ -1,6 +1,13 @@
 /**
  * 이메일 인증 요청
  */
+
+// $.each($('input'), (e) => {
+//   e.keyup(fun)
+// }
+
+Util.enterSubmit($('input'), $('#requestVerif'));
+
 $('#requestVerif').off('click').on('click', () => {
     // email check
     let cname = $('#cname').val()
@@ -40,7 +47,7 @@ $('#requestVerif').off('click').on('click', () => {
           _content = '데이터베이스 오류가 발생했습니다.';
           break;
         case 'NOT_EXIST':
-          _content = '대표자명이 다르거나 스클럽 인증대상 이메일이 아닙니다.';
+          _content = '단체명이 다르거나 스클럽 인증대상 이메일이 아닙니다.';
           break;
         case 'ALREADY_EXIST':
           _content = '계정 발급이 완료된 단체입니다.';
@@ -65,6 +72,7 @@ $('#requestVerif').off('click').on('click', () => {
       }
 
       Util.showNoticeModal({ 'title' : '', 'content' : _content })
+      Util.enterSubmit($('input') , $('#verifyCodeBtn'));   // add enter event
 
       // NEXT_STEP 시, 이메일로 인증코드 보내기
       if(r.RESULT === 'NEXT_STEP'){        
@@ -145,13 +153,14 @@ $('#requestVerif').off('click').on('click', () => {
                       </div>`
                     );
 
+                    Util.enterSubmit($('input') , $('#createAccountBtn'));   // add enter event
+
                     
                     $('#createAccountBtn').off('click').on('click', function(){
                       // Valid Check
                       let adminId = $('#adminId').val()
                       let adminPw1 = $('#adminPw1').val()
                       let adminPw2 = $('#adminPw2').val()
-                      console.log(`id=${adminId}, pw1=${adminPw1}, pw2=${adminPw2}`)
                       // 1. 미입력/공백포함 여부
                       if(!adminId || !adminPw1 || !adminPw2){
                         Util.showToast({'type' : 'warning','content' : '제공된 양식을 모두 채워주세요.'})
@@ -184,7 +193,6 @@ $('#requestVerif').off('click').on('click', () => {
                       },
                         dataType: 'json'
                       }).then((r) => {
-                        console.log(r)
                         if(r.RESULT === 'FAIL'){
                           Util.showToast({'type' : 'error','content' : 'DB 조회 실패'})
                           return false;
@@ -206,7 +214,6 @@ $('#requestVerif').off('click').on('click', () => {
                           },
                             dataType: 'json'
                           }).then((r) => {
-                            console.log(r)
                             Util.showNoticeModal({
                               'title':`계정생성 완료!`,
                               'content' : `<a href="/">SKKLUB 관리페이지</a>에서 [${cname}]의 상세정보를 기입하세요.`
@@ -256,3 +263,4 @@ function lengthCheck(str, min, max){
   }
   return true;
 }
+

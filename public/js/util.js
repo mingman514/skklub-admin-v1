@@ -142,5 +142,17 @@
 
             return deferred.promise();
         }
-    }
+    },
+
+
+
+
+
+    /**
+     * Enter Event
+     */
+    enterSubmit : function (curInput, target){
+        curInput.keyup(function(e){if(e.keyCode == 13) target.click(); });
+      }
+
 }

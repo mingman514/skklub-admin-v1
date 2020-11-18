@@ -33,7 +33,7 @@ router
 
         // 이메일 중복시 단체명도 검사
         sql.generalQuery(
-            `SELECT COUNT(*) FROM REG_REGIST WHERE VERIF_EMAIL='${skkuMail}'`,
+            `SELECT COUNT(*) AS CNT FROM REG_REGIST WHERE VERIF_EMAIL='${skkuMail}'`,
             null,
             (err, results) => {
                 if (err) {
@@ -41,11 +41,14 @@ router
                     res.json({'RESULT':'SQL_ERROR'})
                 } else {
                     let SQL = ''
-                    if(results === 1){
+                    console.log(results[0])
+                    console.log(results[0].CNT)
+                    if(results[0].CNT === 1){
                         SQL = `SELECT * FROM REG_REGIST WHERE VERIF_EMAIL='${skkuMail}'`
                     } else {
                         SQL = `SELECT * FROM REG_REGIST WHERE VERIF_EMAIL='${skkuMail}' AND CNAME='${cname}'`
                     }
+                    console.log(SQL)
 
                     sql.generalQuery(
                         SQL, null, (err, results) => {
@@ -56,9 +59,7 @@ router
                                 let result = results[0]
                                 // 이메일 존재하면 인증번호 갱신
                                 // check 1. 이미 완료된 아이디
-                                // check 2. 10번 이상 시도
-                                // 인증성공시 시도 초기화 해야할듯
-                                console.log(result)
+                                // check 2. 10번 이상 인증요청
                                 if(!result){
                                     res.json({'RESULT':'NOT_EXIST'})
                                 } else if(result.COMPLETED){

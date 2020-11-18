@@ -301,6 +301,9 @@ $("#reset_filter").click(function (e) {
 $('#adminModeSwitch').off('click').on('click', (e) => {
    if($(e.target).prop('checked') === true){   // e.target = clicked element
       dataTable.columns([0,10]).visible(true);
+
+      checkAllClub();
+      checkEachClub();
    } else {
       $('.clubChkbox:checked, #selectAllClub').prop('checked', false);     // 모든 체크 해제
       $('#settingMode').hide();
@@ -363,40 +366,46 @@ _dom.find("tbody").off("change").on("change", ".custom-control-input", function 
 // ==================================
 
 // check all
-$('#selectAllClub').off('click').on('click', () => {
+function checkAllClub(){
+   $('#selectAllClub').off('click').on('click', () => {
    // 이미 모두 체크시, 체크 해제
-   if($('#selectAllClub').is(':checked')){
-      $('.clubChkbox').prop('checked', true);
-   } else {
-      $('.clubChkbox').prop('checked', false);
-   }
-   let checkedbox = $('.clubChkbox:checked').length;
-   if(checkedbox){
-      $('#settingMode').show();
-      $('#settingMode h5 span').text(checkedbox)
-   } else {
-      $('#settingMode').hide();
-   }
-})
+      if($('#selectAllClub').is(':checked')){
+         console.log('here?')
+         $('.clubChkbox').prop('checked', true);
+      } else {
+         $('.clubChkbox').prop('checked', false);
+      }
+      let checkedbox = $('.clubChkbox:checked').length;
+      console.log(checkedbox)
+      if(checkedbox){
+         $('#settingMode').show();
+         $('#settingMode h5 span').text(checkedbox)
+      } else {
+         $('#settingMode').hide();
+      }
+   })
+}
 
-_dom.find("tbody").on('click', '.clubChkbox', () => {
-   let allbox = $('.clubChkbox').length;
-   let checkedbox = $('.clubChkbox:checked').length;
-   // 모두 체크시, 전체선택박스 체크
-   if(allbox === checkedbox){
-      $('#selectAllClub').prop('checked', true)
-   } else {
-      $('#selectAllClub').prop('checked', false)
-   }
-
-   // 하나라도 체크 시, 다중선택 설정창 표시
-   if(checkedbox){
-      $('#settingMode').show();
-      $('#settingMode h5 span').text(checkedbox)
-   } else {
-      $('#settingMode').hide();
-   }
-})
+function checkEachClub(){
+   _dom.find("tbody").on('click', '.clubChkbox', () => {
+      let allbox = $('.clubChkbox').length;
+      let checkedbox = $('.clubChkbox:checked').length;
+      // 모두 체크시, 전체선택박스 체크
+      if(allbox === checkedbox){
+         $('#selectAllClub').prop('checked', true)
+      } else {
+         $('#selectAllClub').prop('checked', false)
+      }
+   
+      // 하나라도 체크 시, 다중선택 설정창 표시
+      if(checkedbox){
+         $('#settingMode').show();
+         $('#settingMode h5 span').text(checkedbox)
+      } else {
+         $('#settingMode').hide();
+      }
+   })
+}
 
 // ==================================
 // Multi-Setting Mode Func
