@@ -19,6 +19,9 @@
             </div>
           <h5 class="card-title">MY SKKLUB</h5>
           <p class="card-text">나의 동아리 정보를 확인하고 수정할 수 있어요. 내 동아리를 멋지게 소개해보세요!</p>
+          <% if(auth === 0 || auth === 1){ %>
+            <p class="card-text red-text">정보수정 권한이 없어 내용확인만 할 수 있어요 :(<br>관리자에게 문의하세요!</p>
+          <% } %>
           <div class="index-btn"><a href="/info"><button type="button" class="btn btn-primary" name="manage_club">내 동아리 정보관리</button></a></div>
         </div>
       </div>

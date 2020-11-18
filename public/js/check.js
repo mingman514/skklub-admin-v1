@@ -17,6 +17,14 @@ module.exports = {
         }
         next();
       },
+
+      checkEditable : function(req, res, next){
+        // 권한이 0, 1인 경우 이전 페이지로
+        if(req.user.authority === 0 || req.user.authority === 1){
+          return res.redirect("/")
+        }
+        next();
+      },
       
       checkMasterAuth : function(req, res, next) {
         // 마스터 계정이 아니면 index 페이지로

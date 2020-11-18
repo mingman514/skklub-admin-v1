@@ -94,7 +94,7 @@ router
       }
     )
   })
-  .post(check.checkAuthenticated, (req, res) => {
+  .post(check.checkAuthenticated, check.checkEditable, (req, res) => {
     // TEXT UPDATE
     var updateSql = "";
     for (var key in req.body) {
@@ -122,7 +122,7 @@ router
 // LOGO UPDATE
 router
   .route("/update/logo")
-  .post(check.checkAuthenticated, upload.single('logoUpload'), (req, res) => {
+  .post(check.checkAuthenticated, check.checkEditable, upload.single('logoUpload'), (req, res) => {
     sql.generalQuery(
       `UPDATE ${process.env.PROCESSING_DB} SET logo_path='${req.file.filename}' WHERE cid= ?;`,
       [req.user.cid],
