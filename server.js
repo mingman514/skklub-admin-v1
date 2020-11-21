@@ -15,6 +15,7 @@ const methodOverride = require("method-override");
 const sql = require("./public/js/mysql-query");
 const cors = require("cors");
 const check = require('./public/js/check')
+const helmet = require('helmet')
 
 /**
  * Local DB
@@ -54,6 +55,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride("_method"));
+app.use(helmet());
 
 
 app.get("/", check.checkAuthenticated, (req, res) => {
