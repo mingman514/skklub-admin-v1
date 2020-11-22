@@ -8,12 +8,13 @@ const nodemailer = require('nodemailer')
 
 const smtpTransport = nodemailer.createTransport({
     service: "Gmail",
+    pool: true,
+    host: "admin.skklub.com",
+    port: 465,
+    secure: true,
     auth: {
         user: process.env.MAIL_ADDRESS,
         pass: process.env.MAIL_PASSWORD
-    },
-    tls: {
-        rejectUnauthorized: false
     }
   });
 
