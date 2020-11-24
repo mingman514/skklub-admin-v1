@@ -28,10 +28,11 @@ module.exports = {
       
       checkMasterAuth : function(req, res, next) {
         // 마스터 계정이 아니면 index 페이지로
-        if (req.user.authority > 3) {
+        if (req.user && req.user.authority > 3) {
           // login success
           return next();
         }
-        res.redirect("/");
+        req.flash("flash", '인증정보가 만료되었습니다. 다시 로그인 해주세요.');
+        res.render('login.ejs');
       }
 }

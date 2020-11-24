@@ -7,10 +7,10 @@ const encrypt = require('../public/js/encrypt')
 
 // master
 router.get("/", check.checkMasterAuth, (req, res) => {
-    res.render("clublist.ejs", {
-      cname: req.user.cname,
-      auth: req.user.authority,
-    });
+      res.render("clublist.ejs", {
+        cname: req.user.cname,
+        auth: req.user.authority,
+      });
   });
 
 

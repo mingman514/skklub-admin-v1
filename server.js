@@ -49,7 +49,9 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false, // 변한 것이 없을때도 재저장할 것인가?
-    saveUninitialized: false, // 값이 없을때 empty value라도 저장하겠는가?
+    saveUninitialized: true, // 값이 없을때 empty value라도 저장하겠는가?
+    cookie: {maxAge : 1000 * 60 * 60 * 3},  // 만료시간 설정
+    rolling: true // reset expiration countdown whenever logged in
   })
 );
 app.use(passport.initialize());
@@ -98,6 +100,12 @@ app.post("/register", check.checkNotAuthenticated, async (req, res) => {
 app.delete("/logout", (req, res) => {
   req.logOut();
   res.redirect("/login");
+});
+
+
+// 404 NOT FOUND
+app.use((req, res, next) => {
+  res.status(404).send("<h2>[404] 요청한 페이지를 찾을 수 없습니다.</h2>");
 });
 
 
