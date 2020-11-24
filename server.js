@@ -20,7 +20,7 @@ const helmet = require('helmet')
 /**
  * Local DB
  */
-const users = require("./data/skklubDB.json");
+// const users = require("./data/skklubDB.json");
 
 /**
  *  Router 
