@@ -2,10 +2,6 @@
  * 이메일 인증 요청
  */
 
-// $.each($('input'), (e) => {
-//   e.keyup(fun)
-// }
-
 Util.enterSubmit($('input'), $('#requestVerif'));
 
 $('#requestVerif').off('click').on('click', () => {
@@ -83,6 +79,7 @@ $('#requestVerif').off('click').on('click', () => {
           data: {
             'id' : r.ID,
             'skku_mail' : skkuMail,
+            'cname' : cname
         },
           dataType: 'json'
         }).then((r) => {

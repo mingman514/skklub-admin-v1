@@ -42,8 +42,7 @@ router
                     res.json({'RESULT':'SQL_ERROR'})
                 } else {
                     let SQL = ''
-                    console.log(results[0])
-                    console.log(results[0].CNT)
+
                     if(results[0].CNT === 1){
                         SQL = `SELECT * FROM REG_REGIST WHERE VERIF_EMAIL='${skkuMail}'`
                     } else {
@@ -81,12 +80,38 @@ router
     .post('/sendVerifyCode', (req, res) => {
         const targetId = req.body.id
         const targetMail = req.body.skku_mail
+        const targetCname = req.body.cname
+
         const veriCode = getRandomInt(100000, 999999)
         const mailOptions = {
             from: process.env.MAIL_ADDRESS,
             to: targetMail,
             subject: "SKKLUB 인증메일입니다.",
-            text: `인증번호 ${veriCode}를 입력해주세요.`
+            text: `
+            
+            안녕하세요, ${targetCname} 대표자님
+            
+            ---------------------------------------
+
+            인증번호 [ ${veriCode} ]를 입력해주세요.
+            (※ 인증번호는 3분간 유효)
+
+            ---------------------------------------
+            
+            인증 과정에서 문제가 발생하거나 본인인증을 시도한 적이 없다면,
+            아래 연락처로 문의바랍니다.
+
+            SKKLUB 운영팀 드림
+
+
+            
+            < SKKLUB >
+            About      https://www.notion.so/9f2a5b7d93a54fedb36c961afa1fb254
+            Main       https://www.skklub.com/
+            Admin      https://admin.skklub.com/
+            
+            (문의 010-5686-3455 또는 010-2969-9875)
+            `
         };
 
         // Update Database
