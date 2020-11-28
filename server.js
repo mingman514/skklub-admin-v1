@@ -61,7 +61,36 @@ app.use(methodOverride("_method"));
 
 
 app.get("/", check.checkAuthenticated, (req, res) => {
-  res.render("index.ejs", { cname: req.user.cname, auth: req.user.authority });
+  let _category1 = req.user.category1;
+  let _campus = req.user.campus;
+
+  switch(_category1){
+      case '중앙동아리':
+        _category1 = 'central-clubs'; break;
+
+      case '준중앙동아리':
+      case '독립동아리':
+        _category1 = 'middle-clubs'; break;   // 추후 수정
+
+      case '소모임':
+      case '준소모임':
+        _category1 = 'small-clubs'; break;   // 추후 수정
+  }
+
+  switch(_campus){
+      case '명륜':
+        _campus = 'seoul'; break;
+      case '율전':
+        _campus = 'suwon'; break;
+  }
+
+  res.render("index.ejs", {
+    cname: req.user.cname,
+    auth: req.user.authority,
+    cid: req.user.cid,
+    campus: _campus,
+    category1: _category1
+  });
 });
 
 
@@ -110,6 +139,10 @@ app.use((req, res, next) => {
 
 
 app.listen(process.env.PORT, () => {
-  console.log(`listening on PORT http://localhost:${process.env.PORT}`);
-  console.log(`CURRENT DATABASE : ${process.env.PROCESSING_DB}`)
+  console.log(`
+  =============================================
+     Listening On..   |  http://localhost:${process.env.PORT}
+  =============================================
+    CURRENT DATABASE  |  ${process.env.PROCESSING_DB}
+  =============================================`)
 });

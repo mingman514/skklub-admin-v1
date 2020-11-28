@@ -7,9 +7,9 @@
         <div class="view overlay zoom">
             <img src="/img/skk_character.jpg" class="img-fluid " alt="">
         </div>
-        <h5 class="card-title">SKKLUB Page</h5>
+        <h5 class="card-title">MY SKKLUB</h5>
         <p class="card-text">SKKLUB은 성균관대학교 동아리를 누구나 쉽고 편하게 찾아볼 수 있는 서비스예요. SKKLUB에 소개되는 나의 동아리를 확인해보세요!</p>
-        <div class="index-btn"><a href="http://www.skklub.com/" target="_blank"><button type="button" class="btn btn-primary">SKKLUB 바로가기</button></a></div>
+        <div class="index-btn"><a href="http://www.skklub.com/<%= category1 %>/<%= campus %>/<%= cid %>" target="_blank"><button type="button" class="btn btn-primary">MY SKKLUB 바로가기</button></a></div>
       </div>
     </div>
     <div class="card">
@@ -17,7 +17,7 @@
             <div class="view overlay zoom">
                 <img src="/img/skk_character2.jpg" class="img-fluid " alt="">
             </div>
-          <h5 class="card-title">MY SKKLUB</h5>
+          <h5 class="card-title">MANAGE CLUB</h5>
           <p class="card-text">나의 동아리 정보를 확인하고 수정할 수 있어요. 내 동아리를 멋지게 소개해보세요!</p>
           <% if(auth === 0 || auth === 1){ %>
             <p class="card-text red-text">정보수정 권한이 없어 내용확인만 할 수 있어요 :(<br>관리자에게 문의하세요!</p>
