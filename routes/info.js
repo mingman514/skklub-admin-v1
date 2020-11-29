@@ -59,8 +59,8 @@ const upload = multer({
 
 // Disable Cache for displaying logo changes
 router.use((req, res, next) => {
-  res.set('Cache-Control', 'no-store')
-  next()
+  res.set('Cache-Control', 'public, max-age=0');
+  next();
 })
 
 // info
