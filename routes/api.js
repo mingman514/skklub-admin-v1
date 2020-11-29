@@ -12,7 +12,7 @@ router
         
         let API_sql = `SELECT cid, cname, authority, category1, category2, category3, campus, logo_path
                        FROM ${process.env.PROCESSING_DB}
-                       WHERE category1='${clubCategory}' AND campus='${clubCampus}' AND authority NOT IN (0, 2, 4, 6)`;
+                       WHERE 1=1${convertCategory(clubCategory)}${convertCampus(clubCampus)} AND authority NOT IN (0, 2, 4, 6)`;
 
         sql.generalQuery(API_sql, null, (err, results) => {
             if (err) {
@@ -58,7 +58,7 @@ router
                         recruit_process,
                         activity_location
                 FROM ${process.env.PROCESSING_DB}
-                WHERE category1='${clubCategory}' AND campus LIKE '%${clubCampus}%' AND cid='${clubId}'`
+                WHERE 1=1${convertCategory(clubCategory)}${convertCampus(clubCampus)} AND cid='${clubId}'`
                 
         sql.generalQuery(API_sql, null, (err, results) => {
             if (err) {
@@ -73,7 +73,35 @@ router
 
 
 
+function convertCategory(clubCategory){
+    let conditions = ' ';
+        // category converting
+    switch(clubCategory){
+        case 'central-clubs':
+            conditions += "AND category1='중앙동아리'"; break;
+        case 'independent-clubs':
+            conditions += "AND (category1='준중앙동아리' OR category1='독립동아리')"; break;
+        case 'groups':
+            conditions += "AND (category1='소모임' OR category1='준소모임')"; break;
+        default:
+            conditions = '';
+    }
+    return conditions;
+}
 
+function convertCampus(clubCampus){
+    let conditions = ' ';
+    // campus converting
+    switch(clubCampus){
+        case 'seoul':
+                conditions += "AND campus='명륜'"; break;
+        case 'suwon':
+            conditions += "AND campus='율전'"; break;
+        default:
+            conditions = '';
+    }
+    return conditions;
+}
 
 
 
