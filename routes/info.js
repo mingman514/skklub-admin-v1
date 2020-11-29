@@ -4,6 +4,7 @@ const router = express.Router();
 
 const sql = require("../public/js/mysql-query");
 const check = require('../public/js/check')
+// const sharp = require('sharp')
 const multer = require("multer");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -123,8 +124,10 @@ router
 router
   .route("/update/logo")
   .post(check.checkAuthenticated, check.checkEditable, upload.single('logoUpload'), (req, res) => {
+    let fileName = req.file.filename;
+
     sql.generalQuery(
-      `UPDATE ${process.env.PROCESSING_DB} SET logo_path='${req.file.filename}' WHERE cid= ?;`,
+      `UPDATE ${process.env.PROCESSING_DB} SET logo_path='${fileName}' WHERE cid= ?;`,
       [req.user.cid],
       (err, results) => {
         if (err) {
@@ -143,5 +146,18 @@ function blankIfNotExist(str){
   }
   return str;
 }
+
+/*
+// Image crop func (* input path != output path)
+function resizeImg(inputFilePath, outputFilePath, cb){
+  sharp(inputFilePath).resize({ height:600, width:600}).toFile(outputFilePath)
+    .then(function(newFileInfo){
+      console.log("Image Resized");
+      cb();
+    })
+    .catch(function(err){
+      console.log(err);
+});
+} */
 
 module.exports = router;

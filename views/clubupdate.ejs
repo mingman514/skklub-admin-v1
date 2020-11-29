@@ -309,7 +309,7 @@
 
 
         // file 유효성 검사
-        var fileForm = /(.*?)\.(jpg|jpeg|png|gif|bmp|pdf)$/;
+        var fileForm = /(.*?)\.(jpg|jpeg|png|gif|bmp|JPG|JPEG|PNG|GIF|BMP)$/;
         var maxSize = 256 * 1024        // bytes
         if(!$('#logoUpload').val().match(fileForm)){     // file format
             // alert('img only')

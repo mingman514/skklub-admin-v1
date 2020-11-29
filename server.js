@@ -50,7 +50,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false, // 변한 것이 없을때도 재저장할 것인가?
     saveUninitialized: true, // 값이 없을때 empty value라도 저장하겠는가?
-    cookie: {maxAge : 1000 * 60 * 60 * 3},  // 만료시간 설정
+    cookie: {maxAge : 1000 * 60 * 60 * 12},  // 만료시간 설정
     rolling: true // reset expiration countdown whenever logged in
   })
 );
