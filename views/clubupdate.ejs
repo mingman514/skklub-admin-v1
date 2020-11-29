@@ -14,10 +14,8 @@
             $(`#category2_1 option[value="${category2_1}"]`).prop('selected', true);
             $(`#category2_2 option[value="${category2_2}"]`).prop('selected', true);
         } else if( '<%= campus %>' === '명륜') {
-            console.log('2')
             $(`#category2_1 option[value="<%= category2 %>"]`).prop('selected', true);
         } else if( '<%= campus %>' === '율전') {
-            console.log('3')
             $(`#category2_2 option[value="<%= category2 %>"]`).prop('selected', true);
         }
         $(`#campus input[value="<%= campus %>"]`).prop('checked', true);

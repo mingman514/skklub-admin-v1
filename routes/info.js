@@ -57,12 +57,6 @@ const upload = multer({
 }); // 용량제한 시 에러핸들링 위해 직접 실행
 
 
-// Disable Cache for displaying logo changes
-router.use((req, res, next) => {
-  res.set('Cache-Control', 'public, max-age=0');
-  next();
-})
-
 // info
 router.get("/", check.checkAuthenticated, (req, res) => {
     sql.searchResult(req.user.cid, "cid", (err, results) => {

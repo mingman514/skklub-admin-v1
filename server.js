@@ -41,7 +41,7 @@ initializePassport(passport);
 app.use(cors());
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs"); // template engine setting
-app.use(express.static("public"));
+app.use(express.static("public"), { maxAge: 0 });
 app.use(express.urlencoded({ extended: false })); // https://velog.io/@yejinh/express-%EB%AF%B8%EB%93%A4%EC%9B%A8%EC%96%B4-bodyParser-%EB%AA%A8%EB%93%88
 // express에 bodyParser 내장
 app.use(flash());
