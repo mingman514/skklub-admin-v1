@@ -57,6 +57,7 @@ const upload = multer({
 }); // 용량제한 시 에러핸들링 위해 직접 실행
 
 
+
 // info
 router.get("/", check.checkAuthenticated, (req, res) => {
     sql.searchResult(req.user.cid, "cid", (err, results) => {
