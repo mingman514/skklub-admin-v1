@@ -27,11 +27,11 @@ router
 
       var sqlWhere = "WHERE 1=1 ";
       if (fcampus) {
-        sqlWhere += `AND campus like '%${fcampus}%' `;
+        sqlWhere += `AND campus LIKE '%${fcampus}%' `;
       }
 
       if (fcategory) {
-        sqlWhere += `AND category1='${fcategory}' `;
+        sqlWhere += `AND category1 LIKE '%${fcategory}%' `;
       }
 
       if (fshow) {
@@ -64,7 +64,10 @@ router
       } else if(req.user.authority > 6 && req.user.authority <= 8) {   // 동연관리자
         sqlWhere += `AND authority <= 6 AND campus LIKE '%${req.user.campus}%' `;
       }
-      console.log("===================", sqlWhere);
+      console.log(`
+      ==========================
+      SQL : ${sqlWhere}
+      ==========================`);
       
       sql.generalQuery(
         `SELECT cid, campus, cname, category1, category2, category3, president_name, president_contact, authority FROM ${process.env.PROCESSING_DB} ${sqlWhere}`,

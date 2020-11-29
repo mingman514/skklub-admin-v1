@@ -101,16 +101,14 @@ router
   .post(check.checkAuthenticated, check.checkEditable, (req, res) => {
     // TEXT UPDATE
     var updateSql = "";
+    
     for (var key in req.body) {
-      if(['logoUpload', 'category1', 'category2_1', 'category2_2', 'campus'].includes(key)) continue;
+      if(['logoUpload', 'category1', 'campus'].includes(key)) continue;
       updateSql += `${key}='${req.body[key]}', `;
     }
+
     updateSql = `UPDATE ${process.env.PROCESSING_DB} SET ${updateSql.slice(0, -2)} WHERE cid=${req.user.cid};`;
-    // category2 직접 추가
-    let comma = req.body.category2_1 && req.body.category2_2 ? ', ' : '';
-    updateSql += `UPDATE ${process.env.PROCESSING_DB}
-                  SET category2='${blankIfNotExist(req.body['category2_1']) + comma + blankIfNotExist(req.body['category2_2'])}'
-                  WHERE cid=${req.user.cid};`
+
     sql.generalQuery(updateSql, null, (err, results) => {
       if (err) {
         console.log(err);

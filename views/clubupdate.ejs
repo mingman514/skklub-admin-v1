@@ -6,18 +6,7 @@
     window.onload = function(){
         // 사전입력 정보 불러오기 기능
         <% var campus = result.campus, category1 = result.category1, category2 = result.category2 %>
-        
-        if('<%= campus %>'.split(',').length > 1){
-            let category2_1 = '<%= category2 %>'.split(',')[0]
-            let category2_2 = '<%= category2 %>'.split(',')[1].slice(1)
-
-            $(`#category2_1 option[value="${category2_1}"]`).prop('selected', true);
-            $(`#category2_2 option[value="${category2_2}"]`).prop('selected', true);
-        } else if( '<%= campus %>' === '명륜') {
-            $(`#category2_1 option[value="<%= category2 %>"]`).prop('selected', true);
-        } else if( '<%= campus %>' === '율전') {
-            $(`#category2_2 option[value="<%= category2 %>"]`).prop('selected', true);
-        }
+        $(`#category2 option[value="<%= category2 %>"]`).prop('selected', true);
         $(`#campus input[value="<%= campus %>"]`).prop('checked', true);
     }
 </script>
@@ -55,9 +44,9 @@
                     <td>중분류</td>
                     <td>
                         <% if(result.category1 && result.campus) { %>
-                            <% if(result.category1 === '중앙동아리' && result.campus.indexOf('명륜') > -1 ) { %>
+                            <% if(['중앙동아리','준중앙동아리', '독립동아리'].includes(result.category1) && result.campus.indexOf('명륜') > -1 ) { %>
                             <%= result.category1 %>(명륜) :
-                            <select name="category2_1" id="category2_1">
+                            <select name="category2" id="category2">
                                 <option value="평면예술">평면예술</option>
                                 <option value="연행예술">연행예술</option>
                                 <option value="봉사">봉사</option>
@@ -69,9 +58,10 @@
                                 <option value="기타">기타</option>
                             </select><br>
                             <% } %>
-                            <% if (result.category1 === '중앙동아리' && result.campus.indexOf('율전') > -1 ) { %>
+                            
+                            <% if (['중앙동아리','준중앙동아리', '독립동아리'].includes(result.category1) && result.campus.indexOf('율전') > -1 ) { %>
                             <%= result.category1 %>(율전) :
-                            <select name="category2_2" id="category2_2">
+                            <select name="category2" id="category2">
                                 <option value="평면예술">평면예술</option>
                                 <option value="연행예술">연행예술</option>
                                 <option value="봉사">봉사</option>
@@ -82,15 +72,10 @@
                                 <option value="기타">기타</option>
                             </select><br>
                             <% } %>
-                            <% if (['준중앙동아리', '독립동아리'].includes(result.category1) && result.campus.indexOf('명륜') > -1 ) { %>
-                            <!-- 기타동아리쪽 수정필요 -->
-                            <select name="category2_1" id="category2_1">
-                                <option value="학술분과">수정이 필요합니다.</option>
-                            </select>
-                            <% } %>
+                            
                             <% if (['소모임', '준소모임'].includes(result.category1) && result.campus.indexOf('명륜') > -1 ) { %>
                             <%= result.category1 %>(명륜) :
-                            <select name="category2_1" id="category2_1">
+                            <select name="category2" id="category2">
                                 <option value="경영대학">경영대학</option>
                                 <option value="경제대학">경제대학</option>
                                 <option value="문과대학">문과대학</option>
@@ -103,7 +88,7 @@
                             <% } %>
                             <% if (['소모임', '준소모임'].includes(result.category1) && result.campus.indexOf('율전') > -1 ) { %>
                             <%= result.category1 %>(율전) :
-                            <select name="category2_2" id="category2_2">
+                            <select name="category2" id="category2">
                                 <option value="공과대학">공과대학</option>
                                 <option value="생명공학대학">생명공학대학</option>
                                 <option value="소프트웨어대학">소프트웨어대학</option>
