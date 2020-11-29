@@ -10,9 +10,9 @@ router
         const clubCategory = req.params.category;
         const clubCampus = req.params.campus;
         
-        let API_sql = `SELECT cid, cname, authority, category1, category2, category3, campus
+        let API_sql = `SELECT cid, cname, authority, category1, category2, category3, campus, logo_path
                        FROM ${process.env.PROCESSING_DB}
-                       WHERE category1='${clubCategory}' AND campus LIKE '%${clubCampus}%' AND authority NOT IN (0, 2, 4, 6)`;
+                       WHERE category1='${clubCategory}' AND campus='${clubCampus}' AND authority NOT IN (0, 2, 4, 6)`;
 
         sql.generalQuery(API_sql, null, (err, results) => {
             if (err) {
