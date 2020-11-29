@@ -9,7 +9,12 @@
         </div>
         <h5 class="card-title">MY SKKLUB</h5>
         <p class="card-text">SKKLUB은 성균관대학교 동아리를 누구나 쉽고 편하게 찾아볼 수 있는 서비스예요. SKKLUB에 소개되는 나의 동아리를 확인해보세요!</p>
-        <div class="index-btn"><a href="http://www.skklub.com/<%= category1 %>/<%= campus %>/<%= cid %>" target="_blank"><button type="button" class="btn btn-primary">MY SKKLUB 바로가기</button></a></div>
+        
+        <% if(auth != 0 && auth != 2) { %>
+          <% var clubUrl = `${category1}/${campus}/${cid}` %> 
+        <% } %> 
+
+        <div class="index-btn"><a href="http://www.skklub.com/<%= clubUrl %>" target="_blank"><button type="button" class="btn btn-primary">MY SKKLUB 바로가기</button></a></div>
       </div>
     </div>
     <div class="card">
