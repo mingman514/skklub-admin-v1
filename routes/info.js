@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 
+const fs = require('fs');
 const sql = require("../public/js/mysql-query");
 const check = require('../public/js/check')
 // const sharp = require('sharp')
@@ -32,24 +33,24 @@ const storage = multer.diskStorage({
         mimeType = "jpg";
       break;
     }
-    /*
+    
     var date = new Date();
-    var mm = date.getMonth() + 1; // getMonth() is zero-based
+    var mth = date.getMonth() + 1; // getMonth() is zero-based
     var dd = date.getDate();
     var hh = date.getHours();
-    var mm = date.getDate();
+    var mm = date.getMinutes();
 
     var fullDate = [date.getFullYear(),
-                    (mm>9 ? '' : '0') + mm,
+                    (mth>9 ? '' : '0') + mth,
                     (dd>9 ? '' : '0') + dd,
                     '_',
                     (hh>9 ? '' : '0') + hh,
                     (mm>9 ? '' : '0') + mm
                   ].join('');
-                  */                          // **** 나중에 여러 이미지 관리시를 대비
-    // cb(null, fullDate + '_' + _cid + '.' + mimeType)
 
-    cb(null, _cid + '.' + mimeType) // 전송된 파일 이름 설정
+    cb(null, fullDate + '_' + _cid + '.' + mimeType)
+
+    // cb(null, _cid + '.' + mimeType) // 전송된 파일 이름 설정
   }
 })
 const upload = multer({ 
@@ -129,12 +130,22 @@ router
     let fileName = req.file.filename;
 
     sql.generalQuery(
-      `UPDATE ${process.env.PROCESSING_DB} SET logo_path='${fileName}' WHERE cid= ?;`,
-      [req.user.cid],
+      `SELECT logo_path FROM ${process.env.PROCESSING_DB} WHERE cid=${req.user.cid};
+      UPDATE ${process.env.PROCESSING_DB} SET logo_path='${fileName}' WHERE cid= ${req.user.cid};`,
+      null,
       (err, results) => {
         if (err) {
           console.log(err);
         } else {
+          // 기존파일 삭제
+          try {
+            fs.unlinkSync('public/img/logo/' + results[0][0].logo_path);
+            console.log(`successfully deleted file [${results[0][0].logo_path}]`);
+          } catch (err) {
+            // handle the error
+            console.log('Delete Fail')
+            console.log(err)
+          }
           res.json({SUCCESS: 'success'});
         }
       })
