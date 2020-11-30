@@ -349,6 +349,9 @@
 
     // save text
     $('#saveTextBtn').on('click', function(e){
+        if($('input[name="category3"]').val() === ''){
+            $('input[name="category3"]').val(' ');
+        }
         if($('#logoUpload').val() && $('#saveState i').hasClass('fa-exclamation-circle')){      // 첨부한 파일이 존재하면서 업로드 전일때
             e.preventDefault();
 
