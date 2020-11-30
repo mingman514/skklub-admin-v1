@@ -127,13 +127,13 @@ router
 
                 // Sending Mail
                 smtpTransport.sendMail(mailOptions, (error, responses) =>{
+                    console.log('Sending Email...')
                     if(error){
                         console.log(error)
                         res.json({'RESULT' : 'FAIL'})
                     }else{
-                        console.log(`Email sent! ---> VERIF_CODE = ${veriCode}`)
-                    
-                        smtpTransport.close();
+                        console.log(`Email Sent! ---> VERIF_CODE = ${veriCode}`)
+                        // smtpTransport.close();
                         res.json({'RESULT' : 'SUCCESS', 'ID' : targetId})
                     }
                 });
