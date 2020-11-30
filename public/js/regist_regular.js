@@ -43,7 +43,7 @@ $('#requestVerif').off('click').on('click', () => {
           _content = '데이터베이스 오류가 발생했습니다.';
           break;
         case 'NOT_EXIST':
-          _content = '단체명이 다르거나 스클럽 인증대상 이메일이 아닙니다.';
+          _content = '단체명이 다르거나 스클럽 인증대상 이메일이 아닙니다.<br><br><a href="https://www.notion.so/SKKLUB-26b704f0583e4637ab6d119264f2a48a">등록절차 안내 바로가기</a>';
           break;
         case 'ALREADY_EXIST':
           _content = '계정 발급이 완료된 단체입니다.';
