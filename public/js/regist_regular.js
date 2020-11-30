@@ -158,6 +158,13 @@ $('#requestVerif').off('click').on('click', () => {
                       let adminId = $('#adminId').val()
                       let adminPw1 = $('#adminPw1').val()
                       let adminPw2 = $('#adminPw2').val()
+
+                      // ID 길이 제한
+                      if( !lengthCheck(adminId, 5, 20) ){
+                        Util.showToast({'type' : 'warning','content' : '아이디는 5~20자리로 설정해주세요.'})
+                        return false;
+                      }
+
                       // 1. 미입력/공백포함 여부
                       if(!adminId || !adminPw1 || !adminPw2){
                         Util.showToast({'type' : 'warning','content' : '제공된 양식을 모두 채워주세요.'})
