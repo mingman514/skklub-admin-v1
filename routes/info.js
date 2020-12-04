@@ -104,7 +104,7 @@ router
     
     for (var key in req.body) {
       if(['logoUpload', 'category1', 'campus'].includes(key)) continue;
-      updateSql += `${key}='${req.body[key]}', `;
+      updateSql += `${key}='${escapeQuotes(req.body[key])}', `;
     }
 
     updateSql = `UPDATE ${process.env.PROCESSING_DB} SET ${updateSql.slice(0, -2)} WHERE cid=${req.user.cid};`;
@@ -156,6 +156,16 @@ function blankIfNotExist(str){
     return '';
   }
   return str;
+}
+
+/**
+ * This is for Second-hand Query. Using "\" may work in direct SQL,
+ * but if you need to process your SQL before querying, then this function may work.
+ */
+function escapeQuotes(txtContent){
+  txtContent = txtContent.replace(/'/gi,"\\'");
+  txtContent = txtContent.replace(/"/gi,'\\"');
+  return txtContent;
 }
 
 /*
