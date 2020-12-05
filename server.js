@@ -71,11 +71,11 @@ app.get("/", check.checkAuthenticated, (req, res) => {
 
       case '준중앙동아리':
       case '독립동아리':
-        _category1 = 'middle-clubs'; break;   // 추후 수정
+        _category1 = 'independent-clubs'; break;
 
       case '소모임':
       case '준소모임':
-        _category1 = 'small-clubs'; break;   // 추후 수정
+        _category1 = 'groups'; break;
   }
 
   switch(_campus){
