@@ -3,15 +3,84 @@ const router = express.Router();
 
 const sql = require("../public/js/mysql-query");
 
+    /**
+     * API FOR TEST
+     */
+router
+.get("/test/:category/:campus", (req, res, next) => {
+    const clubCategory = req.params.category;
+    const clubCampus = req.params.campus;
+    console.log("/test/:category/:campus")
+    let API_sql = `SELECT cid, cname, authority, category1, category2, category3, campus, logo_path
+                   FROM CLUB_TEST
+                   WHERE 1=1${convertCategory(clubCategory)}${convertCampus(clubCampus)} AND authority NOT IN (0, 2, 4, 6)`;
+    console.log(API_sql)
+    sql.generalQuery(API_sql, null, (err, results) => {
+        if (err) {
+            console.log(err);
+            res.send('FAIL')
+        } else {
+            console.log('SUCCESS')
+            res.json(results);
+        }
+    });
+});
 
+router
+.get("/test/:category/:campus/:cid", (req, res, next) => {
+    const clubCategory = req.params.category;
+    const clubCampus = req.params.campus;
+    const clubId = req.params.cid;
+    console.log("/test/:category/:campu/:cid")
+    let API_sql = `SELECT 
+                    cid,
+                    cname,
+                    campus,
+                    authority,
+                    category1,
+                    category2,
+                    category3,
+                    logo_path,
+                    estab_year,
+                    intro_text,
+                    recruit_num,
+                    activity_num,
+                    meeting_time,
+                    recruit_site,
+                    website_link,
+                    activity_info,
+                    website_link2,
+                    intro_sentence,
+                    president_name,
+                    recruit_season,
+                    activity_period,
+                    recruit_process,
+                    activity_location
+            FROM CLUB_TEST
+            WHERE 1=1${convertCategory(clubCategory)}${convertCampus(clubCampus)} AND cid='${clubId}'`
+            
+    sql.generalQuery(API_sql, null, (err, results) => {
+        if (err) {
+            console.log(err);
+            res.send('FAIL')
+        } else {
+            console.log('SUCCESS')
+            res.json(results);
+        }
+    });
+});
+
+ /**
+  * API For Service
+  */
 // Category/Campus Format
 router
     .get("/:category/:campus", (req, res, next) => {
         const clubCategory = req.params.category;
         const clubCampus = req.params.campus;
-        
+        console.log("/:category/:campus")
         let API_sql = `SELECT cid, cname, authority, category1, category2, category3, campus, logo_path
-                       FROM ${process.env.PROCESSING_DB}
+                       FROM CLUB
                        WHERE 1=1${convertCategory(clubCategory)}${convertCampus(clubCampus)} AND authority NOT IN (0, 2, 4, 6)`;
 
         sql.generalQuery(API_sql, null, (err, results) => {
@@ -57,7 +126,7 @@ router
                         activity_period,
                         recruit_process,
                         activity_location
-                FROM ${process.env.PROCESSING_DB}
+                FROM CLUB
                 WHERE 1=1${convertCategory(clubCategory)}${convertCampus(clubCampus)} AND cid='${clubId}'`
                 
         sql.generalQuery(API_sql, null, (err, results) => {
@@ -70,7 +139,6 @@ router
             }
         });
     });
-
 
 
 function convertCategory(clubCategory){
