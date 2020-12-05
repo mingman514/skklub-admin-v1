@@ -7,6 +7,7 @@ module.exports = {
           // login success
           return next();
         }
+        req.flash("flash", '로그인 해주세요.');
         res.redirect("/login");
       },
       
@@ -32,7 +33,6 @@ module.exports = {
           // login success
           return next();
         }
-        req.flash("flash", '인증정보가 만료되었습니다. 다시 로그인 해주세요.');
-        res.render('login.ejs');
+        res.redirect('/');
       }
 }
