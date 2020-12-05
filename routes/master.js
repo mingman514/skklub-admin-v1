@@ -4,6 +4,7 @@ const router = express.Router();
 const check = require('../public/js/check')
 const sql = require("../public/js/mysql-query")
 const encrypt = require('../public/js/encrypt')
+const log = require('../public/js/insertLog');
 
 // master
 router.get("/", check.checkMasterAuth, (req, res) => {
@@ -157,6 +158,8 @@ router
           res.send('FAIL')
         } else {
           console.log(`UPDATE SUCCESS (${target.length} clubs => Auth "${newauth}")`)
+
+          log.insertLogByCid(req.user.cid, 'CHANGE_AUTH', target + ` (auth ${newauth}${req.body.category1? '/'+ req.body.category1 : ''})`);   // write log
           res.send('SUCCESS')
         }
       });
@@ -179,6 +182,8 @@ router
           res.send('FAIL')
         } else {
           console.log(`RESET SUCCESS => ${newPassword}`)
+
+          log.insertLogByCid(req.user.cid, 'RESET_PW', String(_target));   // write log
           res.send(newPassword)
         }
       });
@@ -199,6 +204,8 @@ router
           res.send('FAIL')
         } else {
           console.log(`DELETE and BACKUP SUCCESS`)
+
+          log.insertLogByCid(req.user.cid, 'DELETE_CLUB', String(_target));   // write log
           res.send('DELETED')
         }
       });

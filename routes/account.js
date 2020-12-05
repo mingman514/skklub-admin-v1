@@ -4,6 +4,7 @@ const router = express.Router();
 const sql = require("../public/js/mysql-query");
 const check = require('../public/js/check')
 const bcrypt = require("bcrypt");                        // password hashing https://jungwoon.github.io/node.js/2017/08/07/bcrypt-nodejs/
+const log = require('../public/js/insertLog');
 
 // account
 router
@@ -50,6 +51,7 @@ router
                     res.redirect("/account");
                 } else {
                     msg = `${req.user.cname}의 계정 비밀번호가 변경되었습니다.\n다시 로그인해주세요.`;
+                    log.insertLogByCid(req.user.cid, 'CHANGE_PW', '')
                     req.logOut();
                     req.flash("flash", msg);
                     res.render("login.ejs");

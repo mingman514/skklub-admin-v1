@@ -5,6 +5,7 @@ const router = express.Router();
 const fs = require('fs');
 const sql = require("../public/js/mysql-query");
 const check = require('../public/js/check')
+const log = require('../public/js/insertLog');
 // const sharp = require('sharp')
 const multer = require("multer");
 const storage = multer.diskStorage({
@@ -113,6 +114,8 @@ router
       if (err) {
         console.log(err);
       } else {
+
+        log.insertLogByCid(req.user.cid, 'EDIT_INFO', '');    // write log
         res.redirect("/info");
       }
     })
@@ -125,7 +128,7 @@ router
 router
   .route("/update/logo")
   .post(check.checkAuthenticated, check.checkEditable, upload.single('logoUpload'), (req, res) => {
-    let fileName = req.file.filename;
+    var fileName = req.file.filename;
 
     sql.generalQuery(
       `SELECT logo_path FROM ${process.env.PROCESSING_DB} WHERE cid=${req.user.cid};
@@ -144,6 +147,8 @@ router
             console.log('Delete Fail')
             console.log(err)
           }
+
+          log.insertLogByCid(req.user.cid, 'UPLOAD_FILE', fileName);    // write log
           res.json({SUCCESS: 'success'});
         }
       })

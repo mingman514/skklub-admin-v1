@@ -1,6 +1,7 @@
 const LocalStrategy = require('passport-local').Strategy
 const sql = require("./mysql-query");
 const encrypt = require('./encrypt')
+const log = require('./insertLog')
 
 function initialize(passport){
     const authenticateUser = async (admin_id, password, done) => {
@@ -13,8 +14,10 @@ function initialize(passport){
 
         try {
             if( await encrypt.isHashMatched(password, user.admin_pw)){
+                log.insertLogByCid(user.cid, 'LOGIN', 'SUCCESS')
                 return done(null, user)
             } else{
+                log.insertLogByCid(user.cid, 'LOGIN', 'FAIL')
                 return done(null, false, { message : '비밀번호가 틀립니다.' })
             }
         } catch (e) {
