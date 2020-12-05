@@ -10,8 +10,10 @@
             <label class="custom-control-label" for="adminModeSwitch">관리모드</label>
           </div>
         <!-- 검색조건 -->
-        <div class="text-right">
+        <div style="overflow: auto;">
+        <div class="d-flex justify-content-end text-right" style="min-width: 408px;">
             <form action="/search" id="filterform">
+                <div class="d-inline-block mt-2">
                 <select name="show" class="filtSelect custom-select-sm">
                     <option value="">공개여부</option>
                     <option value="yes">공개중</option>
@@ -34,7 +36,8 @@
                     <option value="독립동아리">독립동아리</option>
                     <option value="소모임">소모임/준소모임</option>
                 </select>
-                <div style="display:inline-block; margin: 5px 0;">
+                </div>
+                <div class="d-inline-block mt-2">
                     <select name="searchCategory" class="filtSelect">
                         <option value="cname">모임명</option>
                         <option value="category2">중분류</option>
@@ -47,6 +50,7 @@
                     <button class="btn btn-dark btn-sm" type="reset" id="reset_filter" title="초기화"><span class="fas fa-sync"></span></button>
                 </div>
             </form>
+        </div>
         </div>
         <table class="table clublist">
             <thead>
