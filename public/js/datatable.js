@@ -292,7 +292,7 @@ $("#reset_filter").click(function (e) {
    $('#filterform').each(function () {
       this.reset();
    })
-   $("#searchKey").focus();
+   // $("#searchKey").focus(); // 모바일 시 불편할 수 있음
    dataTable.ajax.reload()
 });
 
