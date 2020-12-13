@@ -6,9 +6,9 @@ const sql = require("./mysql-query");
 
 module.exports = {
 
-    insertLogByCid : function(cid, logName, actionDetail){
+    insertLogByCid : function(cid, ip, logName, actionDetail){
         // Get IP
-        getIP().then((ip)=> {
+        // getIP().then((ip)=> {
 
             // Get log meta data
             sql.generalQuery(`
@@ -20,9 +20,9 @@ module.exports = {
                 console.log('Log Write SUCCESS');
             })
 
-        }).catch((error) => {
-            console.error(error);
-        });
+        // }).catch((error) => {
+        //     console.error(error);
+        // });
     }
 
 }

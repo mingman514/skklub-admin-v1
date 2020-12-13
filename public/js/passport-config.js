@@ -13,7 +13,7 @@ function initialize(passport){
 
         try {
             if( await encrypt.isHashMatched(password, user.admin_pw)){
-                return done(null, user)
+                return done(null, user, { cid : user.cid })
             } else{
                 return done(null, false, { message : '비밀번호가 틀립니다.', cid : user.cid })
             }
