@@ -11,7 +11,7 @@ module.exports = {
             FROM MAN_LOG_CODE
             WHERE LOG_NAME='${logName}';
             `, null, (err, results) => {
-            console.log('Log Write SUCCESS');
+            console.log(`Log Write SUCCESS : ${logName} ${actionDetail ? '| ' + actionDetail : ""}`);
         })
 
     },
