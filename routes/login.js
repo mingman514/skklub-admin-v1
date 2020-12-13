@@ -19,7 +19,6 @@ router
     //   failureFlash: true,
     // })
     (req, res, next) => { passport.authenticate('local', (err, user, info) => { // info에 passport-config.js에서 autheticateUser로 return한 message, cid 담김
-      console.log(`req user: ${JSON.stringify(info)}`)
         if (err) return next(err);
 
         // Login Fail
