@@ -51,7 +51,7 @@ router
                     res.redirect("/account");
                 } else {
                     msg = `${req.user.cname}의 계정 비밀번호가 변경되었습니다.\n다시 로그인해주세요.`;
-                    log.insertLogByCid(req.user.cid, 'CHANGE_PW', '')
+                    log.insertLogByCid(req.user.cid, log.getClientIp(req), 'CHANGE_PW', '')
                     req.logOut();
                     req.flash("flash", msg);
                     res.render("login.ejs");

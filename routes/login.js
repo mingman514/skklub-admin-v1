@@ -15,14 +15,8 @@ router
     .post(
     (req, res, next) => { passport.authenticate('local', (err, user, info) => { // info에 passport-config.js에서 autheticateUser로 return한 message, cid 담김
 
-      // Get IP
-      var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      if(ip.indexOf(':') > -1 ) {
-        let splitedIp = ip.split(':');
-        ip = splitedIp[splitedIp.length - 1]
-      }
-      console.log(ip)
-
+      let ip = log.getClientIp(req);
+      
         if (err) return next(err);
 
         // Login Fail

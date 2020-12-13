@@ -159,7 +159,7 @@ router
         } else {
           console.log(`UPDATE SUCCESS (${target.length} clubs => Auth "${newauth}")`)
 
-          log.insertLogByCid(req.user.cid, 'CHANGE_AUTH', target + ` (auth ${newauth}${req.body.category1? '/'+ req.body.category1 : ''})`);   // write log
+          log.insertLogByCid(req.user.cid, log.getClientIp(req),'CHANGE_AUTH', target + ` (auth ${newauth}${req.body.category1? '/'+ req.body.category1 : ''})`);   // write log
           res.send('SUCCESS')
         }
       });
@@ -183,7 +183,7 @@ router
         } else {
           console.log(`RESET SUCCESS => ${newPassword}`)
 
-          log.insertLogByCid(req.user.cid, 'RESET_PW', String(_target));   // write log
+          log.insertLogByCid(req.user.cid, log.getClientIp(req),'RESET_PW', String(_target));   // write log
           res.send(newPassword)
         }
       });
@@ -205,7 +205,7 @@ router
         } else {
           console.log(`DELETE and BACKUP SUCCESS`)
 
-          log.insertLogByCid(req.user.cid, 'DELETE_CLUB', String(_target));   // write log
+          log.insertLogByCid(req.user.cid, log.getClientIp(req),'DELETE_CLUB', String(_target));   // write log
           res.send('DELETED')
         }
       });

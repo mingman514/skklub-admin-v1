@@ -115,7 +115,7 @@ router
         console.log(err);
       } else {
 
-        log.insertLogByCid(req.user.cid, 'EDIT_INFO', '');    // write log
+        log.insertLogByCid(req.user.cid, log.getClientIp(req),'EDIT_INFO', '');    // write log
         res.redirect("/info");
       }
     })
@@ -148,7 +148,7 @@ router
             console.log(err)
           }
 
-          log.insertLogByCid(req.user.cid, 'UPLOAD_FILE', fileName);    // write log
+          log.insertLogByCid(req.user.cid, log.getClientIp(req), 'UPLOAD_FILE', fileName);    // write log
           res.json({SUCCESS: 'success'});
         }
       })
