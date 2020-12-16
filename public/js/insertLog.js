@@ -19,8 +19,6 @@ module.exports = {
     getClientIp: function (req) {
         // Get IP
         var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-        console.log(req.headers['x-forwarded-for'])
-        console.log(req.connection.remoteAddress)
         if (ip.indexOf(':') > -1) {
             let splitedIp = ip.split(':');
             ip = splitedIp[splitedIp.length - 1]
