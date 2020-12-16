@@ -24,7 +24,7 @@ router
           // in case ID matched but PW wrong
           if(info.cid) {log.insertLogByCid(info.cid, ip, 'LOGIN', 'FAIL');}
 
-          req.flash("error", info.message);
+          req.flash("flash", info.message);
           return res.render('login.ejs')
         };
 

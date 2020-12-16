@@ -7,7 +7,7 @@ module.exports = {
           // login success
           return next();
         }
-        req.flash("error", '로그인 해주세요');
+        req.flash("flash", '로그인 해주세요');
         res.redirect("/login");
       },
       
@@ -23,6 +23,7 @@ module.exports = {
         // 권한이 0, 1인 경우 이전 페이지로
         try{
           if(req.user.authority === 0 || req.user.authority === 1){
+            req.flash("flash", "권한이 없습니다");
             return res.redirect("/")
           }
           next();
@@ -40,6 +41,7 @@ module.exports = {
           }
           res.redirect('/');
         } catch (e) {
+          req.flash("flash", "권한이 없습니다");
           res.redirect('/');
         }
       }
