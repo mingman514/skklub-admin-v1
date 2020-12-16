@@ -7,7 +7,7 @@ module.exports = {
           // login success
           return next();
         }
-        req.flash("flash", '로그인 해주세요.');
+        req.flash("error", '로그인 해주세요');
         res.redirect("/login");
       },
       
@@ -21,18 +21,26 @@ module.exports = {
 
       checkEditable : function(req, res, next){
         // 권한이 0, 1인 경우 이전 페이지로
-        if(req.user.authority === 0 || req.user.authority === 1){
+        try{
+          if(req.user.authority === 0 || req.user.authority === 1){
+            return res.redirect("/")
+          }
+          next();
+        } catch(e) {
           return res.redirect("/")
         }
-        next();
       },
       
       checkMasterAuth : function(req, res, next) {
         // 마스터 계정이 아니면 index 페이지로
-        if (req.user && req.user.authority > 3) {
-          // login success
-          return next();
+        try{
+          if (req.user && req.user.authority > 3) {
+            // login success
+            return next();
+          }
+          res.redirect('/');
+        } catch (e) {
+          res.redirect('/');
         }
-        res.redirect('/');
       }
 }
