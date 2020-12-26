@@ -1,4 +1,11 @@
-<%- include('./partials/header.ejs'); %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <%- include('./partials/header.ejs'); %>
+    <link href="/lib/DataTables-1.10.23/css/datatables.css" rel="stylesheet">
+</head>
+<body>
+    
 <%- include('./partials/navbar.ejs'); %>
 
 <div class="card">
@@ -312,8 +319,14 @@
   <div id="modalArea">
     
   </div>
-  <%- include('./partials/footer.ejs'); %>
-  <%- include('./partials/scripts.ejs'); %>
-<script src="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"></script>
-<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+</body>
+
+<%- include('./partials/footer.ejs'); %>
+<%- include('./partials/scripts.ejs'); %>
+  
+<script type="text/javascript" src="/lib/DataTables-1.10.23/js/datatables.js"></script>
 <script type="module" src="/js/clublist.js"></script>
+
+
+</html>

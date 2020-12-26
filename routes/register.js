@@ -33,7 +33,7 @@ router
         let skkuMail = req.body.skku_mail
 
         // 이메일 중복시 단체명도 검사
-        sql.generalQuery(
+        sql.requestData(
             `SELECT COUNT(*) AS CNT FROM REG_REGIST WHERE VERIF_EMAIL='${skkuMail}'`,
             null,
             (err, results) => {
@@ -50,7 +50,7 @@ router
                     }
                     console.log(SQL)
 
-                    sql.generalQuery(
+                    sql.requestData(
                         SQL, null, (err, results) => {
                             if (err) {
                                 console.log(err);
@@ -115,7 +115,7 @@ router
         };
 
         // Update Database
-        sql.generalQuery(
+        sql.requestData(
             
             `UPDATE REG_REGIST SET VERIF_NUM=${veriCode}, VERIF_REQ_TIME=CURRENT_TIMESTAMP(), TRIAL_NUM=TRIAL_NUM+1 WHERE ID='${targetId}'; `,
             null,
@@ -150,7 +150,7 @@ router
         const verifCode = req.body.verif_code       // 사용자가 보낸 인증번호
         
         // DB에서 인증번호 비교 후 업데이트!
-        sql.generalQuery(
+        sql.requestData(
             `SELECT VERIF_NUM, VERIF_REQ_TIME FROM REG_REGIST WHERE ID=${targetId};`,
             null,
             (err, results) => {
@@ -181,7 +181,7 @@ router
     .post('/checkExistId', (req, res) => {
         const adminId = req.body.adminId
         const targetId = req.body.id
-        sql.generalQuery(
+        sql.requestData(
             `SELECT EXISTS (SELECT * FROM ${process.env.PROCESSING_DB} WHERE admin_id='${adminId}') AS SUCCESS`,
             null, (err, results) => {
                         if (err) {
@@ -207,7 +207,7 @@ router
         // Encrypt adminPw
         encrypt.hashItem(adminPw, (hashedPassword) => {
             // INSERT ACCOUNT (Default Auth = 3)
-            sql.generalQuery(
+            sql.requestData(
                 `INSERT INTO ${process.env.PROCESSING_DB}(cname, admin_id, admin_pw, authority, category1, campus)
                 VALUES('${cname}', '${adminId}', '${hashedPassword}', 3, (SELECT CATEGORY FROM REG_REGIST WHERE ID=${targetId}), (SELECT CAMPUS FROM REG_REGIST WHERE ID=${targetId}));
                 UPDATE REG_REGIST SET COMPLETED=1 WHERE ID=${targetId};`,

@@ -40,7 +40,7 @@ router
             }
         };
         _bcrypt((hashedPassword) => {
-            sql.generalQuery(
+            sql.requestData(
             `UPDATE ${process.env.PROCESSING_DB} SET admin_pw='${hashedPassword}' WHERE cid=${req.user.cid}`,
             null,
             (err, results) => {

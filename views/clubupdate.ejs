@@ -1,20 +1,16 @@
-<%- include('./partials/header.ejs'); %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <%- include('./partials/header.ejs'); %>
+</head>
+<body>
+
 <%- include('./partials/navbar.ejs'); %>
-
-
-<script>
-    window.onload = function(){
-        // 사전입력 정보 불러오기 기능
-        <% var campus = result.campus, category1 = result.category1, category2 = result.category2 %>
-        $(`#category2 option[value="<%= category2 %>"]`).prop('selected', true);
-        $(`#campus input[value="<%= campus %>"]`).prop('checked', true);
-    }
-</script>
 
 <div class="card">
     <div class="card-body">
-        <h3 class="text-center"> <span style="font-weight: bold;">< <%= result.cname %> ></span> 동아리정보 수정 </h3>
-        <form id="updateForm" action="/info/update" method="POST">
+        <h3 class="text-center"> <span style="font-weight: bold;">< <%= cname %> ></span> 동아리정보 수정 </h3>
+        <form id="updateForm" action="/info/update/text" method="POST">
             <div class="text-center">
                 <a href="/"><button type="button" class="btn btn-amber btn-sm">메인으로</button></a>
                 <a href="/info"><button type="button" class="btn btn-yellow btn-sm">이전으로</button></a>
@@ -30,82 +26,23 @@
                 </tr>
                 <tr>
                     <td>동아리명</td>
-                    <td><input type="text" value="<%= result.cname %>" placeholder="모임이름" disabled> </td>
-                    <td rowspan="5"><img id="clubLogo" style="width:100%;" src="/img/logo/<%= result.logo_path %>" onerror="this.src = '/img/logo/alt.jpg'">
+                    <td><input type="text" value="<%= cname %>" placeholder="모임이름" disabled> </td>
+                    <td rowspan="5"><img id="club_logo" style="width:100%;" src="/img/logo/alt.jpg">
                     </td>
                 </tr>
                 <tr>
                     <td>대분류</td>
                     <td>
-                        <input type="text" name="category1" value="<%= result.category1 %>" placeholder="모임분류" disabled>
+                        <input type="text" id="category1" name="category1" value="" placeholder="모임분류" disabled>
                     </td>
                 </tr>
                 <tr>
                     <td>중분류</td>
-                    <td>
-                        <% if(result.category1 && result.campus) { %>
-                            <% if(['중앙동아리','준중앙동아리', '독립동아리'].includes(result.category1) && result.campus.indexOf('명륜') > -1 ) { %>
-                            <%= result.category1 %>(명륜) :
-                            <select name="category2" id="category2">
-                                <option value="평면예술">평면예술</option>
-                                <option value="연행예술">연행예술</option>
-                                <option value="봉사">봉사</option>
-                                <option value="취미교양">취미교양</option>
-                                <option value="스포츠">스포츠</option>
-                                <option value="종교분과">종교분과</option>
-                                <option value="학술분과">학술분과</option>
-                                <option value="인문사회">인문사회</option>
-                                <option value="기타">기타</option>
-                            </select><br>
-                            <% } %>
-                            
-                            <% if (['중앙동아리','준중앙동아리', '독립동아리'].includes(result.category1) && result.campus.indexOf('율전') > -1 ) { %>
-                            <%= result.category1 %>(율전) :
-                            <select name="category2" id="category2">
-                                <option value="평면예술">평면예술</option>
-                                <option value="연행예술">연행예술</option>
-                                <option value="봉사">봉사</option>
-                                <option value="취미교양">취미교양</option>
-                                <option value="스포츠">스포츠</option>
-                                <option value="종교분과">종교분과</option>
-                                <option value="학술분과">학술분과</option>
-                                <option value="기타">기타</option>
-                            </select><br>
-                            <% } %>
-                            
-                            <% if (['소모임', '준소모임'].includes(result.category1) && result.campus.indexOf('명륜') > -1 ) { %>
-                            <%= result.category1 %>(명륜) :
-                            <select name="category2" id="category2">
-                                <option value="경영대학">경영대학</option>
-                                <option value="경제대학">경제대학</option>
-                                <option value="문과대학">문과대학</option>
-                                <option value="사범대학">사범대학</option>
-                                <option value="사회과학대학">사회과학대학</option>
-                                <option value="예술대학">예술대학</option>
-                                <option value="유학대학">유학대학</option>
-                                <option value="기타">기타</option>
-                            </select><br>
-                            <% } %>
-                            <% if (['소모임', '준소모임'].includes(result.category1) && result.campus.indexOf('율전') > -1 ) { %>
-                            <%= result.category1 %>(율전) :
-                            <select name="category2" id="category2">
-                                <option value="공과대학">공과대학</option>
-                                <option value="생명공학대학">생명공학대학</option>
-                                <option value="소프트웨어대학">소프트웨어대학</option>
-                                <option value="스포츠과학대학">스포츠과학대학</option>
-                                <option value="약학대학">약학대학</option>
-                                <option value="자연과학대학">자연과학대학</option>
-                                <option value="정보통신대학">정보통신대학</option>
-                                <option value="기타">기타</option>
-                            </select><br>
-                            <% } %>
-                        <% } %>
-                    </td>
+                    <td id="category2">-</td>
                 </tr>
                 <tr>
                     <td>소분류</td>
-                    <td><input type="text" name="category3" value="<%= result.category3 %>"
-                            placeholder="동아리 활동내용 요약"> </td>
+                    <td><input type="text" id="category3" name="category3" value="" placeholder="동아리 활동내용 요약"> </td>
                 </tr>
                 <tr>
                     <td>캠퍼스</td>
@@ -120,8 +57,7 @@
                 </tr>
                 <tr>
                     <td>설립연도</td>
-                    <td><input type="text" name="estab_year" value="<%= result.estab_year %>"
-                            placeholder="설립연도"> </td>
+                    <td><input type="text" id="estab_year" name="estab_year" value="" placeholder="설립연도"> </td>
                     <td>
                         <div>
                             <input type="file" name="logoUpload" id="logoUpload" style="overflow:hidden; width:100%;">
@@ -142,39 +78,35 @@
                 <tr>
                     <td>소개글</td>
                     <td colspan="2">
-                        <textarea type="text" name="intro_text"
-                            style="width:100%; min-height: 400px; padding: 15px 10px;"><%= result.intro_text %></textarea>
+                        <textarea type="text" id="intro_text" name="intro_text" style="width:100%; min-height: 400px; padding: 15px 10px;"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>핵심 소개문구</td>
-                    <td colspan="2"><input type="text" name="intro_sentence"
-                            value="<%= result.intro_sentence %>" style="width:80%;" placeholder="표어, 캐치프레이즈 등">
+                    <td colspan="2"><input type="text" id="intro_sentence" name="intro_sentence" value="" style="width:80%;" placeholder="표어, 캐치프레이즈 등">
                     </td>
                 </tr>
                 <tr>
                     <td>활동내용</td>
-                    <td colspan="2"><textarea type="text" name="activity_info"
-                            style="width:100%; min-height: 300px; padding: 15px 10px;"><%= result.activity_info %></textarea>
+                    <td colspan="2">
+                        <textarea type="text" id="activity_info" name="activity_info" style="width:100%; min-height: 300px; padding: 15px 10px;"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>모임시간</td>
-                    <td colspan="2"><textarea type="text" name="meeting_time"
-                            style="width:100%; min-height: 100px; padding: 15px 10px;"><%= result.meeting_time %></textarea>
+                    <td colspan="2"><textarea type="text" id="meeting_time" name="meeting_time" style="width:100%; min-height: 100px; padding: 15px 10px;"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>모임장소</td>
-                    <td colspan="2"><input type="text" name="activity_location"
-                            value="<%= result.activity_location %>" style="width:80%;"
-                            placeholder="활동 또는 모임장소">
+                    <td colspan="2">
+                        <input type="text" id="activity_location" name="activity_location" value="" style="width:80%;" placeholder="활동 또는 모임장소">
                     </td>
                 </tr>
                 <tr>
                     <td>활동인원</td>
-                    <td colspan="2"><input type="text" name="activity_num" value="<%= result.activity_num %>"
-                            placeholder="대략적인 활동인원"></td>
+                    <td colspan="2">
+                        <input type="text" id="activity_num" name="activity_num" value="" placeholder="대략적인 활동인원"></td>
                 </tr>
 
                 <tr>
@@ -182,30 +114,33 @@
                 </tr>
                 <tr>
                     <td>모집시기</td>
-                    <td colspan="2"><input type="text" name="recruit_season"
-                            value="<%= result.recruit_season %>" placeholder="매학기/상반기/상시모집 등">
+                    <td colspan="2">
+                        <input type="text" id="recruit_season" name="recruit_season" value="" placeholder="매학기/상반기/상시모집 등">
                     </td>
                 </tr>
                 <tr>
                     <td>의무활동기간</td>
-                    <td colspan="2"><input type="text" name="activity_period"
-                            value="<%= result.activity_period %>" placeholder="1년/3학기/없음 등"></td>
+                    <td colspan="2">
+                        <input type="text" id="activity_period" name="activity_period" value="" placeholder="1년/3학기/없음 등">
+                    </td>
                 </tr>
                 <tr>
                     <td>모집방식</td>
-                    <td colspan="2"><input type="text" name="recruit_process"
-                            value="<%= result.recruit_process %>" placeholder="자유가입/서류/면접/실기 등">
+                    <td colspan="2">
+                        <input type="text" id="recruit_process" name="recruit_process" value="" placeholder="자유가입/서류/면접/실기 등">
                     </td>
                 </tr>
                 <tr>
                     <td>모집인원</td>
-                    <td colspan="2"><input type="text" name="recruit_num" value="<%= result.recruit_num %>"
-                            placeholder="OO명/변동 등"></td>
+                    <td colspan="2">
+                        <input type="text" id="recruit_num" name="recruit_num" value="" placeholder="OO명/변동 등">
+                        </td>
                 </tr>
                 <tr>
                     <td>리쿠르팅 사이트</td>
-                    <td colspan="2"><input type="text" name="recruit_site" value="<%= result.recruit_site %>"
-                            placeholder="구글폼, 자체사이트 등"></td>
+                    <td colspan="2">
+                        <input type="text" id="recruit_site" name="recruit_site" value="" placeholder="구글폼, 자체사이트 등">
+                    </td>
                 </tr>
 
                 <tr>
@@ -213,28 +148,33 @@
                 </tr>
                 <tr>
                     <td>대표자 이름</td>
-                    <td colspan="2"><input type="text" name="president_name"
-                            value="<%= result.president_name %>" placeholder="모임장/대표자 이름"> </td>
+                    <td colspan="2">
+                        <input type="text" id="president_name" name="president_name" value="" placeholder="모임장/대표자 이름">
+                    </td>
                 </tr>
                 <tr>
                     <td>대표자 연락처</td>
-                    <td colspan="2"><input type="text" name="president_contact"
-                            value="<%= result.president_contact %>" placeholder="모임장/대표자 연락처"> </td>
+                    <td colspan="2">
+                        <input type="text" id="president_contact" name="president_contact" value="" placeholder="모임장/대표자 연락처">
+                    </td>
                 </tr>
                 <tr>
                     <td>긴급연락처</td>
-                    <td colspan="2"><input type="text" name="emergency_contact"
-                            value="<%= result.emergency_contact %>" placeholder="긴급연락처"> </td>
+                    <td colspan="2">
+                        <input type="text" id="emergency_contact" name="emergency_contact" value="" placeholder="긴급연락처">
+                    </td>
                 </tr>
                 <tr>
                     <td>동아리 웹페이지 1</td>
-                    <td colspan="2"><input type="text" name="website_link"
-                            value="<%= result.website_link %>" placeholder="페이스북, 인스타, 블로그 등"> </td>
+                    <td colspan="2">
+                        <input type="text" id="website_link" name="website_link" value="" placeholder="페이스북, 인스타, 블로그 등">
+                    </td>
                 </tr>
                 <tr>
                     <td>동아리 웹페이지 2</td>
-                    <td colspan="2"><input type="text" name="website_link2"
-                            value="<%= result.website_link2 %>" placeholder="페이스북, 인스타, 블로그 등"> </td>
+                    <td colspan="2">
+                        <input type="text" id="website_link2" name="website_link2" value="" placeholder="페이스북, 인스타, 블로그 등">
+                    </td>
                 </tr>
             </table>
             <div class="text-center">
@@ -248,122 +188,11 @@
 <div id="modalArea"></div>
 
 <%- include('./partials/footer.ejs'); %>
+
+</body>
+
 <%- include('./partials/scripts.ejs'); %>
-
-<script>
-
-    // Save Logo Button Toggle
-    $('#logoUpload').change( function(){
-        if($('#logoUpload').prop('files').length){
-            $('#saveUpdateBtn').parent().css('display', 'block')
-
-            // save state
-            $('#saveState i').removeClass('fa-check-circle')
-                                .addClass('fa-exclamation-circle')
-                                .css('color', 'red');
-            $('#saveState span').text(' 업로드 되지 않음')
-                                .css('color', 'red')
-
-            readURL(this);      // preview
-
-        } else {
-            $('#saveUpdateBtn').parent().css('display', 'none')
-        }
-    })
-    // Preview Logo
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        
-        reader.onload = function (e) {
-        $('#clubLogo').attr('src', e.target.result);  
-        }
-        
-        reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    // Update Ajax
-    $('#saveUpdateBtn').on('click', function(){
-
-        var data = new FormData();
-        
-        
-        var uploadedFile = $('#logoUpload').prop('files')[0];
+<script type="module" src="/js/clubupdate.js"></script>
 
 
-        // file 유효성 검사
-        var fileForm = /(.*?)\.(jpg|jpeg|png|gif|bmp|JPG|JPEG|PNG|GIF|BMP)$/;
-        var maxSize = 256 * 1024        // bytes
-        if(!$('#logoUpload').val().match(fileForm)){     // file format
-            // alert('img only')
-            Util.showToast({
-                'type': 'warning',
-                'title': '경고',
-                'content': '이미지 파일만 업로드할 수 있습니다.'
-            })
-            return false;
-        } else if(uploadedFile.size > maxSize ){   // 256KB 제한
-            // 문구
-            Util.showToast({
-                'type': 'warning',
-                'title': '경고',
-                'content': `${maxSize/1024}KB 이하의 파일만 업로드할 수 있습니다.`
-            })
-            return false;
-        }
-        
-
-        Util.showAlert({
-                'title' : '알림',
-                'content' : '이미지를 업로드하시겠습니까?\n(기존 이미지는 삭제됩니다.)'
-        }).then((result) => {
-            // data binding (key-value)
-            data.append('logoUpload', uploadedFile);
-
-            $.ajax({
-                type: 'POST',               
-                processData: false, // important
-                contentType: false, // important
-                data: data,
-                url: '/info/update/logo',
-                dataType : 'json',  
-                
-                success: function(jsonData){
-                    // save state
-                    $('#saveState i').removeClass('fa-exclamation-circle')
-                                        .addClass('fa-check-circle')
-                                        .css('color', 'green');
-                    $('#saveState span').text(' 업로드 완료')
-                                        .css('color', 'black')
-                    Util.showToast({
-                    'title': '작업완료',
-                    'content': `성공적으로 업로드 되었습니다.`
-                    })
-                }
-            });
-            
-            Util.closeAlert();
-        }) 
-    });
-
-    // save text
-    $('#saveTextBtn').on('click', function(e){
-        if($('input[name="category3"]').val() === ''){
-            $('input[name="category3"]').val(' ');
-        }
-        if($('#logoUpload').val() && $('#saveState i').hasClass('fa-exclamation-circle')){      // 첨부한 파일이 존재하면서 업로드 전일때
-            e.preventDefault();
-
-            Util.showAlert({
-                'title' : '경고',
-                'content' : '로고파일이 업로드 되지 않았습니다.\n그래도 계속하시겠습니까?'
-            }).then((result) => {
-                $('#updateForm').submit()
-            })
-        } else {
-            $('#updateForm').submit()
-        }
-    })
-
-</script>
+</html>

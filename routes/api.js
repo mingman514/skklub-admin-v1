@@ -15,7 +15,7 @@ router
                    FROM CLUB_TEST
                    WHERE 1=1${convertCategory(clubCategory)}${convertCampus(clubCampus)} AND authority NOT IN (0, 2, 4, 6)`;
     console.log(API_sql)
-    sql.generalQuery(API_sql, null, (err, results) => {
+    sql.requestData(API_sql, null, (err, results) => {
         if (err) {
             console.log(err);
             res.send('FAIL')
@@ -59,7 +59,7 @@ router
             FROM CLUB_TEST
             WHERE 1=1${convertCategory(clubCategory)}${convertCampus(clubCampus)} AND cid='${clubId}'`
             
-    sql.generalQuery(API_sql, null, (err, results) => {
+    sql.requestData(API_sql, null, (err, results) => {
         if (err) {
             console.log(err);
             res.send('FAIL')
@@ -83,7 +83,7 @@ router
                        FROM CLUB
                        WHERE 1=1${convertCategory(clubCategory)}${convertCampus(clubCampus)} AND authority NOT IN (0, 2, 4, 6)`;
 
-        sql.generalQuery(API_sql, null, (err, results) => {
+        sql.requestData(API_sql, null, (err, results) => {
             if (err) {
                 console.log(err);
                 res.send('FAIL')
@@ -129,7 +129,7 @@ router
                 FROM CLUB
                 WHERE 1=1${convertCategory(clubCategory)}${convertCampus(clubCampus)} AND cid='${clubId}'`
                 
-        sql.generalQuery(API_sql, null, (err, results) => {
+        sql.requestData(API_sql, null, (err, results) => {
             if (err) {
                 console.log(err);
                 res.send('FAIL')

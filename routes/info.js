@@ -61,44 +61,65 @@ const upload = multer({
 
 
 // info
-router.get("/", check.checkAuthenticated, (req, res) => {
-    sql.searchResult(req.user.cid, "cid", (err, results) => {
-      if (err) {
-        console.log(err);
-        res.redirect("/");
-      } else {
-        res.render("info.ejs", {
-          result: results[0],
-          cname: req.user.cname,
-          auth: req.user.authority,
+router.route("/")
+      // redering html
+      .get(check.checkAuthenticated, (req, res) => {
+            res.render("info.ejs", {
+              cname: req.user.cname,
+              auth: req.user.authority,
+            });
+      })
+      // redering data
+      .post(check.checkAuthenticated, (req, res) => {
+        sql.getClubInfo(req.user.cid, "cid", (err, results) => {
+          if (err) {
+            console.log(err);
+            res.redirect("/");
+          } else {
+            res.json({"data" : results[0]});
+          }
         });
-      }
-    });
-  });
+      })
 
 // info/update
 router
   .route("/update")
+  // rendering html
   .get(check.checkAuthenticated, (req, res) => {
-    sql.generalQuery(
-      // `SELECT * FROM ${process.env.PROCESSING_DB} WHERE cid= ?;` + `SELECT DISTINCT category1 FROM ${process.env.PROCESSING_DB};` + `SELECT DISTINCT category2 FROM ${process.env.PROCESSING_DB};`,
-      `SELECT * FROM ${process.env.PROCESSING_DB} WHERE cid= ?;`,
-      [req.user.cid],
-      (err, results) => {
-        if (err) {
-          console.log(err);
-          res.redirect("/info");
-        } else {
-
-          res.render("clubupdate.ejs", {
-            result: results[0],
-            cname: req.user.cname,
-            auth: req.user.authority,
-          });
-        }
-      }
-    )
+          res.render("clubupdate.ejs", { cname: req.user.cname });
   })
+  // rendering data
+  .post(check.checkAuthenticated, (req, res) => {
+    sql.getClubInfo(req.user.cid, "cid", (err, results) => {
+      if (err) {
+        console.log(err);
+        res.redirect("/info");
+      } else {
+        res.json({"data" : results[0]});
+      }
+    });
+    // sql.requestData(
+    //   // `SELECT * FROM ${process.env.PROCESSING_DB} WHERE cid= ?;` + `SELECT DISTINCT category1 FROM ${process.env.PROCESSING_DB};` + `SELECT DISTINCT category2 FROM ${process.env.PROCESSING_DB};`,
+    //   `SELECT * FROM ${process.env.PROCESSING_DB} WHERE cid= ?;`,
+    //   [req.user.cid],
+    //   (err, results) => {
+    //     if (err) {
+    //       console.log(err);
+    //       res.redirect("/info");
+    //     } else {
+
+    //       res.render("clubupdate.ejs", {
+    //         result: results[0],
+    //         cname: req.user.cname,
+    //         auth: req.user.authority,
+    //       });
+    //     }
+    //   }
+    // )
+  })
+
+router
+.route("/update/text")
   .post(check.checkAuthenticated, check.checkEditable, (req, res) => {
     // TEXT UPDATE
     var updateSql = "";
@@ -110,7 +131,7 @@ router
 
     updateSql = `UPDATE ${process.env.PROCESSING_DB} SET ${updateSql.slice(0, -2)} WHERE cid=${req.user.cid};`;
 
-    sql.generalQuery(updateSql, null, (err, results) => {
+    sql.requestData(updateSql, null, (err, results) => {
       if (err) {
         console.log(err);
       } else {
@@ -130,7 +151,7 @@ router
   .post(check.checkAuthenticated, check.checkEditable, upload.single('logoUpload'), (req, res) => {
     var fileName = req.file.filename;
 
-    sql.generalQuery(
+    sql.requestData(
       `SELECT logo_path FROM ${process.env.PROCESSING_DB} WHERE cid=${req.user.cid};
       UPDATE ${process.env.PROCESSING_DB} SET logo_path='${fileName}' WHERE cid= ${req.user.cid};`,
       null,

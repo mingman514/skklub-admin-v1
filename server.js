@@ -68,7 +68,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride("_method"));
-// app.use(helmet()); => CSP policy 위반에 따라 html 내 inline script 사용금지됨
+app.use(helmet()); // => CSP policy 위반에 따라 html 내 inline script 사용금지됨
 
 
 app.get("/", check.checkAuthenticated, (req, res) => {

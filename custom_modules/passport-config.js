@@ -36,7 +36,7 @@ function initialize(passport){
 function getUserByColumn(inputValue, columnName){
     // User 정보 불러온 뒤 실행위해 Promise 객체 반환
     return new Promise( (resolve, reject) => {
-        sql.generalQuery(
+        sql.requestData(
             `SELECT admin_id, admin_pw, cid, cname, authority, category1, campus FROM ${process.env.PROCESSING_DB} WHERE ${columnName}='${inputValue}'`,
             null,
             (err, results) => {
