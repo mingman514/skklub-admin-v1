@@ -3,28 +3,42 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
-/**
+/*********************************************************
+ * 
  * Modules
- */
+ * 
+ *********************************************************/
+
+// node_modules
 const express = require("express");
 const app = express();
 const passport = require("passport");
 const flash = require("express-flash");
 const session = require("express-session");
 const methodOverride = require("method-override");
-const sql = require("./public/js/mysql-query");
 const cors = require("cors");
-const check = require('./public/js/check')
-const helmet = require('helmet')
+const helmet = require('helmet');
 
-/**
+// custom_modules
+const sql = require("./custom_modules/mysql-query");
+const check = require('./custom_modules/check');
+
+
+
+/********************************************************
+ * 
  * Local DB
- */
+ * @deprecated
+ ********************************************************/
 // const users = require("./data/skklubDB.json");
 
-/**
+
+
+/*********************************************************
+ * 
  *  Router 
- */
+ * 
+ *********************************************************/
 const infoRouter = require('./routes/info');
 const accountRouter = require('./routes/account');
 const loginRouter = require('./routes/login');
@@ -32,19 +46,15 @@ const masterRouter = require('./routes/master');
 const apiRouter = require('./routes/api');
 const registerRouter = require('./routes/register');
 
-
-
-const initializePassport = require("./public/js/passport-config");
+const initializePassport = require("./custom_modules/passport-config");
 initializePassport(passport);
 
   
 app.use(cors());
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs"); // template engine setting
-app.use(express.static(__dirname + "/public", { etag: false, maxAge: 0}));  // cloudflare 거치면 header 바꿀 수 없음
-console.log(__dirname)
-app.use(express.urlencoded({ extended: false })); // https://velog.io/@yejinh/express-%EB%AF%B8%EB%93%A4%EC%9B%A8%EC%96%B4-bodyParser-%EB%AA%A8%EB%93%88
-// express에 bodyParser 내장
+app.use(express.static(__dirname + "/public", { etag: false, maxAge: 0}));
+app.use(express.urlencoded({ extended: false }));
 app.use(flash());
 app.use(
   session({
@@ -142,8 +152,12 @@ app.use((req, res, next) => {
 app.listen(process.env.PORT, () => {
   console.log(`
   =============================================
-     Listening On..   |  http://localhost:${process.env.PORT}
-  =============================================
+                      |
     CURRENT DATABASE  |  ${process.env.PROCESSING_DB}
+                      |
+  =============================================
+                      |
+     Listening On..   |  http://localhost:${process.env.PORT}
+                      |
   =============================================`)
 });

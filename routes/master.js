@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const check = require('../public/js/check')
-const sql = require("../public/js/mysql-query")
-const encrypt = require('../public/js/encrypt')
-const log = require('../public/js/insertLog');
+const check = require('../custom_modules/check')
+const sql = require("../custom_modules/mysql-query")
+const encrypt = require('../custom_modules/encrypt')
+const log = require('../custom_modules/insertLog');
 
 // master
 router.get("/", check.checkMasterAuth, (req, res) => {

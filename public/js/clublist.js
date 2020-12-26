@@ -1,5 +1,4 @@
-
-
+import Util from './modules/util.js'
 
 // ==================================
 // Datatable
@@ -31,7 +30,7 @@ const lang_kor = {
    }
 };
 
-dataTable = _dom.DataTable({
+var dataTable = _dom.DataTable({
    language: lang_kor,
    serverSide: false,
    processing: true,
@@ -171,7 +170,7 @@ _dom.find("tbody").off("click").on("click", ".viewDetail", function () { // $([s
 
          $('#dt-title, #logo-cname').text(obj_result['cname']+' ');                              // title, logo cname
          $('#dt-logo').find('img').attr('src', `../img/logo/${obj_result['logo_path']}`)     // logo path
-         for (key in obj_result){
+         for (var key in obj_result){
             if($('#dt-'+key) !== null){
                modalTable.find('#dt-'+key).text(obj_result[key])                              // else
             }

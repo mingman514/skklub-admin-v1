@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const check = require('../public/js/check')
-const sql = require("../public/js/mysql-query")
-const encrypt = require('../public/js/encrypt')
+const check = require('../custom_modules/check')
+const sql = require("../custom_modules/mysql-query")
+const encrypt = require('../custom_modules/encrypt')
 const nodemailer = require('nodemailer')
 
 const smtpTransport = nodemailer.createTransport({

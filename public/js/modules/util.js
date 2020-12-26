@@ -1,9 +1,10 @@
- const Util = {
-    // -----------------------------------------------------------------
-    // **** 자체 Alert Msg 사용법 ****
-    // 원하는 비동기 처리 앞에 showAlert 넣고 .then((data)=>{ 비동기 }) 처리한다.
-    // parameter로 alertTitle과 alertMsg의 option 주면 메시지 수정 가능하다.
-    // -----------------------------------------------------------------
+export default {
+    /**
+     * Alert Msg 사용법
+     * 
+     * 원하는 비동기 처리 앞에 showAlert 넣고 .then((data)=>{ 비동기 }) 처리한다.
+     * parameter로 alertTitle과 alertMsg의 option 주면 메시지 수정 가능하다.
+     */
     showAlert: function(option){
         option = option || {};
 

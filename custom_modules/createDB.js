@@ -1,3 +1,7 @@
+/**
+ * @deprecated
+ */
+
 // mysql DB to json file
 
 const fs = require('fs')

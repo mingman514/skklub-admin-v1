@@ -3,9 +3,9 @@ const router = express.Router();
 
 
 const fs = require('fs');
-const sql = require("../public/js/mysql-query");
-const check = require('../public/js/check')
-const log = require('../public/js/insertLog');
+const sql = require("../custom_modules/mysql-query");
+const check = require('../custom_modules/check')
+const log = require('../custom_modules/insertLog');
 // const sharp = require('sharp')
 const multer = require("multer");
 const storage = multer.diskStorage({

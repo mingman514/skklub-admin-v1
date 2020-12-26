@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const check = require('../public/js/check')
+const check = require('../custom_modules/check')
 const passport = require('passport');
-const log = require('../public/js/insertLog')
+const log = require('../custom_modules/insertLog')
 
 
 

@@ -1,3 +1,5 @@
+import Util from './modules/util.js'
+
 /**
  * 이메일 인증 요청
  */

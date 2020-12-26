@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const sql = require("../public/js/mysql-query");
-const check = require('../public/js/check')
+const sql = require("../custom_modules/mysql-query");
+const check = require('../custom_modules/check')
 const bcrypt = require("bcrypt");                        // password hashing https://jungwoon.github.io/node.js/2017/08/07/bcrypt-nodejs/
-const log = require('../public/js/insertLog');
+const log = require('../custom_modules/insertLog');
 
 // account
 router
