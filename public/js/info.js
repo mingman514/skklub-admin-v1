@@ -25,8 +25,11 @@ window.onload = function(){
 
             try {
                 // data pre-processing
-                let URLRecogContent = cdata[key].replace(/\n/gi, '<br>')        // CRLF processing
-                                                .replace(Util.userPatterns.url, '<a href="$&" target="_blank" style="color:blue;">$&</a>');  // URL recognition
+                let URLRecogContent = cdata[key].replace(/\n/gi, '<br>')    // CRLF processing
+
+                if(['intro_text', 'activity_info', 'recruit_site', 'website_link', 'website_link2'].includes(key)){
+                    URLRecogContent = URLRecogContent.replace(Util.userPatterns.url, '<a href="$&" target="_blank" style="color:blue;">$&</a>');  // URL recognition
+                }
                 $(`#${key}`).html(URLRecogContent);
                 
             } catch {
