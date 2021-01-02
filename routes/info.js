@@ -86,7 +86,10 @@ router
   .route("/update")
   // rendering html
   .get(check.checkAuthenticated, (req, res) => {
-          res.render("clubupdate.ejs", { cname: req.user.cname });
+          res.render("clubupdate.ejs", {
+            cname: req.user.cname,
+            auth: req.user.authority
+          });
   })
   // rendering data
   .post(check.checkAuthenticated, (req, res) => {
