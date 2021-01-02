@@ -87,6 +87,12 @@ span.viewDetail:hover{
 /* Master Page */
 
 /* filter */
+@media screen and (max-width: 450px) {
+    #filterform{
+        text-align: left;
+    }
+}
+
 #filterform .filtSelect{
         display: inline-block;
         height: calc(1.8125rem + 2px);
@@ -119,6 +125,11 @@ span.viewDetail:hover{
         border: 1px solid #ced4da;
         border-radius: .25rem;
         transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+#search_btn, #reset_filter{
+    padding: .5rem 1rem;
+    margin: 0.1rem;
 }
 
 /* Setting Mode */

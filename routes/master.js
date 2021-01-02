@@ -71,13 +71,20 @@ router
       ==========================`);
       
       sql.requestData(
-        `SELECT cid, campus, cname, category1, category2, category3, president_name, president_contact, authority FROM ${process.env.PROCESSING_DB} ${sqlWhere}`,
+        `
+        SELECT cid, campus, cname, category1, category2, category3, president_name, president_contact, authority
+        FROM ${process.env.PROCESSING_DB}
+        ${sqlWhere}
+        ORDER BY cname ASC
+        `,
         null,
         (err, results) => {
           if (err) {
             console.log(err);
           } else {
-            let obj_result = { data: results };
+            let obj_result = {}
+            obj_result.data = results;
+            obj_result.auth = req.user.authority;
             res.json(obj_result);
           }
         }

@@ -143,15 +143,30 @@ var dataTable = _dom.DataTable({
          "className" : 'dt-center'
       },
       {
-         "targets": [ 0 ],
-         "visible": false,
+         "targets": [ 0, 3, 10 ],       // checkbox, campus, auth switch
+         "visible": false
      },
      {
-         "targets": [ 10 ],
-         "visible": false
+         "targets" : [0, 1, 9, 10],    // checkbox, plus btn, contact, auth switch
+         "orderable": false
      }
-   ]
+   ],
+
+//    order: [[4, 'asc']],    // order by cname
+
+// ==================================
+// 캠퍼스 통합 관리자 전용 UI
+// ==================================
+
+   // when finished loading
+   initComplete: function(settings, json) {
+      if(json.auth === 9){
+         $('select[name="campus"]').show();       // show filter
+         dataTable.columns([3]).visible(true);    // show campus column
+      }
+    }
 });
+
 
 // ==================================
 // 개별 모임정보 확인
