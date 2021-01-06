@@ -134,7 +134,7 @@ router
 
     updateSql = `UPDATE ${process.env.PROCESSING_DB} SET ${updateSql.slice(0, -2)} WHERE cid=${req.user.cid};`;
     // UPDATE_FLAG
-    updateSql += `UPDATE CLUB_INFO_TEMP_TEST SET update_flag=0 WHERE cid=${req.user.cid};`
+    updateSql += `UPDATE ${process.env.INFO_TEMP} SET update_flag=0 WHERE cid=${req.user.cid};`
 
     sql.requestData(updateSql, null, (err, results) => {
       if (err) {
@@ -190,7 +190,7 @@ router
         saveTempSql += `${key}='${escapeQuotes(req.body[key])}', `;
       }
 
-      saveTempSql = `UPDATE CLUB_INFO_TEMP_TEST SET ${saveTempSql.slice(0, -2)} WHERE cid=${req.user.cid};`;
+      saveTempSql = `UPDATE ${process.env.INFO_TEMP} SET ${saveTempSql.slice(0, -2)} WHERE cid=${req.user.cid};`;
 
       sql.requestData(saveTempSql, null, (err, results) => {
         if (err) {
@@ -207,7 +207,7 @@ router
   .route("/check-temp")
     .post(check.checkAuthenticated, check.checkEditable, (req, res) => {
 
-      sql.requestData(`SELECT update_flag FROM CLUB_INFO_TEMP_TEST WHERE cid=${req.user.cid}`, null, (err, results) => {
+      sql.requestData(`SELECT update_flag FROM ${process.env.INFO_TEMP} WHERE cid=${req.user.cid}`, null, (err, results) => {
         if (err) {
           console.log(err);
           res.json({result : "DB_ERROR"})
@@ -226,7 +226,7 @@ router
 router
   .route("/load-temp")
     .post(check.checkAuthenticated, check.checkEditable, (req, res) => {
-      sql.getClubTemp(req.user.cid, "cid", "CLUB_INFO_TEMP_TEST", (err, results) => {
+      sql.getClubTemp(req.user.cid, "cid", process.env.INFO_TEMP, (err, results) => {
         if (err) {
           console.log(err);
           res.redirect("/info");
