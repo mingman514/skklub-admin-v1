@@ -11,10 +11,12 @@
 
 import Util from './modules/util.js'
 
-
-// Loading Club Data
 window.onload = function(){
-
+    /***************************************
+     * 
+     * Load Club Data
+     * 
+     ***************************************/
     $.ajax({
         url:'/info/update',
         type: 'POST',
@@ -111,8 +113,6 @@ window.onload = function(){
                 }
                 else if ($dom.prop('tagName') === 'TEXTAREA'){  // textarea tag이면 textContent에 넣기
                     $dom.text(cdata[key]);
-                } else {
-                    continue;
                 }
 
             } catch {
@@ -132,10 +132,79 @@ window.onload = function(){
         // 사전입력 정보 불러오기
         $(`#category2 option[value="${cdata.category2}"]`).prop('selected', true);
         $(`#campus input[value="${cdata.campus}"]`).prop('checked', true);
-            
+    
+    
+    
+        /***************************************
+         * 
+         * Temporary Saved Data
+         * 
+         ***************************************/
+        $.ajax({
+            url:'/info/check-temp',
+            type: 'POST',
+            dataType: 'json'
+        }).then((r) => {
+
+            if(r.result === 'EXIST'){
+                Util.showAlert({
+                    'title' : '알림',
+                    'content' : '임시저장된 데이터가 존재합니다.<br>불러오시겠습니까?',
+                    'positive' : '불러오기',
+                    'negative' : '취소'
+                }).then((result) => {
+                    Util.closeAlert();
+                    // load stored data
+                    $.ajax({
+                     url:'/info/load-temp',
+                     type: 'POST',
+                     dataType: 'json'
+                     }).then((r) => {
+     
+                         let cdata = r.data;
+                         for(var key in cdata){
+                             try {
+                                 let $dom = $(`#${key}`);
+     
+                                 if($dom.prop('tagName') === 'INPUT' ){      // input tag이면 value에 넣기
+                                     $dom.val(cdata[key]);
+                                 }
+                                 else if ($dom.prop('tagName') === 'TEXTAREA'){  // textarea tag이면 textContent에 넣기
+                                     $dom.text(cdata[key]);
+                                 }
+     
+                             } catch {
+                                 console.log(`Cannot find [ ${key} ]`)
+                             }
+                         }
+     
+                         Util.showToast({
+                             'type': 'success',
+                             'title': '성공',
+                             'content': '데이터 불러오기가 완료되었습니다.'
+                         })
+                     }, () => {     // then의 두번째 콜백 인자 => when reject
+                        Util.showToast({
+                            'type': 'error',
+                            'title': '실패',
+                            'content': '데이터를 불러올 수 없습니다.'
+                        })
+                     })
+                });
+            }
+         })
     })
+
+    
     
 
+    
+
+     /***************************************
+     * 
+     * Bounding Events
+     * 
+     ***************************************/
     // Save Logo Button Toggle
     $('#logoUpload').change( function(){
         if($('#logoUpload').prop('files').length){
@@ -200,7 +269,7 @@ window.onload = function(){
 
         Util.showAlert({
                 'title' : '알림',
-                'content' : '이미지를 업로드하시겠습니까?\n(기존 이미지는 삭제됩니다.)'
+                'content' : '이미지를 업로드하시겠습니까?<br>(기존 이미지는 삭제됩니다.)'
         }).then((result) => {
             // data binding (key-value)
             data.append('logoUpload', uploadedFile);
@@ -233,22 +302,119 @@ window.onload = function(){
 
     // save text
     $('#saveTextBtn').on('click', function(e){
-        if($('input[name="category3"]').val() === ''){
-            $('input[name="category3"]').val(' ');
+        const $category3 = $('input[name="category3"]');
+        if($category3.val() === '' || $category3.val() === null){
+            $category3.val(' ');
         }
+        e.preventDefault();
+        
         if($('#logoUpload').val() && $('#saveState i').hasClass('fa-exclamation-circle')){      // 첨부한 파일이 존재하면서 업로드 전일때
-            e.preventDefault();
 
             Util.showAlert({
                 'title' : '경고',
-                'content' : '로고파일이 업로드 되지 않았습니다.\n그래도 계속하시겠습니까?'
+                'content' : '로고파일이 업로드 되지 않았습니다.<br>그래도 계속하시겠습니까?'
             }).then((result) => {
-                $('#updateForm').submit()
+                $('#updateForm').submit();
             })
         } else {
-            $('#updateForm').submit()
+            Util.showAlert({
+                'title' : '확인',
+                'content' : '변경사항을 저장하시겠습니까?<br>(SKKLUB 즉시 반영)'
+            }).then((result) => {
+                $('#updateForm').submit();
+            })
         }
     })
+
+
+    /* Save Temp Button */
+
+    // Change Event
+    // $('input[type="text"], textarea').keypress(() => {
+    $('input[type="text"], textarea').on('keyup' ,() => {
+        // change btn feature
+        const $floatingBtn = $('#floatingBtn');
+        if($floatingBtn.hasClass('btn-info')){
+            $floatingBtn.switchClass('btn-info', 'btn-warning', 1000, 'easeInOutQuad');
+
+            // 랜덤하게 저장하라는 툴팁 띄워주기
+            // if(!(Math.floor(Math.random()*10) % 3)){
+            //     // add tooltip event
+            //     let contents = ['날려도 책임 못 져요..', '틈틈이 저장하기!', '잠깐..! 저장은 했나요?'];
+
+            //     /** 아래 형식은 어떻게 쓰는건가... */
+            //     const popover = new mdb.Popover($('#floatingBtn'), {
+            //         animation : true,
+            //         content : contents[Math.floor(Math.random()*3)],
+            //         trigger : 'manual',
+            //         placement : 'top',
+            //     })
+            //     popover.show();
+            //     setTimeout(() => { popover.hide(); }, 7000);
+            // }
+        }
+    })
+    
+
+    // Hover Event
+    $('#floatingBtn').hover(() => {
+        // mouseover
+        $('#floatingBtn').children().eq(0).hide();
+        $('#floatingBtn').children().eq(1).show();
+    }, () => {
+        // mouseleave
+        $('#floatingBtn').children().eq(1).hide();
+        $('#floatingBtn').children().eq(0).show();
+    })
+
+    // Click Event
+    $('#floatingBtn').click( () => {
+        const $floatingBtn = $('#floatingBtn');
+        const $icon = $floatingBtn.children().eq(0);
+
+        if($icon.hasClass('fa-check') || $floatingBtn.hasClass('btn-success'))
+            return ;
+
+        $.ajax({
+            url:'/info/save-temp',
+            type: 'POST',
+            data: $('#updateForm').serialize(),     // serialize : GET all the form values
+            dataType: 'text'
+        }).then((r) => {
+            if(r === 'SUCCESS'){
+                Util.showToast({
+                    'type': 'success',
+                    'title': '성공',
+                    'content': '데이터 임시저장이 완료되었습니다.'
+                })
+
+                $floatingBtn.removeClass('btn-info btn-warning').addClass('btn-success');
+                $icon.switchClass('fa-archive', 'fa-check');
+
+                setTimeout(() => {
+                    $floatingBtn.switchClass('btn-success', 'btn-info', 1000, 'easeIn');
+                    $icon.switchClass('fa-check', 'fa-archive', 1000, 'easeIn');
+                }, 4000);
+                
+            } else {
+                Util.showToast({
+                    'type': 'warning',
+                    'title': '실패',
+                    'content': '데이터 임시저장에 실패하였습니다.'
+                })
+            }
+        }, () => {
+            // when disconnected
+            Util.showToast({
+                'type': 'warning',
+                'title': '실패',
+                'content': '서버와 연결이 중단되었습니다.<br>새로고침해주세요.'
+            })
+        })
+    })
+
+    
+    
 
 
 }

@@ -8,22 +8,27 @@ export default {
     showAlert: function(option){
         option = option || {};
 
-        createAlertModal(option.title, option.content).then(()=>{
+        createAlertModal(option.title, option.content, option.positive, option.negative).then(()=>{
             $('#alertModal').modal();
         });
 
         let dfd = $.Deferred();
         
-        
+        // resolve
         $('#alert-continue').off('click').on('click', function(){
-            dfd.resolve('confirm');
+            dfd.resolve('continue');
+        })
+
+        // reject
+        $('#alert-break').off('click').on('click', function(){
+            dfd.reject('break');
         })
 
         return dfd.promise();
         
 
         // Create Alert
-        function createAlertModal(title, content){
+        function createAlertModal(title, content, positive, negative){
             let dfd = $.Deferred();
 
             let alertHTML = `
@@ -42,8 +47,8 @@ export default {
                     ${content ? content : '작업을 계속하시겠습니까?'}
                 </div>
                 <div class="alertModal-footer text-center p-2">
-                    <button type="button" class="btn btn-primary" id="alert-continue">예</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">아니오</button>
+                    <button type="button" class="btn btn-primary" id="alert-continue">${positive ? positive : '예'}</button>
+                    <button type="button" class="btn btn-secondary" id="alert-break" data-dismiss="modal">${negative ? negative : '아니오'}</button>
                 </div>
                 </div>
             </div>

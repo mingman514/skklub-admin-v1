@@ -34,15 +34,31 @@ module.exports = {
     /**
      * @param string input          - 조건검색 키워드
      * @param string searchColumn   - 조건검색 컬럼
+     * @param string search table
      * @todo 모든 컬럼 명시하는 대신 효율적으로 필요한 정보만 불러오는 방법 모색
      */
-    getClubInfo : function (input, searchColumn, callback) {
+    getClubInfo : function (input, searchColumn, table, callback) {
         connection.query(`
         SELECT  cname, category1, category2, category3, campus, intro_text, intro_sentence, activity_info,
                 estab_year, meeting_time, recruit_season, recruit_num, activity_period, recruit_process,
                 activity_location, website_link, website_link2, activity_num, president_name, president_contact,
                 recruit_site, logo_path, emergency_contact
-        FROM ${process.env.PROCESSING_DB}
+        FROM ${table}
+        WHERE ${searchColumn}='${input}'`, (error, results, fields) => {
+            if (error) {
+                callback(error, null)
+            } else {
+                callback(null, results)
+            }
+        })
+    },
+    getClubTemp : function (input, searchColumn, table, callback) {
+        connection.query(`
+        SELECT  category2, category3, intro_text, intro_sentence, activity_info,
+                estab_year, meeting_time, recruit_season, recruit_num, activity_period, recruit_process,
+                activity_location, website_link, website_link2, activity_num, president_name, president_contact,
+                recruit_site, logo_path, emergency_contact
+        FROM ${table}
         WHERE ${searchColumn}='${input}'`, (error, results, fields) => {
             if (error) {
                 callback(error, null)

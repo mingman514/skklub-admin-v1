@@ -71,7 +71,7 @@ router.route("/")
       })
       // redering data
       .post(check.checkAuthenticated, (req, res) => {
-        sql.getClubInfo(req.user.cid, "cid", (err, results) => {
+        sql.getClubInfo(req.user.cid, "cid", process.env.PROCESSING_DB, (err, results) => {
           if (err) {
             console.log(err);
             res.redirect("/");
@@ -93,7 +93,7 @@ router
   })
   // rendering data
   .post(check.checkAuthenticated, (req, res) => {
-    sql.getClubInfo(req.user.cid, "cid", (err, results) => {
+    sql.getClubInfo(req.user.cid, "cid", process.env.PROCESSING_DB, (err, results) => {
       if (err) {
         console.log(err);
         res.redirect("/info");
@@ -133,21 +133,20 @@ router
     }
 
     updateSql = `UPDATE ${process.env.PROCESSING_DB} SET ${updateSql.slice(0, -2)} WHERE cid=${req.user.cid};`;
+    // UPDATE_FLAG
+    updateSql += `UPDATE CLUB_INFO_TEMP_TEST SET update_flag=0 WHERE cid=${req.user.cid};`
 
     sql.requestData(updateSql, null, (err, results) => {
       if (err) {
         console.log(err);
       } else {
-
         log.insertLogByCid(req.user.cid, log.getClientIp(req),'EDIT_INFO', '');    // write log
-        res.redirect("/info");
       }
+      res.redirect("/info");
     })
   })
 
 
-
-  // DB반영 추가!!
 // LOGO UPDATE
 router
   .route("/update/logo")
@@ -178,6 +177,64 @@ router
       })
 })
 
+// Temporary Storage 기능
+// info/save-temp
+router
+  .route("/save-temp")
+    .post(check.checkAuthenticated, check.checkEditable, (req, res) => {
+      // SAVE TEXT TEMP
+      var saveTempSql = "update_flag=1, ";
+      
+      for (var key in req.body) {
+        if(['logoUpload', 'category1', 'campus'].includes(key)) continue;
+        saveTempSql += `${key}='${escapeQuotes(req.body[key])}', `;
+      }
+
+      saveTempSql = `UPDATE CLUB_INFO_TEMP_TEST SET ${saveTempSql.slice(0, -2)} WHERE cid=${req.user.cid};`;
+
+      sql.requestData(saveTempSql, null, (err, results) => {
+        if (err) {
+          console.log(err);
+          res.send("FAIL")
+        } else {
+          res.send("SUCCESS");
+        }
+      })
+    })
+
+// Check if VALID stored data exist
+router
+  .route("/check-temp")
+    .post(check.checkAuthenticated, check.checkEditable, (req, res) => {
+
+      sql.requestData(`SELECT update_flag FROM CLUB_INFO_TEMP_TEST WHERE cid=${req.user.cid}`, null, (err, results) => {
+        if (err) {
+          console.log(err);
+          res.json({result : "DB_ERROR"})
+        } else {
+
+          if(results[0].update_flag === 0){
+            res.json({result : "NOT_EXIST"})
+          } else {
+            res.json({result : "EXIST"})
+          }
+        }
+      })
+    })
+
+// Load temp data
+router
+  .route("/load-temp")
+    .post(check.checkAuthenticated, check.checkEditable, (req, res) => {
+      sql.getClubTemp(req.user.cid, "cid", "CLUB_INFO_TEMP_TEST", (err, results) => {
+        if (err) {
+          console.log(err);
+          res.redirect("/info");
+        } else {
+          res.json({"data" : results[0]});
+        }
+      })
+    })
 
 
 function blankIfNotExist(str){

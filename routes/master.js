@@ -26,7 +26,7 @@ router
       let fsearchCategory = req.body.searchCategory;
       let fsearchKey = req.body.searchKey;
 
-      var sqlWhere = "WHERE 1=1 ";
+      var sqlWhere = " ";
       if (fcampus) {
         sqlWhere += `AND campus LIKE '%${fcampus}%' `;
       }
@@ -74,8 +74,8 @@ router
         `
         SELECT cid, campus, cname, category1, category2, category3, president_name, president_contact, authority
         FROM ${process.env.PROCESSING_DB}
-        ${sqlWhere}
-        ORDER BY cname ASC
+        WHERE 1=1${sqlWhere}
+        ORDER BY cname ASC;
         `,
         null,
         (err, results) => {
