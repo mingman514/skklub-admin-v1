@@ -7,6 +7,8 @@ const sql = require("../custom_modules/mysql-query");
 const check = require('../custom_modules/check')
 const log = require('../custom_modules/insertLog');
 // const sharp = require('sharp')
+
+const sanitizeHtml = require('sanitize-html');
 const multer = require("multer");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -129,7 +131,7 @@ router
     
     for (var key in req.body) {
       if(['logoUpload', 'category1', 'campus'].includes(key)) continue;
-      updateSql += `${key}='${escapeQuotes(req.body[key])}', `;
+      updateSql += `${key}='${escapeQuotes(sanitizeHtml(req.body[key]))}', `;
     }
 
     updateSql = `UPDATE ${process.env.PROCESSING_DB} SET ${updateSql.slice(0, -2)} WHERE cid=${req.user.cid};`;
@@ -187,7 +189,7 @@ router
       
       for (var key in req.body) {
         if(['logoUpload', 'category1', 'campus'].includes(key)) continue;
-        saveTempSql += `${key}='${escapeQuotes(req.body[key])}', `;
+        saveTempSql += `${key}='${escapeQuotes(sanitizeHtml(req.body[key]))}', `;
       }
 
       saveTempSql = `UPDATE ${process.env.INFO_TEMP} SET ${saveTempSql.slice(0, -2)} WHERE cid=${req.user.cid};`;
