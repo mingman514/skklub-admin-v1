@@ -123,6 +123,7 @@ router
                         website_link2,
                         intro_sentence,
                         president_name,
+                        president_contact,
                         recruit_season,
                         activity_period,
                         recruit_process,
