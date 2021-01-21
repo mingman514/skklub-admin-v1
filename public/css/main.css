@@ -54,6 +54,10 @@ li .logout-btn{
 }
 
 /* login */
+.login-card{
+    margin: 0.3rem;
+}
+
 input#admin_id, input#password, button#sign-in, input#pw1, input#pw2, button#pwchange{
     width: 50% !important;
     margin: auto auto;
@@ -63,7 +67,7 @@ article.card{
     flex-direction: row;
     justify-content: center;
 }
-.login-card{
+.login-form{
     max-width: 768px;
 }
 
@@ -171,4 +175,34 @@ span.viewDetail:hover{
     padding: .3rem 1.2rem;
     margin-left: 0;
     margin-top: 10px;
+}
+
+/* Handling IE */
+.ie_content{
+    position: relative;
+    margin-left: 50%;
+    transform: translate(-50%, 0);
+    
+    width: 90%;
+    max-width: 800px;
+    display: flex;
+    flex: 1 1;
+    flex-direction: column;
+    text-align: center;
+    margin-top: 5%;
+    margin-bottom: 5%;
+
+    padding: 1rem;
+}
+.ie_content img{
+    width: 80%;
+}
+
+@media screen and (max-width: 450px) {
+    .ie_content .lead{
+        font-size: 15px;
+    }
+    .ie_content .text-muted{
+        font-size: 13px;
+    }
 }
