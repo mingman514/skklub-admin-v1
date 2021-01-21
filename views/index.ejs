@@ -7,7 +7,8 @@
 
 <%- include('./partials/navbar.ejs'); %>
 
-<div class="card-group" id="index-card">
+<section class="mh">
+  <div class="card-group" id="index-card">
     <div class="card">
       <div class="card-body">
         <div class="view overlay zoom">
@@ -36,18 +37,19 @@
           <% } %>
           <div class="index-btn"><a href="/info"><button type="button" class="btn btn-primary" name="manage_club">내 동아리 정보관리</button></a></div>
         </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+          <div class="view overlay zoom">
+              <img src="/img/skk_character3.jpg" class="img-fluid " alt="">
+          </div>
+        <h5 class="card-title">Account Setting</h5>
+        <p class="card-text">내 계정의 비밀번호를 수정할 수 있어요. 비밀번호는 어렵게, 인수인계는 확실하게!</p>
+        <div class="index-btn"><a href="/account"><button type="button" class="btn btn-primary">비밀번호 변경</button></a></div>
       </div>
-      <div class="card">
-        <div class="card-body">
-            <div class="view overlay zoom">
-                <img src="/img/skk_character3.jpg" class="img-fluid " alt="">
-            </div>
-          <h5 class="card-title">Account Setting</h5>
-          <p class="card-text">내 계정의 비밀번호를 수정할 수 있어요. 비밀번호는 어렵게, 인수인계는 확실하게!</p>
-          <div class="index-btn"><a href="/account"><button type="button" class="btn btn-primary">비밀번호 변경</button></a></div>
-        </div>
-      </div>
+    </div>
   </div>
+</section>
 
 <%- include('./partials/footer.ejs'); %>
 

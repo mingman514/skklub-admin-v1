@@ -3,8 +3,7 @@ const router = express.Router();
 
 const check = require('../custom_modules/check')
 const passport = require('passport');
-const log = require('../custom_modules/insertLog')
-
+const log = require('../custom_modules/insertLog');
 
 
 router

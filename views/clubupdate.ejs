@@ -7,6 +7,7 @@
 
 <%- include('./partials/navbar.ejs'); %>
 
+<section class="mh">
 <div class="card">
     <div class="card-body">
         <h3 class="text-center"> <span style="font-weight: bold;">< <%= cname %> ></span> 동아리정보 수정 </h3>
@@ -167,13 +168,13 @@
                 <tr>
                     <td>동아리 웹페이지 1</td>
                     <td colspan="2">
-                        <input type="text" id="website_link" name="website_link" value="" placeholder="(웹주소 형식을 준수한 링크만 반영)">
+                        <input type="text" id="website_link" name="website_link" value="" placeholder="페이스북, 인스타 등">
                     </td>
                 </tr>
                 <tr>
                     <td>동아리 웹페이지 2</td>
                     <td colspan="2">
-                        <input type="text" id="website_link2" name="website_link2" value="" placeholder="(웹주소 형식을 준수한 링크만 반영)">
+                        <input type="text" id="website_link2" name="website_link2" value="" placeholder="페이스북, 인스타 등">
                     </td>
                 </tr>
             </table>
@@ -183,7 +184,7 @@
         </form>
     </div>
 </div>
-</div>
+</section>
 
 <!-- Save Temp Btn -->
 <button id="floatingBtn" class="btn btn-info btn-floating" style="position: fixed; right:30px; bottom: 30px;">

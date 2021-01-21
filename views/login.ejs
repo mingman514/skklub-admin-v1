@@ -1,48 +1,55 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <%- include('./partials/header.ejs'); %>
 </head>
+
 <body>
 
-<%- include('./partials/navbar.ejs'); %>
-<div class="card">
-    <div class="card-body" style="padding-bottom: 10rem;">
+    <%- include('./partials/navbar.ejs'); %>
+    <section class="mh">
+        <article class="card">
+            <div class="card-body login-card">
 
-        <div class="card-header">
-            <h3 class="text-center">SKKLUB 관리자 로그인</h3>
-        </div>
-        <!-- Default form login -->
-        <form class="text-center border border-light p-5" action="/login" method="POST">
+                <div class="card-header">
+                    <h3 class="text-center">SKKLUB 관리자 로그인</h3>
+                </div>
+                <!-- Default form login -->
+                <form class="text-center border border-light p-5" action="/login" method="POST">
 
-            <p class="h4 mb-4">Log in</p>
+                    <p class="h4 mb-4">Log in</p>
 
-            <!-- Email -->
-            <input type="text" id="admin_id" name="admin_id" class="form-control mb-4" placeholder="Club ID" required value="">
+                    <!-- Email -->
+                    <input type="text" id="admin_id" name="admin_id" class="form-control mb-4" placeholder="Club ID"
+                        required value="">
 
-            <!-- Password -->
-            <input type="password" id="password" name="password" class="form-control mb-4" placeholder="Password" required value="">
+                    <!-- Password -->
+                    <input type="password" id="password" name="password" class="form-control mb-4"
+                        placeholder="Password" required value="">
 
-            <!-- Sign in button -->
-            <button class="btn btn-info btn-block my-4" type="submit" id="sign-in">Log in</button>
-            <div style="color: rgb(247, 114, 114)">
-                <% try { %>
-                <%= messages.flash %>
-                <% } catch {}%>
-            </div>
-            <!-- Register -->
-            <!-- <p>Not a member?
+                    <!-- Sign in button -->
+                    <button class="btn btn-info btn-block my-4" type="submit" id="sign-in">Log in</button>
+                    <div style="color: rgb(247, 114, 114)">
+                        <% try { %>
+                        <%= messages.flash %>
+                        <% } catch {}%>
+                    </div>
+                    <!-- Register -->
+                    <!-- <p>Not a member?
             <a href="">Register</a>
             </p> -->
 
-        </form>
-    </div>
-</div>
+                </form>
+            </div>
+        </article>
+    </section>
 
-<%- include('./partials/footer.ejs'); %>
+    <%- include('./partials/footer.ejs'); %>
 
 </body>
 
 <%- include('./partials/scripts.ejs'); %>
+<script type="text/javascript" src="/js/login.js"></script>
 
 </html>
