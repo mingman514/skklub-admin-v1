@@ -1,3 +1,13 @@
+/* Basic Structure */
+html, body{height: 100%;}
+body{ margin: 0;}
+section.mh{
+    min-height: calc(100% - 50px);
+    padding-bottom: 126px;
+}
+footer{margin-top: -126px;}
+
+
 /* index */
 #index-card .card-body{
     padding-bottom: 70px;
@@ -48,6 +58,17 @@ input#admin_id, input#password, button#sign-in, input#pw1, input#pw2, button#pwc
     width: 50% !important;
     margin: auto auto;
     text-align:center;
+}
+article.card{
+    flex-direction: row;
+    justify-content: center;
+}
+.login-card{
+    max-width: 768px;
+}
+
+.card-body{
+    padding: 3rem 2rem 6rem;
 }
 @media screen and (max-width: 768px) {
     input#admin_id, input#password, button#sign-in, input#pw1, input#pw2, button#pwchange{
