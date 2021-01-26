@@ -75,7 +75,7 @@ router
         SELECT cid, campus, cname, category1, category2, category3, president_name, president_contact, authority
         FROM ${process.env.PROCESSING_DB}
         WHERE 1=1${sqlWhere}
-        ORDER BY cname ASC;
+        ORDER BY recent_change_date DESC;
         `,
         null,
         (err, results) => {

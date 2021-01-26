@@ -61,7 +61,7 @@ window.onload = function(){
                     `
                 }
                 
-                if (['소모임', '준소모임'].includes(cdata.category1) && cdata.campus.indexOf('명륜') > -1 ) {
+                if (['소모임', '준소모임', '학회'].includes(cdata.category1) && cdata.campus.indexOf('명륜') > -1 ) {
                     selectFormHTML = `
                     ${cdata.category1}(명륜) :
                     <select name="category2" id="category2">
@@ -76,7 +76,7 @@ window.onload = function(){
                     </select><br>
                     `
                     }
-                if (['소모임', '준소모임'].includes(cdata.category1) && cdata.campus.indexOf('율전') > -1 ) {
+                if (['소모임', '준소모임', '학회'].includes(cdata.category1) && cdata.campus.indexOf('율전') > -1 ) {
                     selectFormHTML = `
                     ${cdata.category1}(율전) :
                     <select name="category2" id="category2">

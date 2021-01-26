@@ -222,7 +222,7 @@ $('#requestVerif').off('click').on('click', () => {
                           }).then((r) => {
                             Util.showNoticeModal({
                               'title':`계정생성 완료!`,
-                              'content' : `<a href="/">SKKLUB 관리페이지</a>에서 [${cname}]의 상세정보를 기입하세요.`
+                              'content' : `<a href="/">SKKLUB 관리페이지</a>에서 [${cname}]의<br> 상세정보를 기입하세요.`
                             })
                             
                             // 모달 닫히면 초기 페이지로
