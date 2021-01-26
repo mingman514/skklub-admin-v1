@@ -4,6 +4,7 @@ const router = express.Router();
 const check = require('../custom_modules/check')
 const sql = require("../custom_modules/mysql-query")
 const encrypt = require('../custom_modules/encrypt')
+const log = require('../custom_modules/insertLog');
 const nodemailer = require('nodemailer')
 
 const smtpTransport = nodemailer.createTransport({
@@ -214,9 +215,10 @@ router
                 null, (err, results) => {
                             if (err) {
                                 console.log(err);
-                                res.json({'RESULT':'FAIL'})
+                                res.json({'RESULT':'FAIL'});
                             } else {
-                            res.json({'RESULT':'SUCCESS'})
+                                log.insertLogByCid(req.user.cid, log.getClientIp(req), 'SIGN_UP', 'REGULAR');
+                                res.json({'RESULT':'SUCCESS'});
                             }
                         })
         })
