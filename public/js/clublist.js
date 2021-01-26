@@ -184,7 +184,11 @@ _dom.find("tbody").off("click").on("click", ".viewDetail", function () { // $([s
          var modalTable = $('#info-table-modal, #info-table-modal2');
 
          $('#dt-title, #logo-cname').text(obj_result['cname']+' ');                              // title, logo cname
-         $('#dt-logo').find('img').attr('src', `../img/logo/${obj_result['logo_path']}`)     // logo path
+         
+         if(obj_result['logo_path'] !== null){
+            $('#dt-logo').find('img').attr('src', `../img/logo/${obj_result['logo_path']}`)     // logo path
+         }
+
          for (var key in obj_result){
             if($('#dt-'+key) !== null){
                modalTable.find('#dt-'+key).text(obj_result[key])                              // else

@@ -121,7 +121,7 @@ window.onload = function(){
         }
 
         // load logo img
-        if(cdata['logo_path'] !== ""){
+        if(cdata['logo_path'] !== "" && cdata['logo_path'] !== null){
             $('#club_logo').attr('src', '/img/logo/' + cdata['logo_path']);
         }
 
