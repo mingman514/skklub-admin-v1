@@ -103,6 +103,8 @@ router
         res.json({"data" : results[0]});
       }
     });
+
+    /** 항목 추려서 가져오기 */
     // sql.requestData(
     //   // `SELECT * FROM ${process.env.PROCESSING_DB} WHERE cid= ?;` + `SELECT DISTINCT category1 FROM ${process.env.PROCESSING_DB};` + `SELECT DISTINCT category2 FROM ${process.env.PROCESSING_DB};`,
     //   `SELECT * FROM ${process.env.PROCESSING_DB} WHERE cid= ?;`,
@@ -204,20 +206,38 @@ router
       })
     })
 
+// Check
+
 // Check if VALID stored data exist
 router
   .route("/check-temp")
     .post(check.checkAuthenticated, check.checkEditable, (req, res) => {
 
-      sql.requestData(`SELECT update_flag FROM ${process.env.INFO_TEMP} WHERE cid=${req.user.cid}`, null, (err, results) => {
+      sql.requestData(`SELECT COUNT(*) AS cnt, update_flag FROM ${process.env.INFO_TEMP} WHERE cid=${req.user.cid}`, null, (err, results) => {
         if (err) {
           console.log(err);
           res.json({result : "DB_ERROR"})
         } else {
 
-          if(results[0].update_flag === 0){
+          // When Data Empty
+          if(results[0].cnt === 0){
+
+            // Insert Row
+            sql.requestData(`INSERT INTO ${process.env.INFO_TEMP} (cid) VALUES(${req.user.cid});`, null, (err, results) => {
+              if(err){
+                console.log(err);
+                res.json({result : "DB_ERROR"});
+              } else {
+                res.json({result : "NOT_EXIST"});
+              }
+            })
+          } 
+          // Found One but already Up-to-date
+          else if(results[0].update_flag === 0){
             res.json({result : "NOT_EXIST"})
-          } else {
+          }
+          // Found One in the Middle of Work
+          else {
             res.json({result : "EXIST"})
           }
         }
