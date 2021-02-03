@@ -217,7 +217,7 @@ router
                                 console.log(err);
                                 res.json({'RESULT':'FAIL'});
                             } else {
-                                log.insertLogByCid(req.user.cid, log.getClientIp(req), 'SIGN_UP', 'REGULAR');
+                                log.insertLogByCname(cname, log.getClientIp(req), 'SIGN_UP', 'REGULAR');
                                 res.json({'RESULT':'SUCCESS'});
                             }
                         })
