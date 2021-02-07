@@ -3,6 +3,17 @@ const router = express.Router();
 
 const sql = require("../custom_modules/mysql-query");
 
+/**
+     * @author mingman
+     * Seed needs to be changed once a day.
+     * Therefore, seed format should be 'yyyymmdd',
+     * which is a number of 8 digits.
+     * 
+     * Get today's date and then convert it into format above.
+     */
+var dateSeed = getSeedForRand();
+
+
     /**
      * API FOR TEST
      */
@@ -13,7 +24,8 @@ router
     console.log("/test/:category/:campus")
     let API_sql = `SELECT cid, cname, authority, category1, category2, category3, campus, logo_path
                    FROM CLUB_TEST
-                   WHERE 1=1${convertCategory(clubCategory)}${convertCampus(clubCampus)} AND authority NOT IN (0, 2, 4, 6)`;
+                   WHERE 1=1${convertCategory(clubCategory)}${convertCampus(clubCampus)} AND authority NOT IN (0, 2, 4, 6)
+                   ORDER BY RAND(${dateSeed})`;
     console.log(API_sql)
     sql.requestData(API_sql, null, (err, results) => {
         if (err) {
@@ -82,7 +94,8 @@ router
         console.log("/:category/:campus")
         let API_sql = `SELECT cid, cname, authority, category1, category2, category3, campus, logo_path
                        FROM CLUB
-                       WHERE 1=1${convertCategory(clubCategory)}${convertCampus(clubCampus)} AND authority NOT IN (0, 2, 4, 6)`;
+                       WHERE 1=1${convertCategory(clubCategory)}${convertCampus(clubCampus)} AND authority NOT IN (0, 2, 4, 6)
+                       ORDER BY RAND(${dateSeed})`;
 
         sql.requestData(API_sql, null, (err, results) => {
             if (err) {
@@ -143,6 +156,7 @@ router
     });
 
 
+// FUNCTIONS
 function convertCategory(clubCategory){
     let conditions = ' ';
         // category converting
@@ -175,6 +189,21 @@ function convertCampus(clubCampus){
     return conditions;
 }
 
+function getSeedForRand() {
+    // Converter date -> int
+    let date = new Date();
+    let year = date.getFullYear(); 
+    let month = new String(date.getMonth()+1);
+    let day = new String(date.getDate());
 
+    month = addZero(month);
+    day = addZero(day);
+    
+    return (Number) (year + month + day);
+
+    function addZero(str) {
+        return str.length == 1? '0' + str : str;
+    }
+}
 
 module.exports = router;
