@@ -153,7 +153,7 @@ function convertCategory(clubCategory){
             conditions += "AND (category1='준중앙동아리' OR category1='독립동아리')"; break;
         case 'groups':
             conditions += "AND (category1='소모임' OR category1='준소모임')"; break;
-        case 'academic-club':
+        case 'academic-clubs':
             conditions += "AND category1='학회'"; break;
         default:
             conditions = '';
