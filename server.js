@@ -114,29 +114,6 @@ app.use('/api', apiRouter);
 app.use('/register', registerRouter);
 
 
-
-// register 구현 아직
-app.get("/register", check.checkNotAuthenticated, (req, res) => {
-  res.render("register.ejs");
-});
-
-app.post("/register", check.checkNotAuthenticated, async (req, res) => {
-  // https://joshua1988.github.io/web-development/javascript/js-async-await/
-  try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10); // 10 times hashing (default), await = asynchronous process
-    users.push({
-      id: Date.now().toString(),
-      name: req.body.name,
-      admin_id: req.body.admin_id,
-      password: hashedPassword,
-    });
-    res.redirect("/login");
-  } catch {
-    res.redirect("/register");
-  }
-  console.log(users);
-});
-
 app.delete("/logout", (req, res) => {
   req.logOut();
   res.redirect("/login");

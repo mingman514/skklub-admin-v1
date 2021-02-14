@@ -1,7 +1,7 @@
 /* Basic Structure */
 html, body{height: 100%;}
 body{ margin: 0;}
-section.mh{
+.footer-min-width{
     min-height: calc(100% - 50px);
     padding-bottom: 126px;
 }
@@ -11,6 +11,10 @@ footer{margin-top: -126px;}
 /* index */
 #index-card .card-body{
     padding-bottom: 70px;
+}
+
+.classic-tabs .card-body{
+    padding: 0;
 }
 
 #index-card .index-btn{
@@ -81,7 +85,9 @@ article.card{
 }
 
 
+/* Master Page */
 /* datatable */
+/* (1) Club List */
 .clublist .dt-center {
     min-width:70px;
 }
@@ -107,10 +113,6 @@ span.viewDetail:hover{
     margin: 0 3px;
 }
 
-
-
-/* Master Page */
-
 /* filter */
 @media screen and (max-width: 450px) {
     #filterform{
@@ -118,7 +120,7 @@ span.viewDetail:hover{
     }
 }
 
-#filterform .filtSelect{
+#filterform .filtSelect, #tab-log .filtSelect{
         display: inline-block;
         height: calc(1.8125rem + 2px);
         padding: .375rem 1.55rem .375rem .35rem;
@@ -136,7 +138,7 @@ span.viewDetail:hover{
         font-size: .875rem;
 }
 
-#filterform .filtTxt{
+#filterform .filtTxt, #tab-log .filtTxt{
         width: 152px;
         display: inline-block;
         height: calc(1.8125rem + 2px);
@@ -156,6 +158,26 @@ span.viewDetail:hover{
     padding: .5rem 1rem;
     margin: 0.1rem;
 }
+
+/* (2) Activity Log */
+#tab-log .dataTables_scrollHeadInner, #tab-log .table{
+    width:100%!important
+};
+
+#tab-log .tab_log_srchbtn, #tab-log .tab_log_reset{
+    padding: .5rem 1rem;
+    margin: 0.1rem;
+}
+
+#tab-log .log-cname:hover, #tab-log .delete-log:hover{
+    color: slateblue;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+
+
+
 
 /* Setting Mode */
 #settingMode{

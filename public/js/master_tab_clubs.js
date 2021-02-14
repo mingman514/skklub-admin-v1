@@ -76,12 +76,12 @@ var dataTable = _dom.DataTable({
        'render': function ( data, type, row ) {
                   let auth = Number(data)
                   let txtcontent = ''
-                  if(isShown(auth)){
+                  if(Util.isShown(auth)){
                      txtcontent += '<span class="badge badge-pill badge-success">공개중</span> '
                   } else {
                      txtcontent += '<span class="badge badge-pill badge-danger">비공개</span> '
                   }
-                  if(isEditable(auth)){
+                  if(Util.isEditable(auth)){
                      txtcontent += '<span class="badge badge-pill badge-default">수정가능</span>'
                   } else {
                      txtcontent += '<span class="badge badge-pill badge-danger">수정불가</span>'
@@ -115,10 +115,10 @@ var dataTable = _dom.DataTable({
                      let auth = Number(data)
                      let showchk = ''
                      let editchk = ''
-                     if(isShown(auth)){
+                     if(Util.isShown(auth)){
                         showchk = ' checked';
                      }
-                     if(isEditable(auth)){
+                     if(Util.isEditable(auth)){
                         editchk = ' checked'
                      }
                      let switchContent = `
@@ -197,12 +197,12 @@ _dom.find("tbody").off("click").on("click", ".viewDetail", function () { // $([s
          // Show Status Badge
          let txtcontent = ' '
          let auth = Number(obj_result['authority'])
-         if(isShown(auth)){
+         if(Util.isShown(auth)){
             txtcontent += '<span class="badge badge-pill badge-success" style="margin-left:10px;">공개중</span> '
          } else {
             txtcontent += '<span class="badge badge-pill badge-danger" style="margin-left:10px;">비공개</span> '
          }
-         if(isEditable(auth)){
+         if(Util.isEditable(auth)){
             txtcontent += '<span class="badge badge-pill badge-default">수정가능</span>'
          } else {
             txtcontent += '<span class="badge badge-pill badge-danger">수정불가</span>'
@@ -226,7 +226,24 @@ _dom.find("tbody").off("click").on("click", ".viewDetail", function () { // $([s
 
 });
 
+// ==================================
+// Reload Tabs
+// ==================================
+/** @todo 동적 리로드 구현 */
+// const clubsTab = $('.nav-item a[href="#tab-clubs"]');
+// const manageTab = $('.nav-item a[href="#tab-manage"]');
+// const logTab = $('.nav-item a[href="#tab-log"]');
 
+// const tabs = [clubsTab, manageTab, logTab];
+// tabs.forEach((e) => {
+//    e.off().on('click', () => {
+//       let target = e.attr('href');
+//       console.log('target = '+target);
+//       $(target).load(location.href + target);
+//    })
+// })
+// var current_index = $("#tabs").tabs("option","active");
+// $("#tabs").tabs('load',current_index);
 
 // ==================================
 // 비밀번호 재설정
@@ -310,7 +327,7 @@ $("#reset_filter").click(function (e) {
    $('#filterform').each(function () {
       this.reset();
    })
-   // $("#searchKey").focus(); // 모바일 시 불편할 수 있음
+   
    dataTable.ajax.reload()
 });
 
@@ -360,7 +377,7 @@ _dom.find("tbody").off("change").on("change", ".custom-control-input", function 
          alert("message:"+request.responseText);
         }
    }).then(function(result){
-      let newauth = calcAuth(result['authority'], showauth, editauth);
+      let newauth = Util.calcAuth(result['authority'], showauth, editauth);
       // 권한변경 요청 ajax
       $.ajax({
          url:'/master/update',
@@ -466,7 +483,7 @@ function checkEachClub(){
          type: 'POST',
          data: {
             category1 : $category1,
-            newauth : calcAuth(0, $multiShow, $multiEdit),
+            newauth : Util.calcAuth(0, $multiShow, $multiEdit),
             target : $targetClubs
          },
          dataType: 'text'
@@ -486,32 +503,3 @@ function checkEachClub(){
  })
 
 
-
-// ==================================
-// Function Declarations
-// ==================================
-
-function isShown(auth){
-   let binNum = auth.toString(2)
-   if(auth >= 4 || binNum[binNum.length-1] === '1'){ // 관리자급부턴 기본권한 허용
-      return true;
-   }
-   return false;
-}
-
-function isEditable(auth){
-   let binNum = auth.toString(2)
-   if(auth >= 4 || binNum[binNum.length-2] === '1'){
-      return true;
-   }
-   return false;
-}
-
-function calcAuth(prevauth, showauth, editauth){
-   if(prevauth>3){
-      return prevauth;
-   }
-   let binNum = showauth + (editauth << 1);
-
-   return binNum
-}

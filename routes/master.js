@@ -8,7 +8,7 @@ const log = require('../custom_modules/insertLog');
 
 // master
 router.get("/", check.checkMasterAuth, (req, res) => {
-      res.render("clublist.ejs", {
+      res.render("master.ejs", {
         cname: req.user.cname,
         auth: req.user.authority,
       });
@@ -18,7 +18,6 @@ router.get("/", check.checkMasterAuth, (req, res) => {
 // Show Club List
 router
     .post("/getClubList", check.checkMasterAuth, (req, res) => {
-      // param 전달받아서 sql로 필터처리하는 부분 구현!
       let fcampus = req.body.campus;
       let fcategory = req.body.category;
       let fshow = req.body.show;
@@ -90,6 +89,59 @@ router
         }
       );
     });
+
+router
+    .post("/getActivityLog", check.checkMasterAuth, (req, res) => {
+      var startIdx = req.body.start;
+      var length = req.body.length;
+      var draw = req.body.draw;
+      
+      var order_col_idx = req.body['order[0][column]']; // 정렬할 기준 컬럼 인덱스
+      var order_col = req.body[`columns[${order_col_idx}][data]`]
+      var order_dir = req.body['order[0][dir]'];
+      var srch_col = req.body.srch_col;
+      var srch_key = req.body.srch_key;
+      
+      sql.requestData(
+        `
+        -- requested data
+        SELECT L.LOG_ID, L.LOG_CDE, L.ACTION_DETAIL, L.CID, L.CNAME, C.campus AS CAMPUS, date_format(L.TIME,'%Y-%m-%d %H:%i') AS TIME, L.USR_IP
+        FROM ${process.env.LOG_DB} AS L
+        LEFT OUTER JOIN (SELECT cid, campus FROM ${process.env.PROCESSING_DB}) AS C
+        ON L.CID = C.cid
+        WHERE CAMPUS LIKE '%${req.user.campus}%'${srch_key? ` AND ${srch_col} LIKE '%${srch_key}%'` : '' }
+        ORDER BY ${order_col} ${order_dir} LIMIT ${length} OFFSET ${startIdx};
+
+        -- recordsTotal
+        SELECT COUNT(*) AS TOT_CNT FROM ${process.env.LOG_DB} AS L
+        LEFT OUTER JOIN (SELECT cid, campus FROM ${process.env.PROCESSING_DB}) AS C
+        ON L.CID = C.cid
+        WHERE CAMPUS LIKE '%${req.user.campus}%';
+
+        -- recordsFilter
+        SELECT COUNT(*) AS FILT_CNT FROM ${process.env.LOG_DB} AS L
+        LEFT OUTER JOIN (SELECT cid, campus FROM ${process.env.PROCESSING_DB}) AS C
+        ON L.CID = C.cid
+        WHERE CAMPUS LIKE '%${req.user.campus}%'${srch_key? ` AND ${srch_col} LIKE '%${srch_key}%'` : '' }
+        `,
+        null,
+        (err, results) => {
+          if (err) {
+            console.log(err);
+          } else {
+            let obj_result = {
+              draw : draw,
+              recordsTotal : results[1][0].TOT_CNT,
+              recordsFiltered : results[2][0].FILT_CNT,
+              data : results[0],
+              auth : req.user.authority
+            }
+
+            res.json(obj_result);
+          }
+        }
+      );
+    })
 
 
 // Get Club Detail for Modal
@@ -216,6 +268,20 @@ router
           res.send('DELETED')
         }
       });
+  })
+
+router
+  .post('/delete-log', check.checkMasterAuth, (req, res) => {
+    const logId = req.body.logId;
+
+    sql.requestData(`DELETE FROM ${process.env.LOG_DB} WHERE LOG_ID=?`, logId, (err, results) => {
+      if(err){
+        console.log(err);
+        res.json({ 'RESULT' : 'FAIL'} );
+      } else {
+        res.json({ 'RESULT' : 'SUCCESS'} );
+      }
+    })
   })
 
 

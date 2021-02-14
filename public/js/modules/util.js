@@ -151,6 +151,41 @@ export default {
     },
 
 
+    /**
+     * 공개권한 여부
+     */
+    isShown : function (auth){
+        let binNum = auth.toString(2)
+        if(auth >= 4 || binNum[binNum.length-1] === '1'){ // 관리자급부턴 기본권한 허용
+           return true;
+        }
+        return false;
+     },
+    
+    /**
+     * 수정권한 여부
+     */ 
+    isEditable : function (auth){
+        let binNum = auth.toString(2)
+        if(auth >= 4 || binNum[binNum.length-2] === '1'){
+           return true;
+        }
+        return false;
+     },
+    
+    /**
+     * 권한 계산
+     */
+    calcAuth : function (prevauth, showauth, editauth){
+        if(prevauth>3){
+           return prevauth;
+        }
+        let binNum = showauth + (editauth << 1);
+     
+        return binNum
+     },
+
+
 
 
 
