@@ -109,10 +109,10 @@ window.onload = function(){
                 let $dom = $(`#${key}`);
 
                 if($dom.prop('tagName') === 'INPUT' ){      // input tag이면 value에 넣기
-                    $dom.val(cdata[key]);
+                    $dom.val(Util.decodeHTMLEntities(cdata[key]));
                 }
                 else if ($dom.prop('tagName') === 'TEXTAREA'){  // textarea tag이면 textContent에 넣기
-                    $dom.text(cdata[key]);
+                    $dom.text(Util.decodeHTMLEntities(cdata[key]));
                 }
 
             } catch {
@@ -167,10 +167,10 @@ window.onload = function(){
                                  let $dom = $(`#${key}`);
      
                                  if($dom.prop('tagName') === 'INPUT' ){      // input tag이면 value에 넣기
-                                     $dom.val(cdata[key]);
+                                     $dom.val(Util.decodeHTMLEntities(cdata[key]));
                                  }
                                  else if ($dom.prop('tagName') === 'TEXTAREA'){  // textarea tag이면 textContent에 넣기
-                                     $dom.text(cdata[key]);
+                                     $dom.text(Util.decodeHTMLEntities(cdata[key]));
                                  }
      
                              } catch {
