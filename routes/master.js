@@ -7,7 +7,7 @@ const encrypt = require('../custom_modules/encrypt')
 const log = require('../custom_modules/insertLog');
 
 // master
-router.get("/", check.checkMasterAuth, (req, res) => {
+router.get("/", (req, res) => {
       res.render("master.ejs", {
         cname: req.user.cname,
         auth: req.user.authority,
@@ -17,7 +17,7 @@ router.get("/", check.checkMasterAuth, (req, res) => {
 
 // Show Club List
 router
-    .post("/getClubList", check.checkMasterAuth, (req, res) => {
+    .post("/getClubList", (req, res) => {
       let fcampus = req.body.campus;
       let fcategory = req.body.category;
       let fshow = req.body.show;
@@ -91,7 +91,7 @@ router
     });
 
 router
-    .post("/getActivityLog", check.checkMasterAuth, (req, res) => {
+    .post("/getActivityLog", (req, res) => {
       var startIdx = req.body.start;
       var length = req.body.length;
       var draw = req.body.draw;
@@ -146,7 +146,7 @@ router
 
 // Get Club Detail for Modal
 router
-    .post("/getClubDetail", check.checkMasterAuth, (req, res) => {
+    .post("/getClubDetail", (req, res) => {
       let _cid = req.body.cid;
       console.log("cid = ", _cid);
       sql.requestData(
@@ -168,7 +168,7 @@ router
 
 // Get Specific Columns
 router
-    .post("/getTargetFeature", check.checkMasterAuth, (req, res) => {
+    .post("/getTargetFeature", (req, res) => {
       let _cid = req.body.cid;
       let reqCols = req.body.reqColumn.split(','); // 배열을 string 형태로 전송하므로 split으로 배열화 시켜줌
       let reqColsSql = '';
@@ -191,7 +191,7 @@ router
 
 // Update Authority (Switch)
 router
-    .post("/update", check.checkMasterAuth, (req, res) => {
+    .post("/update", (req, res) => {
       let categorySql = '';
       if(req.body.category1){
         categorySql = `, category1='${req.body.category1}'`;
@@ -226,7 +226,7 @@ router
 
 
 router
-  .post("/resetPassword", check.checkMasterAuth, (req, res) => {
+  .post("/resetPassword", (req, res) => {
     const _target = req.body.cid
 
     var newPassword = String(getRandomInt(100000, 999999));
@@ -251,7 +251,7 @@ router
 
 
 router
-  .post("/deleteAccount", check.checkMasterAuth, (req, res) => {
+  .post("/deleteAccount", (req, res) => {
     const _target = req.body.cid
 
     const backupSql = `INSERT INTO DELETED_CLUB SELECT * FROM ${process.env.PROCESSING_DB} WHERE cid=${_target};`
@@ -271,7 +271,7 @@ router
   })
 
 router
-  .post('/delete-log', check.checkMasterAuth, (req, res) => {
+  .post('/delete-log', (req, res) => {
     const logId = req.body.logId;
 
     sql.requestData(`DELETE FROM ${process.env.LOG_DB} WHERE LOG_ID=?`, logId, (err, results) => {

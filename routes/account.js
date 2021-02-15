@@ -9,10 +9,10 @@ const log = require('../custom_modules/insertLog');
 // account
 router
     .route("/")
-    .get(check.checkAuthenticated, (req, res) => {
+    .get((req, res) => {
         res.render("account.ejs", { cname: req.user.cname, flash: "" });
     })
-    .post(check.checkAuthenticated, (req, res) => {
+    .post((req, res) => {
         var pw1 = req.body.pw1;
         var pw2 = req.body.pw2;
         var msg = "";

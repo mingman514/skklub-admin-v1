@@ -106,10 +106,10 @@ app.get("/", check.checkAuthenticated, (req, res) => {
 
 
 // ROUTING
-app.use('/info', infoRouter);
-app.use('/account', accountRouter);
+app.use('/info', check.checkAuthenticated, infoRouter);
+app.use('/account', check.checkAuthenticated, accountRouter);
 app.use('/login', loginRouter);
-app.use('/master', masterRouter);
+app.use('/master', check.checkMasterAuth, masterRouter);
 app.use('/api', apiRouter);
 app.use('/register', registerRouter);
 

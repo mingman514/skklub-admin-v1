@@ -65,14 +65,14 @@ const upload = multer({
 // info
 router.route("/")
       // redering html
-      .get(check.checkAuthenticated, (req, res) => {
+      .get((req, res) => {
             res.render("info.ejs", {
               cname: req.user.cname,
               auth: req.user.authority,
             });
       })
       // redering data
-      .post(check.checkAuthenticated, (req, res) => {
+      .post((req, res) => {
         sql.getClubInfo(req.user.cid, "cid", process.env.PROCESSING_DB, (err, results) => {
           if (err) {
             console.log(err);
@@ -87,14 +87,14 @@ router.route("/")
 router
   .route("/update")
   // rendering html
-  .get(check.checkAuthenticated, (req, res) => {
+  .get((req, res) => {
           res.render("clubupdate.ejs", {
             cname: req.user.cname,
             auth: req.user.authority
           });
   })
   // rendering data
-  .post(check.checkAuthenticated, (req, res) => {
+  .post((req, res) => {
     sql.getClubInfo(req.user.cid, "cid", process.env.PROCESSING_DB, (err, results) => {
       if (err) {
         console.log(err);
@@ -127,7 +127,7 @@ router
 
 router
 .route("/update/text")
-  .post(check.checkAuthenticated, check.checkEditable, (req, res) => {
+  .post(check.checkEditable, (req, res) => {
     // TEXT UPDATE
     var updateSql = "";
     
@@ -154,7 +154,7 @@ router
 // LOGO UPDATE
 router
   .route("/update/logo")
-  .post(check.checkAuthenticated, check.checkEditable, upload.single('logoUpload'), (req, res) => {
+  .post(check.checkEditable, upload.single('logoUpload'), (req, res) => {
     var fileName = req.file.filename;
 
     sql.requestData(
@@ -185,7 +185,7 @@ router
 // info/save-temp
 router
   .route("/save-temp")
-    .post(check.checkAuthenticated, check.checkEditable, (req, res) => {
+    .post(check.checkEditable, (req, res) => {
       // SAVE TEXT TEMP
       var saveTempSql = "update_flag=1, ";
       
@@ -211,7 +211,7 @@ router
 // Check if VALID stored data exist
 router
   .route("/check-temp")
-    .post(check.checkAuthenticated, check.checkEditable, (req, res) => {
+    .post(check.checkEditable, (req, res) => {
 
       sql.requestData(`SELECT COUNT(*) AS cnt, update_flag FROM ${process.env.INFO_TEMP} WHERE cid=${req.user.cid}`, null, (err, results) => {
         if (err) {
@@ -247,7 +247,7 @@ router
 // Load temp data
 router
   .route("/load-temp")
-    .post(check.checkAuthenticated, check.checkEditable, (req, res) => {
+    .post(check.checkEditable, (req, res) => {
       sql.getClubTemp(req.user.cid, "cid", process.env.INFO_TEMP, (err, results) => {
         if (err) {
           console.log(err);
