@@ -20,7 +20,9 @@ const smtpTransport = nodemailer.createTransport({
   });
 
 
-
+/**
+ * 정규등록
+ */
 router
     .get('/regular', (req, res) => {
         res.render("regist_regular.ejs");
@@ -225,7 +227,106 @@ router
     })
 
 
+/**
+ * 상시등록
+ */
+router
+    .get('/extra', (req, res) => {
+        res.render("regist_extra.ejs");
+    })
 
+router
+    .post('/hasCode', (req, res) => {
+        sql.requestData(`SELECT USED FROM CODES WHERE SUBJECT LIKE 'REGIST_EXTRA' AND CAMPUS LIKE ?;`, req.body.campus, (err, results) => {
+            if(err){
+                console.log(err);
+                res.json({'RESULT' : 'FAIL'});
+            } else {
+                if(results[0].USED === 1)
+                    res.json({'RESULT' : 'USE_CODE'});
+                else
+                    res.json({'RESULT' : 'NO_CODE'});
+            }
+        })
+    })
+
+router
+    .post('/matchCodeExtra', (req, res) => {
+        let campus = req.body.campus;
+        let code = req.body.verif_code;
+
+        sql.requestData(`SELECT CODE FROM CODES WHERE SUBJECT LIKE 'REGIST_EXTRA' AND CAMPUS LIKE ?;`, campus, (err, results) => {
+            if(err){
+                console.log(err);
+                res.json({'RESULT' : 'FAIL'});
+            } else {
+                if(results[0].CODE === code)
+                    res.json({'RESULT' : 'MATCHED'});
+                else
+                    res.json({'RESULT' : 'NOT_MATCHED'});
+            }
+        })
+    })
+
+router
+    .post('/requestExtra', (req, res) => {
+        const cname = req.body.cname;
+        const campus = req.body.campus;
+        const category1 = req.body.category1;
+        const admin_id = req.body.admin_id;
+        const admin_pw = req.body.admin_pw;
+        const president_name = req.body.president_name;
+        const president_contact = req.body.president_contact;
+        
+        /**@todo 시간되면 신청완료 log도 넣기 */
+        // 비밀번호 해시적용
+        encrypt.hashItem(admin_pw, (hashedPassword) => {
+            sql.requestData(`
+                INSERT INTO EXTRA_REGIST(CNAME, CAMPUS, CATEGORY1, ADMIN_ID, ADMIN_PW, PRESIDENT, CONTACT)
+                VALUES('${cname}', '${campus}', '${category1}', '${admin_id}', '${hashedPassword}', '${president_name}', '${president_contact}');`,
+                null, (err, results) => {
+                    if(err){
+                        console.log(err);
+                        res.json({'RESULT' : 'FAIL'});    
+                    } 
+                    res.json({'RESULT' : 'SUCCESS'});
+                })
+        })
+    })
+
+
+router
+    .post('/approveExtra', check.checkMasterAuth, (req, res) => {
+        // insert to CLUB, delete from EXTRA_REGIST
+
+        /** @todo signup - extra 로그찍기 */
+        
+         /** @todo 관리자가 승인 눌렀을 때 쿼리 */
+        /*
+        // Encrypt adminPw
+        encrypt.hashItem(admin_pw, (hashedPassword) => {
+            // INSERT ACCOUNT (Default Auth = 3)
+            sql.requestData(
+                `INSERT INTO ${process.env.PROCESSING_DB}(cname, campus, category1, admin_id, admin_pw, authority, president_name, president_contact)
+                VALUES('${cname}', '${campus}', '${category1}', '${admin_id}', '${hashedPassword}', 3, '${president_name}', '${president_name}'); 이것도 다 select로 처리해야하네...
+                UPDATE EXTRA_REGIST SET COMPLETED=1 WHERE ID=${targetId};`,
+                null, (err, results) => {
+                            if (err) {
+                                console.log(err);
+                                res.json({'RESULT':'FAIL'});
+                            } else {
+                                log.insertLogByCname(cname, log.getClientIp(req), 'SIGN_UP', 'REGULAR');
+                                res.json({'RESULT':'SUCCESS'});
+                            }
+                        })
+        })*/
+    })
+
+    // 신청내역 삭제
+router
+    .post('/deleteExtra', check.checkMasterAuth, (req, res) => {
+        
+    })
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);

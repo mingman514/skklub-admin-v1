@@ -1,5 +1,9 @@
 import Util from './modules/util.js'
 
+(function(){
+  'use strict';
+
+
 /**
  * 이메일 인증 요청
  */
@@ -135,7 +139,7 @@ $('#requestVerif').off('click').on('click', () => {
                       <div class="md-form">
                         <i class="fas fa-id-badge prefix grey-text"></i>
                         <input type="text" id="adminId" class="form-control" value="">
-                        <label for="adminId">아이디(한글가능)</label>
+                        <label for="adminId">아이디</label>
                       </div>
                       <div class="md-form">
                         <i class="fas fa-lock prefix grey-text"></i>
@@ -270,3 +274,4 @@ function lengthCheck(str, min, max){
   return true;
 }
 
+})();

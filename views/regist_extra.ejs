@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <%- include('./partials/header.ejs'); %>
+</head>
+
+<body>
+    <%- include('./partials/navbar.ejs'); %>
+
+    <!-- Full Page Intro -->
+    <section class="mh extra-regist"
+        style="background-image: url('/img/삼성학술정보관2.jpg'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+        <!-- Mask & flexbox options-->
+        <div class="mask d-flex justify-content-center align-items-center">
+            <!-- Content -->
+            <div class="container py-5 my-5">
+
+                <h3 class="font-weight-bold text-center white-text pb-2">SKKLUB 상시 등록</h3>
+                <p class="text-center white-text pt-2 mb-4">양식에 맞게 신청하여 스클럽 등록허가를 받으세요.</p>
+
+                <!--Grid row-->
+                <div class="row d-flex align-items-center justify-content-center">
+                    <!--Grid column-->
+                    <div class="col-md-6 col-xl-5">
+                        <!--Form-->
+                        <div class="card">
+                            <div class="card-body z-depth-2 px-4" id="registerForm">
+                                <div class="md-form" style="display: flex; flex-direction: row;">
+                                    <select id="campus-select" class="form-control regist-select" style="flex:1;">    
+                                        <option value="">캠퍼스</option> 
+                                        <option value="명륜">명륜</option>
+                                        <option value="율전">율전</option>                             
+                                    </select>
+                                    <select id="category-select" class="form-control regist-select" style="flex:2">     
+                                        <option value="">모임구분</option>
+                                        <option value="중앙동아리">중앙동아리</option>
+                                        <option value="독립동아리">독립동아리</option>
+                                        <option value="소모임">소모임</option>
+                                        <option value="학회">학회</option>                             
+                                    </select>
+                                </div>
+                                <div class="md-form">
+                                    <i class="fas fa-users prefix grey-text"></i>
+                                    <input type="text" id="cname" class="form-control" value="">
+                                    <label for="cname">신청 단체명</label>
+                                </div>
+                                <div class="md-form">
+                                    <i class="fas fa-id-badge prefix grey-text"></i>
+                                    <input type="text" id="admin-id" class="form-control" value="">
+                                    <label for="admin-id">아이디</label>
+                                </div>
+                                <div style="display: flex; flex-direction: row;">
+                                    <div class="md-form">
+                                        <i class="fas fa-lock prefix grey-text"></i>
+                                        <input type="password" id="admin-pw1" class="form-control" value="">
+                                        <label for="admin-pw1">비밀번호</label>
+                                    </div>
+                                    <div class="md-form">
+                                        <i class="fas fa-unlock prefix grey-text"></i>
+                                        <input type="password" id="admin-pw2" class="form-control" value="">
+                                        <label for="admin-pw2">비밀번호 확인</label>
+                                    </div>
+                                </div>
+                                <div class="md-form">
+                                    <i class="fas fa-user-tie prefix grey-text"></i>
+                                    <input type="text" id="president" class="form-control" value="">
+                                    <label for="president">대표자명</label>
+                                </div>
+                                <div class="md-form">
+                                    <i class="fas fa-phone prefix grey-text"></i>
+                                    <input type="text" id="contact" class="form-control" value="">
+                                    <label for="contact">연락처</label>
+                                </div>
+                                <div class="text-center my-3">
+                                    <button id="requestRegist" class="btn btn-indigo btn-block">계정등록 신청</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/.Form-->
+                    </div>
+                    <!--Grid column-->
+                </div>
+                <!--Grid row-->
+            </div>
+            <!-- Content -->
+        </div>
+        <!-- Mask & flexbox options-->
+    </section>
+    <!-- Full Page Intro -->
+
+
+
+    <div id="modalArea"></div>
+
+    <%- include('./partials/footer.ejs'); %>
+
+</body>
+
+<script type="module" src="/js/regist_extra.js"></script>
+<%- include('./partials/scripts.ejs'); %>
+
+</html>
