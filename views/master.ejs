@@ -114,23 +114,65 @@
             <!--/.Panel 1-->
             <!--Panel 2-->
             <div class="tab-pane fade text-right" id="tab-manage" role="tabpanel">
+                <!-- Verification Code Setting -->
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                    <div class="panel panel-default">
-                      <div class="panel-heading" role="tab" id="headingOne">
-                        <h4 class="panel-title">
-                          <button class="btn btn-primary btn-sm" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            인증코드 관리
-                          </button>
-                        </h4>
-                      </div>
-                      <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                        <div class="panel-body">
-                          <span class="text-muted">상시등록 인증을 위한 코드를 설정합니다.</span>
-                          <input type="text"> <button class="btn btn-sm btn-info">변경</button>
+                    <div class="panel panel-default d-flex flex-row justify-content-end">
+                        <div id="code-accordian-mr" style="margin-right:10px;">
+                            <div class="panel-heading" role="tab" id="headingOne">
+                                <h4 class="panel-title">
+                                <button class="btn btn-primary btn-sm" data-toggle="collapse" data-parent="#accordion" href="#manage_code_btn_mr" aria-expanded="true" aria-controls="manage_code_btn_mr">
+                                    인증코드 관리(명륜)
+                                </button>
+                                </h4>
+                            </div>
+                            <div id="manage_code_btn_mr" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                <div class="panel-body">
+                                    <div class="form-check">
+                                        <input
+                                          class="form-check-input"
+                                          type="checkbox"
+                                          value=""
+                                          id="use-code-mr"
+                                        />
+                                        <label class="form-check-label" for="use-code-mr">
+                                          인증코드 사용
+                                        </label>
+                                    </div>
+                                    <input type="text" id="code-mr" disabled> <button class="btn btn-sm btn-info" id="btn-code-mr">수정</button>
+                                    <div class="text-muted">상시등록 인증코드를 설정합니다.</div>
+                                </div>
+                            </div>
                         </div>
-                      </div>
+                        <div id="code-accordian-yj">
+                            <div class="panel-heading" role="tab" id="headingTwo">
+                                <h4 class="panel-title">
+                                <button class="btn btn-success btn-sm" data-toggle="collapse" data-parent="#accordion" href="#manage_code_btn_yj" aria-expanded="true" aria-controls="manage_code_btn_yj">
+                                    인증코드 관리(율전)
+                                </button>
+                                </h4>
+                            </div>
+                            <div id="manage_code_btn_yj" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+                                <div class="panel-body">
+                                    <div class="form-check">
+                                        <input
+                                          class="form-check-input"
+                                          type="checkbox"
+                                          value=""
+                                          id="use-code-yj"                                        
+                                        />
+                                        <label class="form-check-label" for="use-code-yj">
+                                          인증코드 사용
+                                        </label>
+                                    </div>
+                                    <input type="text" id="code-yj" disabled> <button class="btn btn-sm btn-info" id="btn-code-yj">수정</button>
+                                    <div class="text-muted">상시등록 인증코드를 설정합니다.</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
+                </div>
+                <!-- Submission List -->
+
             </div>
             <!--/.Panel 2-->
             <!--Panel 3-->

@@ -171,7 +171,7 @@ import Util from './modules/util.js'
                     } else
                         msg = '서버에서 오류가 발생하였습니다. 다시 시도해주세요.';
 
-                    Util.showNoticeModal({ 'title' : '', 'content' : msg })
+                    Util.showNoticeModal({ 'title' : '알림', 'content' : msg })
 
                     setTimeout(() => { window.location.reload() }, 3000);
                   })

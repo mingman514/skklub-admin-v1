@@ -15,6 +15,9 @@ router.get("/", (req, res) => {
   });
 
 
+/***********************************
+ * Clubs Tab
+ ***********************************/
 // Show Club List
 router
     .post("/getClubList", (req, res) => {
@@ -89,60 +92,6 @@ router
         }
       );
     });
-
-router
-    .post("/getActivityLog", (req, res) => {
-      var startIdx = req.body.start;
-      var length = req.body.length;
-      var draw = req.body.draw;
-      
-      var order_col_idx = req.body['order[0][column]']; // 정렬할 기준 컬럼 인덱스
-      var order_col = req.body[`columns[${order_col_idx}][data]`]
-      var order_dir = req.body['order[0][dir]'];
-      var srch_col = req.body.srch_col;
-      var srch_key = req.body.srch_key;
-      
-      sql.requestData(
-        `
-        -- requested data
-        SELECT L.LOG_ID, L.LOG_CDE, L.ACTION_DETAIL, L.CID, L.CNAME, C.campus AS CAMPUS, date_format(L.TIME,'%Y-%m-%d %H:%i') AS TIME, L.USR_IP
-        FROM ${process.env.LOG_DB} AS L
-        LEFT OUTER JOIN (SELECT cid, campus FROM ${process.env.PROCESSING_DB}) AS C
-        ON L.CID = C.cid
-        WHERE CAMPUS LIKE '%${req.user.campus}%'${srch_key? ` AND ${srch_col} LIKE '%${srch_key}%'` : '' }
-        ORDER BY ${order_col} ${order_dir} LIMIT ${length} OFFSET ${startIdx};
-
-        -- recordsTotal
-        SELECT COUNT(*) AS TOT_CNT FROM ${process.env.LOG_DB} AS L
-        LEFT OUTER JOIN (SELECT cid, campus FROM ${process.env.PROCESSING_DB}) AS C
-        ON L.CID = C.cid
-        WHERE CAMPUS LIKE '%${req.user.campus}%';
-
-        -- recordsFilter
-        SELECT COUNT(*) AS FILT_CNT FROM ${process.env.LOG_DB} AS L
-        LEFT OUTER JOIN (SELECT cid, campus FROM ${process.env.PROCESSING_DB}) AS C
-        ON L.CID = C.cid
-        WHERE CAMPUS LIKE '%${req.user.campus}%'${srch_key? ` AND ${srch_col} LIKE '%${srch_key}%'` : '' }
-        `,
-        null,
-        (err, results) => {
-          if (err) {
-            console.log(err);
-          } else {
-            let obj_result = {
-              draw : draw,
-              recordsTotal : results[1][0].TOT_CNT,
-              recordsFiltered : results[2][0].FILT_CNT,
-              data : results[0],
-              auth : req.user.authority
-            }
-
-            res.json(obj_result);
-          }
-        }
-      );
-    })
-
 
 // Get Club Detail for Modal
 router
@@ -268,6 +217,107 @@ router
           res.send('DELETED')
         }
       });
+  })
+/***********************************
+ * Manage Tab
+ ***********************************/
+router
+  .post('/getCodeInfo', (req, res) => {
+    sql.requestData(`SELECT CODE, USED, CAMPUS FROM CODES WHERE SUBJECT LIKE 'REGIST_EXTRA';`, null, (err, results) => {
+      if(err){
+        console.log(err);
+        res.json({'RESULT' : 'FAIL'});
+      } else {
+        res.json({'RESULT' : 'SUCCESS', 'INFO' : results, 'CAMPUS' : req.user.campus });
+      }
+    })
+  })
+
+router
+  .post('/changeCode', (req, res) => {
+    const campus = req.body.campus;
+    const code = req.body.code;
+
+    sql.requestData(`UPDATE CODES SET CODE=? WHERE CAMPUS LIKE ?;`, [code, campus], (err, results) => {
+      if(err){
+        console.log(err);
+        res.json({'RESULT' : 'FAIL'});
+      } else {
+        res.json({'RESULT' : 'SUCCESS'});
+      }
+    })
+  })
+
+router
+  .post('/changeCodeUse', (req, res) => {
+    const campus = req.body.campus;
+    const use = req.body.use;
+
+    sql.requestData(`UPDATE CODES SET USED=? WHERE CAMPUS LIKE ?;`, [use, campus], (err, results) => {
+      if(err){
+        console.log(err);
+        res.json({'RESULT' : 'FAIL'});
+      } else {
+        res.json({'RESULT' : 'SUCCESS'});
+      }
+    })
+  })
+
+
+/***********************************
+ * Log Tab
+ ***********************************/
+router
+  .post("/getActivityLog", (req, res) => {
+    var startIdx = req.body.start;
+    var length = req.body.length;
+    var draw = req.body.draw;
+    
+    var order_col_idx = req.body['order[0][column]']; // 정렬할 기준 컬럼 인덱스
+    var order_col = req.body[`columns[${order_col_idx}][data]`]
+    var order_dir = req.body['order[0][dir]'];
+    var srch_col = req.body.srch_col;
+    var srch_key = req.body.srch_key;
+    
+    sql.requestData(
+      `
+      -- requested data
+      SELECT L.LOG_ID, L.LOG_CDE, L.ACTION_DETAIL, L.CID, L.CNAME, C.campus AS CAMPUS, date_format(L.TIME,'%Y-%m-%d %H:%i') AS TIME, L.USR_IP
+      FROM ${process.env.LOG_DB} AS L
+      LEFT OUTER JOIN (SELECT cid, campus FROM ${process.env.PROCESSING_DB}) AS C
+      ON L.CID = C.cid
+      WHERE CAMPUS LIKE '%${req.user.campus}%'${srch_key? ` AND ${srch_col} LIKE '%${srch_key}%'` : '' }
+      ORDER BY ${order_col} ${order_dir} LIMIT ${length} OFFSET ${startIdx};
+
+      -- recordsTotal
+      SELECT COUNT(*) AS TOT_CNT FROM ${process.env.LOG_DB} AS L
+      LEFT OUTER JOIN (SELECT cid, campus FROM ${process.env.PROCESSING_DB}) AS C
+      ON L.CID = C.cid
+      WHERE CAMPUS LIKE '%${req.user.campus}%';
+
+      -- recordsFilter
+      SELECT COUNT(*) AS FILT_CNT FROM ${process.env.LOG_DB} AS L
+      LEFT OUTER JOIN (SELECT cid, campus FROM ${process.env.PROCESSING_DB}) AS C
+      ON L.CID = C.cid
+      WHERE CAMPUS LIKE '%${req.user.campus}%'${srch_key? ` AND ${srch_col} LIKE '%${srch_key}%'` : '' }
+      `,
+      null,
+      (err, results) => {
+        if (err) {
+          console.log(err);
+        } else {
+          let obj_result = {
+            draw : draw,
+            recordsTotal : results[1][0].TOT_CNT,
+            recordsFiltered : results[2][0].FILT_CNT,
+            data : results[0],
+            auth : req.user.authority
+          }
+
+          res.json(obj_result);
+        }
+      }
+    );
   })
 
 router
