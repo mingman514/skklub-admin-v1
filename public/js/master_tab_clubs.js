@@ -183,15 +183,17 @@ _dom.find("tbody").off("click").on("click", ".viewDetail", function () { // $([s
 
          var modalTable = $('#info-table-modal, #info-table-modal2');
 
-         $('#dt-title, #logo-cname').text(Util.decodeHTMLEntities(obj_result['cname'])+' ');                              // title, logo cname
+         $('#dt-title, #logo-cname').empty().text(Util.decodeHTMLEntities(obj_result['cname'])+' ');                              // title, logo cname
          
-         if(obj_result['logo_path'] !== null){
-            $('#dt-logo').find('img').attr('src', `../img/logo/${obj_result['logo_path']}`)     // logo path
-         }
+
+         if(obj_result['logo_path'] === null)
+            obj_result['logo_path'] = 'alt.jpg';
+
+         $('#dt-logo').find('img').attr('src', `../img/logo/${obj_result['logo_path']}`)     // logo path
 
          for (var key in obj_result){
             if($('#dt-'+key) !== null){
-               modalTable.find('#dt-'+key).text(Util.decodeHTMLEntities(obj_result[key]))         // else
+               modalTable.find('#dt-'+key).empty().text(Util.decodeHTMLEntities(obj_result[key]))         // else
             }
          }
          // Show Status Badge
@@ -282,16 +284,32 @@ $('.deleteAccount').off('click').on('click', (e) => {
          url:'/master/deleteAccount',
          type: 'POST',
          data: {cid : target_cid},
-         dataType: 'text'
+         dataType: 'JSON'
       })
    
-      .done((result) => {
+      .done((r) => {
          Util.closeAlert();
-         Util.showNoticeModal({
-            'type' : 'warning',
-            'title' : '계정삭제 완료', 
-            'content' : `[ ${_target} ]의 계정이 삭제되었습니다.`
-         })
+         if(r.RESULT === 'UNAUTHORIZED'){
+            Util.showNoticeModal({
+               'type' : 'danger',
+               'title' : '계정삭제 실패', 
+               'content' : `삭제 권한이 없습니다.`
+            })
+         } else if(r.RESULT === 'SUCCESS'){
+            Util.showNoticeModal({
+               'type' : 'warning',
+               'title' : '계정삭제 완료', 
+               'content' : `[ ${_target} ]의 계정이 삭제되었습니다.`
+            })
+            $('#clubDetailModal').modal('hide');
+            dataTable.ajax.reload()
+         } else {
+            Util.showNoticeModal({
+               'type' : 'danger',
+               'title' : '계정삭제 실패', 
+               'content' : '오류가 발생하였습니다.'
+            })
+         }
       })
    })
 })

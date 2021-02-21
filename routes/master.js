@@ -228,20 +228,34 @@ router
   .post("/deleteAccount", (req, res) => {
     const _target = req.body.cid
 
-    const backupSql = `INSERT INTO DELETED_CLUB SELECT * FROM ${process.env.PROCESSING_DB} WHERE cid=${_target};`
-    const deleteSql = `DELETE FROM ${process.env.PROCESSING_DB} WHERE cid=${_target};`
-
-    sql.requestData(backupSql + deleteSql, null, (err, results) => {
-        if (err) {
-          console.log(err);
-          res.send('FAIL')
+    sql.requestData(`SELECT authority AS AUTH FROM ${process.env.PROCESSING_DB} WHERE cid=${_target}`, null, (err, results) => {
+      if(err){
+        console.log(err);
+        res.json({'RESULT' : 'FAIL'});
+      } else {
+        console.log(results);
+        if(results[0].AUTH >= req.user.authority){
+          res.json({'RESULT' : 'UNAUTHORIZED'});
         } else {
-          console.log(`DELETE and BACKUP SUCCESS`)
 
-          log.insertLogByCid(req.user.cid, log.getClientIp(req),'DELETE_CLUB', String(_target));   // write log
-          res.send('DELETED')
+          const backupSql = `INSERT INTO DELETED_CLUB SELECT * FROM ${process.env.PROCESSING_DB} WHERE cid=${_target};`
+          const deleteSql = `DELETE FROM ${process.env.PROCESSING_DB} WHERE cid=${_target};`
+          
+          sql.requestData(backupSql + deleteSql, null, (err, results) => {
+            if (err) {
+              console.log(err);
+              res.json({'RESULT' : 'FAIL'});
+            } else {
+              console.log(`DELETE and BACKUP SUCCESS`)
+              
+              log.insertLogByCid(req.user.cid, log.getClientIp(req),'DELETE_CLUB', String(_target));   // write log
+              res.json({'RESULT' : 'SUCCESS'});
+
+            }
+          });
         }
-      });
+      }
+    })
   })
 /***********************************
  * Manage Tab
@@ -282,7 +296,7 @@ router
                       ID, CNAME, CATEGORY1, CAMPUS, PRESIDENT, CONTACT, date_format(REGIST_TIME,'%Y-%m-%d %H:%i') AS REGIST_TIME
                 FROM EXTRA_REGIST, (SELECT @ROWNUM := 0) TMP
                 WHERE 1=1 
-                ${req.user.authority < 8? ` AND CAMPUS LIKE ${req.user.campus}`: ''}
+                ${req.user.authority < 8? ` AND CAMPUS LIKE '${req.user.campus}'`: ''}
                 ORDER BY REGIST_TIME ASC) SUB
           ORDER BY SUB.ROWNUM DESC;
           `;
@@ -376,7 +390,8 @@ router
     var srch_col = req.body.srch_col;
     var srch_key = req.body.srch_key;
 
-    var master_filter = masterDetailedFilter(req.user.authority, req.user.campus, 'C.authority', 'CAMPUS');
+    var master_filter = masterSelfFilter(req.user.authority, req.user.campus, 'C.authority', 'CAMPUS'); // 권한 + 1은 활동로그 조회 시에 자신의 로그를 보기 위함
+
     sql.requestData(
       `
       -- requested data
@@ -434,8 +449,10 @@ router
     })
   })
 
-
-
+/**
+ * 스스로 자기계정을 삭제하는 등 치명적인 오류 예상시,
+ * 자신이 목록에 뜨지 않도록 하는 필터
+ */
 function masterDetailedFilter(auth, campus, authTxt, campusTxt){
   let sql = '';
   if (auth > 3 && auth <= 6) {   // 중간관리자
@@ -444,6 +461,21 @@ function masterDetailedFilter(auth, campus, authTxt, campusTxt){
     sql += ` AND ${authTxt} <= 6 AND ${campusTxt} LIKE '%${campus}%' `;
   } else if(auth == 8) {   // 기지위 서브관리자
     sql += ` AND ${authTxt} <= 7 `;
+  }
+  return sql;
+}
+
+/**
+ * 조회 등에서 자기 계정까지 포함하고 싶을때
+ */
+function masterSelfFilter(auth, campus, authTxt, campusTxt){
+  let sql = '';
+  if (auth > 3 && auth <= 6) {   // 중간관리자
+    sql += ` AND ${authTxt} <= 6 AND ${campusTxt} LIKE '%${campus}%' `;
+  } else if(auth == 7) {   // 동연관리자
+    sql += ` AND ${authTxt} <= 7 AND ${campusTxt} LIKE '%${campus}%' `;
+  } else if(auth == 8) {   // 기지위 서브관리자
+    sql += ` AND ${authTxt} <= 8 `;
   }
   return sql;
 }
