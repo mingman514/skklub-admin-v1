@@ -1,0 +1,90 @@
+<!--Panel 2-->
+<div class="text-right" id="tab-manage" role="tabpanel">
+    <h3 class="text-center"> 신청 동아리 관리 </h3>
+    <!-- Verification Code Setting -->
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default d-flex flex-row justify-content-end">
+            <div id="code-accordian-mr" style="margin-right:10px;">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                    <button class="btn btn-primary btn-sm" data-toggle="collapse" data-parent="#accordion" href="#manage_code_btn_mr" aria-expanded="true" aria-controls="manage_code_btn_mr">
+                        인증코드 관리(명륜)
+                    </button>
+                    </h4>
+                </div>
+                <div id="manage_code_btn_mr" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              value=""
+                              id="use-code-mr"
+                            />
+                            <label class="form-check-label" for="use-code-mr">
+                              인증코드 사용
+                            </label>
+                        </div>
+                        <input type="text" id="code-mr" disabled> <button class="btn btn-sm btn-info" id="btn-code-mr">수정</button>
+                        <div class="text-muted">상시등록 인증코드를 설정합니다.</div>
+                    </div>
+                </div>
+            </div>
+            <div id="code-accordian-yj">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                    <h4 class="panel-title">
+                    <button class="btn btn-success btn-sm" data-toggle="collapse" data-parent="#accordion" href="#manage_code_btn_yj" aria-expanded="true" aria-controls="manage_code_btn_yj">
+                        인증코드 관리(율전)
+                    </button>
+                    </h4>
+                </div>
+                <div id="manage_code_btn_yj" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+                    <div class="panel-body">
+                        <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              value=""
+                              id="use-code-yj"                                        
+                            />
+                            <label class="form-check-label" for="use-code-yj">
+                              인증코드 사용
+                            </label>
+                        </div>
+                        <input type="text" id="code-yj" disabled> <button class="btn btn-sm btn-info" id="btn-code-yj">수정</button>
+                        <div class="text-muted">상시등록 인증코드를 설정합니다.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Submission List -->
+        <table class="table dtable club-manage">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>모임명</th>
+                    <th>모임구분</th>
+                    <th>캠퍼스</th>
+                    <th>대표자명</th>
+                    <th>연락처</th>
+                    <th>신청시간</th>
+                    <th>승인/거절</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- <script type="module" src="/js/master_tab_manage.js"></script> -->
+<!--/.Panel 2-->

@@ -87,6 +87,9 @@ article.card{
 
 /* Master Page */
 /* datatable */
+.dtable, .dtable .dataTables_scrollHeadInner{
+    width: 100% !important;
+}
 /* (1) Club List */
 .clublist .dt-center {
     min-width:70px;
@@ -159,10 +162,16 @@ span.viewDetail:hover{
     margin: 0.1rem;
 }
 
-/* (2) Activity Log */
-#tab-log .dataTables_scrollHeadInner, #tab-log .table{
-    width:100%!important
-};
+/* (2) Club Manage */
+.club-manage .dt-center {
+    min-width:70px;
+}
+
+
+/* (3) Activity Log */
+#tab-log .activity-log .dt-center {
+    min-width:70px;
+}
 
 #tab-log .tab_log_srchbtn, #tab-log .tab_log_reset{
     padding: .5rem 1rem;

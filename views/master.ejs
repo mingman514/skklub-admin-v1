@@ -13,18 +13,18 @@
         <div class="tabs-wrapper" id="tabs">
             <ul class="nav tabs-secondary" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link waves-light active waves-effect waves-light" data-toggle="tab" href="#tab-clubs" role="tab">Clubs</a>
+                    <a id="btn-tab-clubs" class="nav-link waves-light active waves-effect waves-light" data-toggle="tab" href="#tab-clubs" role="tab">Clubs</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" href="#tab-manage" role="tab">Manage</a>
+                    <a id="btn-tab-manage" class="nav-link waves-light waves-effect waves-light" data-toggle="tab" href="#tab-manage" role="tab">Manage</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link waves-light waves-effect waves-light" data-toggle="tab" href="#tab-log" role="tab">Log</a>
+                    <a id="btn-tab-log" class="nav-link waves-light waves-effect waves-light" data-toggle="tab" href="#tab-log" role="tab">Log</a>
                 </li>
             </ul>
         </div>
         <!-- Tab panels -->
-        <div class="tab-content card">
+        <div class="tab-content card main-tab">
             <!--Panel 1-->
             <div class="tab-pane fade in show active" id="tab-clubs" role="tabpanel">
                 <div class="card-body">
@@ -78,7 +78,7 @@
                         </form>
                     </div>
                     </div>
-                    <table class="table clublist">
+                    <table class="table dtable clublist">
                         <thead>
                             <tr>
                                 <th><input type="checkbox" id="selectAllClub"></th>
@@ -112,97 +112,6 @@
                 </div>
             </div>
             <!--/.Panel 1-->
-            <!--Panel 2-->
-            <div class="tab-pane fade text-right" id="tab-manage" role="tabpanel">
-                <!-- Verification Code Setting -->
-                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                    <div class="panel panel-default d-flex flex-row justify-content-end">
-                        <div id="code-accordian-mr" style="margin-right:10px;">
-                            <div class="panel-heading" role="tab" id="headingOne">
-                                <h4 class="panel-title">
-                                <button class="btn btn-primary btn-sm" data-toggle="collapse" data-parent="#accordion" href="#manage_code_btn_mr" aria-expanded="true" aria-controls="manage_code_btn_mr">
-                                    인증코드 관리(명륜)
-                                </button>
-                                </h4>
-                            </div>
-                            <div id="manage_code_btn_mr" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                                <div class="panel-body">
-                                    <div class="form-check">
-                                        <input
-                                          class="form-check-input"
-                                          type="checkbox"
-                                          value=""
-                                          id="use-code-mr"
-                                        />
-                                        <label class="form-check-label" for="use-code-mr">
-                                          인증코드 사용
-                                        </label>
-                                    </div>
-                                    <input type="text" id="code-mr" disabled> <button class="btn btn-sm btn-info" id="btn-code-mr">수정</button>
-                                    <div class="text-muted">상시등록 인증코드를 설정합니다.</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="code-accordian-yj">
-                            <div class="panel-heading" role="tab" id="headingTwo">
-                                <h4 class="panel-title">
-                                <button class="btn btn-success btn-sm" data-toggle="collapse" data-parent="#accordion" href="#manage_code_btn_yj" aria-expanded="true" aria-controls="manage_code_btn_yj">
-                                    인증코드 관리(율전)
-                                </button>
-                                </h4>
-                            </div>
-                            <div id="manage_code_btn_yj" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
-                                <div class="panel-body">
-                                    <div class="form-check">
-                                        <input
-                                          class="form-check-input"
-                                          type="checkbox"
-                                          value=""
-                                          id="use-code-yj"                                        
-                                        />
-                                        <label class="form-check-label" for="use-code-yj">
-                                          인증코드 사용
-                                        </label>
-                                    </div>
-                                    <input type="text" id="code-yj" disabled> <button class="btn btn-sm btn-info" id="btn-code-yj">수정</button>
-                                    <div class="text-muted">상시등록 인증코드를 설정합니다.</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Submission List -->
-
-            </div>
-            <!--/.Panel 2-->
-            <!--Panel 3-->
-            <div class="tab-pane fade" id="tab-log" role="tabpanel">
-                <div class="d-flex align-items-center justify-content-end mb-4" style="min-width: 408px;">
-                    <select name="src_col" class="srch-col filtSelect custom-select-sm">
-                        <option value="CNAME" selected>모임명</option>
-                        <option value="ACTION_DETAIL">활동상세</option>
-                        <option value="USR_IP">IP주소</option>
-                    </select>
-                    <input type="text" name="searchKey" class="filtTxt tab_log_srchkey" placeholder="search">
-                    <button class="tab_log_srchbtn btn btn-dark btn-sm" type="submit" title="검색"><span class="fas fa-search"></span></button>
-                    <button class="tab_log_reset btn btn-dark btn-sm" type="reset" title="초기화"><span class="fas fa-sync"></span></button>
-                </div>
-                <table class="table activity-log">
-                    <thead>
-                        <tr>
-                            <th>번호</th>
-                            <th>활동</th>
-                            <th>활동상세</th>
-                            <th>모임명</th>
-                            <th>캠퍼스</th>
-                            <th>활동시간</th>
-                            <th>IP주소</th>
-                            <th><span class='fas fa-trash-alt'></span></th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-            <!--/.Panel 3-->
         </div>
     </div>
 </div>
@@ -441,8 +350,6 @@
 <%- include('./partials/scripts.ejs'); %>
   
 <script type="text/javascript" src="/lib/DataTables-1.10.23/js/datatables.js"></script>
+<script type="module" src="/js/master.js"></script>
 <script type="module" src="/js/master_tab_clubs.js"></script>
-<script type="module" src="/js/master_tab_log.js"></script>
-<script type="module" src="/js/master_tab_manage.js"></script>
-
 </html>

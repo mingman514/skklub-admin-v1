@@ -1,0 +1,88 @@
+<!--Panel 1-->
+<div class="in show active" id="tab-clubs" role="tabpanel">
+    <div class="card-body">
+        <h3 class="text-center"> 스클럽 동아리 명단 </h3>
+        <!-- 모드 변환 -->
+        <div class="custom-control custom-switch text-right">
+            <input type="checkbox" class="custom-control-input" id="adminModeSwitch">
+            <label class="custom-control-label" for="adminModeSwitch">관리모드</label>
+            </div>
+        <!-- 검색조건 -->
+        <div style="overflow: auto;">
+        <div class="d-flex justify-content-end text-right mb-4" style="min-width: 408px;">
+            <form action="/search" id="filterform">
+                <div class="d-inline-block mt-2">
+                <select name="show" class="filtSelect custom-select-sm">
+                    <option value="">공개여부</option>
+                    <option value="yes">공개중</option>
+                    <option value="no">비공개</option>
+                </select>
+                <select name="edit" class="filtSelect custom-select-sm">
+                    <option value="">수정권한</option>
+                    <option value="yes">수정가능</option>
+                    <option value="no">수정불가</option>
+                </select>
+                <select name="campus" class="filtSelect custom-select-sm" style="display: none;">
+                    <option value="">캠퍼스</option>
+                    <option value="명륜">명륜</option>
+                    <option value="율전">율전</option>
+                </select>
+                <select name="category1" class="filtSelect custom-select-sm">
+                    <option value="">모임구분</option>
+                    <option value="중앙동아리">중앙동아리</option>
+                    <option value="준중앙동아리">준중앙동아리</option>
+                    <option value="독립동아리">독립동아리</option>
+                    <option value="소모임">소모임/준소모임</option>
+                    <option value="학회">학회</option>
+                </select>
+                </div>
+                <div class="d-inline-block mt-2">
+                    <select name="searchCategory" class="filtSelect">
+                        <option value="cname">모임명</option>
+                        <option value="category2">중분류</option>
+                        <option value="category3">소분류</option>
+                        <option value="president_name">대표자명</option>
+                        <option value="contents">본문</option>
+                    </select>
+                    <input type="text" name="searchKey" id="searchKey" class="filtTxt" placeholder="search">
+                    <button class="btn btn-dark btn-sm" id="search_btn" type="submit" title="검색"><span class="fas fa-search"></span></button>
+                    <button class="btn btn-dark btn-sm" type="reset" id="reset_filter" title="초기화"><span class="fas fa-sync"></span></button>
+                </div>
+            </form>
+        </div>
+        </div>
+        <table class="table dtable clublist">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAllClub"></th>
+                    <th><span class="fas fa-search-plus"></span></th>
+                    <th>상태</th>
+                    <th>캠퍼스</th>
+                    <th>모임명</th>
+                    <th>대분류</th>
+                    <th>중분류</th>
+                    <th>소분류</th>
+                    <th>대표자</th>
+                    <th>연락처</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>-</td>
+                    <td><span class="far fa-plus-square"></span></td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- <script type="module" src="/js/master_tab_clubs.js"></script> -->
+<!--/.Panel 1-->

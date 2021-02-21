@@ -1,0 +1,32 @@
+<!--Panel 3-->
+<div id="tab-log" role="tabpanel">
+    <h3 class="text-center"> 동아리 활동로그 </h3>
+    <div style="overflow: auto;">
+        <div class="d-flex align-items-center justify-content-end mb-4" style="min-width: 408px;">
+            <select name="src_col" class="srch-col filtSelect custom-select-sm">
+                <option value="CNAME" selected>모임명</option>
+                <option value="ACTION_DETAIL">활동상세</option>
+                <option value="USR_IP">IP주소</option>
+            </select>
+            <input type="text" name="searchKey" class="filtTxt tab_log_srchkey" placeholder="search">
+            <button class="tab_log_srchbtn btn btn-dark btn-sm" type="submit" title="검색"><span class="fas fa-search"></span></button>
+            <button class="tab_log_reset btn btn-dark btn-sm" type="reset" title="초기화"><span class="fas fa-sync"></span></button>
+        </div>
+    </div>
+    <table class="table dtable activity-log">
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>활동</th>
+                <th>활동상세</th>
+                <th>모임명</th>
+                <th>캠퍼스</th>
+                <th>활동시간</th>
+                <th>IP주소</th>
+                <th><span class='fas fa-trash-alt'></span></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<!-- <script type="module" src="/js/master_tab_log.js"></script> -->
+<!--/.Panel 3-->

@@ -105,7 +105,8 @@ import Util from './modules/util.js'
             }
         }
     })
-        // use-code checkbox
+    
+    // use-code checkbox
     codeUseCheckMr.off().on('click', (e) => {
         var isChecked = ($(e.target).attr('checked')==='checked'? 1 : 0);
         $.ajax({
@@ -212,6 +213,124 @@ import Util from './modules/util.js'
         
         return regEx.test(str);
     }
+
+
+})();
+
+(function(){
+
+    'use strict';
+
+    // ==================================
+    // Datatable
+    // ==================================
+
+    var _dom = $(".table.club-manage");
+
+    const lang_kor = {
+    "decimal": "",
+    "emptyTable": "데이터가 없습니다.",
+    "info": "총 _TOTAL_ 건",
+    "infoEmpty": "0 건",
+    "infoFiltered": "(전체 _MAX_ 명 중 검색결과)",
+    "infoPostFix": "",
+    "thousands": ",",
+    "loadingRecords": "로딩중...",
+    "processing": `<img src='img/loading-table.gif' />`,
+    "search": "검색 : ",
+    "zeroRecords": "검색된 데이터가 없습니다.",
+    "paginate": {
+        "first": "첫 페이지",
+        "last": "마지막 페이지",
+        "next": "다음",
+        "previous": "이전"
+    },
+    "aria": {
+        "sortAscending": " :  오름차순 정렬",
+        "sortDescending": " :  내림차순 정렬"
+    }
+    };
+
+    var dataTable = _dom.DataTable({
+    language: lang_kor,
+    serverSide: false,
+    processing: true,
+    responsive: true,
+    searching: false,
+    lengthChange: true,
+    ordering: true,
+    pageLength: 10,
+    paging: true,
+    pagingType: "simple_numbers",
+    stateSave: false,
+    scrollX : true,
+    autoWidth: true,
+    ajax: {
+        "url": '/master/getRegistList',
+        "type": 'POST'
+    },
+    columns: [
+        { 'data': 'ROWNUM' },
+        { 'data': 'CNAME' },
+        { 
+            'data': 'CATEGORY1',
+            'render' : function(data, type, row){
+                // 중앙, 독립, 소모임, 학회
+                let txtcontent = ''
+                let badgeOption = '';    // default
+
+                switch (data) {
+                    case '중앙동아리':
+                        badgeOption = 'warning'; break;
+                    case '독립동아리':
+                        badgeOption = 'secondary'; break;
+                    case '소모임':
+                        badgeOption = 'info'; break;
+                    case '학회':
+                        badgeOption = 'success'; break;
+                    default:
+                        badgeOption = 'dark';
+                        break;
+                }
+                return `<span class="badge bg-${badgeOption}">${data}</span>`;
+            }
+        },
+        { 'data': 'CAMPUS' },
+        { 'data': 'PRESIDENT' },
+        { 'data': 'CONTACT' },
+        { 'data': 'REGIST_TIME' },
+        { 
+            'data': 'ID',
+            'render': function(data, type, row){
+                return `
+                    <span class='fas fa-check-square delete-log' name='regist_${data}' style='cursor:pointer;'></span>
+                    <span class='fas fa-window-close delete-log' name='regist_${data}' style='cursor:pointer;'></span>
+                `
+            },         
+        }
+    ],
+    columnDefs: [
+        {
+            "targets" : '_all',
+            "className" : 'dt-center'
+        },
+        { "orderable": false, targets: [4, 6] },
+        { "visible": false, "targets": [ 3 ] }, // hide campus column
+    ],
+    order: [[0, 'desc']],
+
+    // ==================================
+    // 캠퍼스 통합 관리자 전용 UI
+    // ==================================
+
+    // when finished loading
+    initComplete: function(settings, json) {
+        if(json.auth === 9){
+            dataTable.columns([3]).visible(true);    // show campus column
+        }
+    }
+    });
+
 
 
 })();

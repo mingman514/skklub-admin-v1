@@ -43,7 +43,7 @@ var dataTable = _dom.DataTable({
    pagingType: "simple_numbers",
    stateSave: false,
    scrollX : true,
-   autoWidth: false,
+   autoWidth: true,
    ajax: {
       "url": '/master/getClubList',
       "type": 'POST',
@@ -183,7 +183,7 @@ _dom.find("tbody").off("click").on("click", ".viewDetail", function () { // $([s
 
          var modalTable = $('#info-table-modal, #info-table-modal2');
 
-         $('#dt-title, #logo-cname').text(obj_result['cname']+' ');                              // title, logo cname
+         $('#dt-title, #logo-cname').text(Util.decodeHTMLEntities(obj_result['cname'])+' ');                              // title, logo cname
          
          if(obj_result['logo_path'] !== null){
             $('#dt-logo').find('img').attr('src', `../img/logo/${obj_result['logo_path']}`)     // logo path
@@ -191,7 +191,7 @@ _dom.find("tbody").off("click").on("click", ".viewDetail", function () { // $([s
 
          for (var key in obj_result){
             if($('#dt-'+key) !== null){
-               modalTable.find('#dt-'+key).text(obj_result[key])                              // else
+               modalTable.find('#dt-'+key).text(Util.decodeHTMLEntities(obj_result[key]))         // else
             }
          }
          // Show Status Badge
@@ -225,25 +225,6 @@ _dom.find("tbody").off("click").on("click", ".viewDetail", function () { // $([s
 
 
 });
-
-// ==================================
-// Reload Tabs
-// ==================================
-/** @todo 동적 리로드 구현 */
-// const clubsTab = $('.nav-item a[href="#tab-clubs"]');
-// const manageTab = $('.nav-item a[href="#tab-manage"]');
-// const logTab = $('.nav-item a[href="#tab-log"]');
-
-// const tabs = [clubsTab, manageTab, logTab];
-// tabs.forEach((e) => {
-//    e.off().on('click', () => {
-//       let target = e.attr('href');
-//       console.log('target = '+target);
-//       $(target).load(location.href + target);
-//    })
-// })
-// var current_index = $("#tabs").tabs("option","active");
-// $("#tabs").tabs('load',current_index);
 
 // ==================================
 // 비밀번호 재설정
@@ -463,7 +444,6 @@ function checkEachClub(){
    let $targetClubs = [];
    $('.clubChkbox:checked').each(function(){       // check된 것들 cid 배열
       $targetClubs.push($(this).data('clubid'));
-      console.log($targetClubs);
    })
    Util.showAlert({
       'content' : `

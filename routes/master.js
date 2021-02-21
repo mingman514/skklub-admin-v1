@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+const fs = require('fs');
 const check = require('../custom_modules/check')
 const sql = require("../custom_modules/mysql-query")
 const encrypt = require('../custom_modules/encrypt')
@@ -13,6 +14,32 @@ router.get("/", (req, res) => {
         auth: req.user.authority,
       });
   });
+
+// Open Tab
+router.post("/openTab", (req, res) => {
+  const tabName = req.body.tabName;
+  const filePath = __dirname + `/../views/partials/master/tab_${tabName}.html`;
+
+  fs.readFile(filePath, 'utf-8', (err, data) => {
+    if(err){
+      console.log(err);
+      res.json({'RESULT' : 'FAIL'});
+    } else {
+      /**
+       * @author mingman
+       * @since 2021-02-21
+       * Tabs did not work properly when clicked.
+       * Html loaded successfully, but JS file excuted once.
+       * Cached file was the problem, so need to load new file.
+       * Therefore, dynamically add random charaters at the end.
+       * Be careful with file names and tab texts.
+       * (If you find a better way, try that instead!)
+       */
+      data += `<script type="module" src="/js/master_tab_${tabName}.js?version=${Math.random().toString(36).substr(2,11)}"></script>`
+      res.json({'RESULT' : 'SUCCESS', 'HTML' : data});
+    }
+  })
+})
 
 
 /***********************************
@@ -62,11 +89,8 @@ router
       }
 
       // 마스터 세부 권한 필터
-      if (req.user.authority > 3 && req.user.authority <= 6) {   // 중간관리자
-        sqlWhere += `AND authority <= 3 AND campus LIKE '%${req.user.campus}%' `;
-      } else if(req.user.authority > 6 && req.user.authority <= 8) {   // 동연관리자
-        sqlWhere += `AND authority <= 6 AND campus LIKE '%${req.user.campus}%' `;
-      }
+      sqlWhere += masterDetailedFilter(req.user.authority, req.user.campus,'authority', 'campus');
+
       console.log(`
       ==========================
       SQL : ${sqlWhere}
@@ -249,6 +273,33 @@ router
   })
 
 router
+  .post('/getRegistList', (req, res) => {
+    let SQL = `
+          SELECT *
+          FROM (SELECT
+                      @ROWNUM := @ROWNUM + 1 AS ROWNUM,
+                      ID, CNAME, CATEGORY1, CAMPUS, PRESIDENT, CONTACT, date_format(REGIST_TIME,'%Y-%m-%d %H:%i') AS REGIST_TIME
+                FROM EXTRA_REGIST, (SELECT @ROWNUM := 0) TMP
+                WHERE 1=1 
+                ${req.user.authority < 8? ` AND CAMPUS LIKE ${req.user.campus}`: ''}
+                ORDER BY REGIST_TIME ASC) SUB
+          ORDER BY SUB.ROWNUM DESC;
+          `;
+
+    sql.requestData(SQL, null, (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        let obj_result = {}
+        obj_result.data = results;
+        obj_result.auth = req.user.authority;
+        res.json(obj_result);
+      }
+    })
+
+  })
+
+router
   .post('/changeCodeUse', (req, res) => {
     const campus = req.body.campus;
     const use = req.body.use;
@@ -278,28 +329,31 @@ router
     var order_dir = req.body['order[0][dir]'];
     var srch_col = req.body.srch_col;
     var srch_key = req.body.srch_key;
-    
+
+    var master_filter = masterDetailedFilter(req.user.authority, req.user.campus, 'C.authority', 'CAMPUS');
     sql.requestData(
       `
       -- requested data
-      SELECT L.LOG_ID, L.LOG_CDE, L.ACTION_DETAIL, L.CID, L.CNAME, C.campus AS CAMPUS, date_format(L.TIME,'%Y-%m-%d %H:%i') AS TIME, L.USR_IP
+      SELECT L.LOG_ID, L.LOG_CDE, L.ACTION_DETAIL, L.CID, L.CNAME, C.campus AS CAMPUS, C.authority AS AUTH, date_format(L.TIME,'%Y-%m-%d %H:%i') AS TIME, L.USR_IP
       FROM ${process.env.LOG_DB} AS L
-      LEFT OUTER JOIN (SELECT cid, campus FROM ${process.env.PROCESSING_DB}) AS C
+      LEFT OUTER JOIN (SELECT cid, campus, authority FROM ${process.env.PROCESSING_DB}) AS C
       ON L.CID = C.cid
-      WHERE CAMPUS LIKE '%${req.user.campus}%'${srch_key? ` AND ${srch_col} LIKE '%${srch_key}%'` : '' }
+      WHERE 1=1 ${master_filter}
+      ${srch_key? ` AND ${srch_col} LIKE '%${srch_key}%'` : '' }
       ORDER BY ${order_col} ${order_dir} LIMIT ${length} OFFSET ${startIdx};
 
       -- recordsTotal
       SELECT COUNT(*) AS TOT_CNT FROM ${process.env.LOG_DB} AS L
-      LEFT OUTER JOIN (SELECT cid, campus FROM ${process.env.PROCESSING_DB}) AS C
+      LEFT OUTER JOIN (SELECT cid, campus, authority FROM ${process.env.PROCESSING_DB}) AS C
       ON L.CID = C.cid
-      WHERE CAMPUS LIKE '%${req.user.campus}%';
+      WHERE 1=1 ${master_filter};
 
       -- recordsFilter
       SELECT COUNT(*) AS FILT_CNT FROM ${process.env.LOG_DB} AS L
-      LEFT OUTER JOIN (SELECT cid, campus FROM ${process.env.PROCESSING_DB}) AS C
+      LEFT OUTER JOIN (SELECT cid, campus, authority FROM ${process.env.PROCESSING_DB}) AS C
       ON L.CID = C.cid
-      WHERE CAMPUS LIKE '%${req.user.campus}%'${srch_key? ` AND ${srch_col} LIKE '%${srch_key}%'` : '' }
+      WHERE 1=1 ${master_filter}
+      ${srch_key? ` AND ${srch_col} LIKE '%${srch_key}%'` : '' }
       `,
       null,
       (err, results) => {
@@ -336,6 +390,17 @@ router
 
 
 
+function masterDetailedFilter(auth, campus, authTxt, campusTxt){
+  let sql = '';
+  if (auth > 3 && auth <= 6) {   // 중간관리자
+    sql += ` AND ${authTxt} <= 3 AND ${campusTxt} LIKE '%${campus}%' `;
+  } else if(auth == 7) {   // 동연관리자
+    sql += ` AND ${authTxt} <= 6 AND ${campusTxt} LIKE '%${campus}%' `;
+  } else if(auth == 8) {   // 기지위 서브관리자
+    sql += ` AND ${authTxt} <= 7 `;
+  }
+  return sql;
+}
 
 
 function getRandomInt(min, max) {
