@@ -136,7 +136,7 @@ import Util from './modules/util.js'
         },
         { "orderable": false, targets: [2, 4, 6, 7] },
         { "searchable": false, "targets": [0, 4, 5, 6, 7] },
-        { "visible": false, "targets": [ 4 ] }, // hide campus column
+        { "visible": false, "targets": [ 4, 7 ] }, // hide campus column
     ],
     order: [[0, 'desc']],
 
@@ -147,7 +147,7 @@ import Util from './modules/util.js'
     // when finished loading
     initComplete: function(settings, json) {
         if(json.auth === 9){
-            dataTable.columns([4]).visible(true);    // show campus column
+            dataTable.columns([4, 7]).visible(true);    // show campus column
         }
     }
     });
