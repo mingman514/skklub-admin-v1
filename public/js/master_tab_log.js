@@ -90,6 +90,12 @@ import Util from './modules/util.js'
                             case '003':
                                 txtcontent = '<span class="badge bg-warning text-dark">권한변경</span>';
                                 break;
+                            case '004':
+                                txtcontent = '<span class="badge bg-warning text-dark">동아리승인</span>';
+                                break;
+                            case '005':
+                                txtcontent = '<span class="badge bg-warning text-dark">동아리반려</span>';
+                                break;
                         }
                         break;
                     case 'USR' :

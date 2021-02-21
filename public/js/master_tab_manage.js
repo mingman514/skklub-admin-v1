@@ -303,8 +303,8 @@ import Util from './modules/util.js'
             'data': 'ID',
             'render': function(data, type, row){
                 return `
-                    <span class='fas fa-check-square delete-log' name='regist_${data}' style='cursor:pointer;'></span>
-                    <span class='fas fa-window-close delete-log' name='regist_${data}' style='cursor:pointer;'></span>
+                    <span class='fas fa-check-square fa-lg approve-club' name='regist_${data}' style='cursor:pointer;'></span>
+                    <span class='fas fa-window-close fa-lg reject-club' name='regist_${data}' style='cursor:pointer;'></span>
                 `
             },         
         }
@@ -332,5 +332,85 @@ import Util from './modules/util.js'
     });
 
 
+    // ==================================
+    // 동아리 승인
+    // ==================================
+    _dom.on("click", ".approve-club", function () {
+        let registId = $(this).attr('name').split('_')[1];
+        let cname = $(this).closest('tr').children().eq(1).text();
+        
+
+        Util.showAlert({
+            'title': '동아리 승인',
+            'content' : `[${cname}]의 스클럽 신청을 승인하시겠습니까?`
+         })
+        .done((result) => {
+            Util.closeAlert();
+            $.ajax({
+                url:'/master/approveClub',
+                type: 'POST',
+                data: {
+                    'registId' : registId,
+                    'cname' : cname
+                },
+                dataType: 'JSON'
+            }).done(function(r){
+                if(r.RESULT === 'FAIL'){
+                    Util.showNoticeModal({
+                        'type' : 'warning',
+                        'title' : '동아리 승인실패', 
+                        'content' : `승인과정에서 문제가 발생하였습니다.`
+                     })
+                } else {
+                    Util.showToast({
+                        'type' : 'success',
+                        'title' : `동아리 승인완료`,
+                        'content' : `스클럽에 등록되었습니다.`
+                     })
+                }
+                dataTable.ajax.reload()
+            })
+        })
+    })
+
+    // ==================================
+    // 동아리 거절
+    // ==================================
+    _dom.on("click", ".reject-club", function () {
+        let registId = $(this).attr('name').split('_')[1];
+        let cname = $(this).closest('tr').children().eq(1).text();
+        
+        Util.showAlert({
+            'title': '동아리 반려',
+            'content' : `[${cname}]의 스클럽 등록을 반려하시겠습니까?`
+         })
+        .done((result) => {
+            Util.closeAlert();
+            $.ajax({
+                url:'/master/rejectClub',
+                type: 'POST',
+                data: {
+                    'registId' : registId,
+                    'cname' : cname
+                },
+                dataType: 'JSON'
+            }).done(function(r){
+                if(r.RESULT === 'FAIL'){
+                    Util.showNoticeModal({
+                        'type' : 'warning',
+                        'title' : '동아리 반려실패', 
+                        'content' : `반려과정에서 문제가 발생하였습니다.`
+                     })
+                } else {
+                    Util.showToast({
+                        'type' : 'success',
+                        'title' : `동아리 반려 완료`,
+                        'content' : `${cname}을(를) 반려하였습니다.`
+                     })
+                }
+                dataTable.ajax.reload()
+            })
+        })
+    })
 
 })();

@@ -6,6 +6,7 @@ const check = require('../custom_modules/check')
 const sql = require("../custom_modules/mysql-query")
 const encrypt = require('../custom_modules/encrypt')
 const log = require('../custom_modules/insertLog');
+const { insertLogByCid } = require('../custom_modules/insertLog');
 
 // master
 router.get("/", (req, res) => {
@@ -314,7 +315,52 @@ router
     })
   })
 
+router
+  .post('/approveClub', (req, res) => {
+    const registId = req.body.registId;
+    const cname = req.body.cname;
 
+    let SQL = `
+              INSERT INTO ${process.env.PROCESSING_DB}
+              (cname, category1, campus, president_name, president_contact, admin_id, admin_pw, authority)
+                  SELECT CNAME, CATEGORY1, CAMPUS, PRESIDENT, CONTACT, ADMIN_ID, ADMIN_PW, 3
+                  FROM EXTRA_REGIST
+                  WHERE ID=?;
+              `
+    sql.requestData(SQL, registId, (err, results) => {
+      if(err){
+        console.log(err);
+        res.json({'RESULT' : 'FAIL'});
+      } else {
+        // delete regist data
+        sql.requestData('DELETE FROM EXTRA_REGIST WHERE ID=?', registId, (err, results) => {
+          if(err){
+            console.log(err);
+            res.json({'RESULT' : 'FAIL'});
+          } else {
+            log.insertLogByCname(req.user.cname, log.getClientIp(req), 'APPROVE_CLUB', `${cname} 승인`);
+            res.json({'RESULT' : 'SUCCESS'})
+          }
+        })
+      }
+    })
+  })
+
+router
+  .post('/rejectClub', (req, res) => {
+    const registId = req.body.registId;
+    const cname = req.body.cname;
+
+    sql.requestData('DELETE FROM EXTRA_REGIST WHERE ID=?', registId, (err, results) => {
+      if(err){
+        console.log(err);
+        res.json({'RESULT' : 'FAIL'});
+      } else {
+        log.insertLogByCname(req.user.cname, log.getClientIp(req), 'REJECT_CLUB', `${cname} 반려`);
+        res.json({'RESULT' : 'SUCCESS'})
+      }
+    })
+  })
 /***********************************
  * Log Tab
  ***********************************/

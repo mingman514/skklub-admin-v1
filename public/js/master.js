@@ -25,7 +25,6 @@ import Util from './modules/util.js'
                 cache : false,
             }).done(function(r){
                 if(r.RESULT === 'SUCCESS'){
-                    console.log(r.HTML)
                     mainTabContent.html(r.HTML);
                 }
             })

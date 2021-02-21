@@ -294,40 +294,6 @@ router
         })
     })
 
-
-router
-    .post('/approveExtra', check.checkMasterAuth, (req, res) => {
-        // insert to CLUB, delete from EXTRA_REGIST
-
-        /** @todo signup - extra 로그찍기 */
-        
-         /** @todo 관리자가 승인 눌렀을 때 쿼리 */
-        /*
-        // Encrypt adminPw
-        encrypt.hashItem(admin_pw, (hashedPassword) => {
-            // INSERT ACCOUNT (Default Auth = 3)
-            sql.requestData(
-                `INSERT INTO ${process.env.PROCESSING_DB}(cname, campus, category1, admin_id, admin_pw, authority, president_name, president_contact)
-                VALUES('${cname}', '${campus}', '${category1}', '${admin_id}', '${hashedPassword}', 3, '${president_name}', '${president_name}'); 이것도 다 select로 처리해야하네...
-                UPDATE EXTRA_REGIST SET COMPLETED=1 WHERE ID=${targetId};`,
-                null, (err, results) => {
-                            if (err) {
-                                console.log(err);
-                                res.json({'RESULT':'FAIL'});
-                            } else {
-                                log.insertLogByCname(cname, log.getClientIp(req), 'SIGN_UP', 'REGULAR');
-                                res.json({'RESULT':'SUCCESS'});
-                            }
-                        })
-        })*/
-    })
-
-    // 신청내역 삭제
-router
-    .post('/deleteExtra', check.checkMasterAuth, (req, res) => {
-        
-    })
-
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
