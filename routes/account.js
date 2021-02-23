@@ -50,7 +50,7 @@ router
                     req.flash("flash", msg);
                     res.redirect("/account");
                 } else {
-                    msg = `${req.user.cname}의 계정 비밀번호가 변경되었습니다.<br>다시 로그인해주세요`;
+                    msg = `${req.user.cname}의 계정 비밀번호가 변경되었습니다.`;
                     log.insertLogByCid(req.user.cid, log.getClientIp(req), 'CHANGE_PW', '')
                     req.logOut();
                     req.flash("flash", msg);

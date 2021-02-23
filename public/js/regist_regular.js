@@ -24,9 +24,10 @@ $('#requestVerif').off('click').on('click', () => {
       _content = '모든 정보를 빠짐없이 입력해주세요.'
     } else if (!isEmail(skkuMail)){   // email format
       _content = '이메일 형식을 지켜주세요.'
-    } else if(!['skku.edu', 'g.skku.edu'].includes(skkuMail.split('@')[1])){    // SKKU email
-      _content = '학교 이메일을 사용해주세요.\n(@skku.edu 또는 @g.skku.edu)'
     }
+    // else if(!['skku.edu', 'g.skku.edu'].includes(skkuMail.split('@')[1])){    // SKKU email
+    //   _content = '학교 이메일을 사용해주세요.\n(@skku.edu 또는 @g.skku.edu)'
+    // }
   
     if(_content){   // 입력값 문제 확인시 중단
       Util.showNoticeModal({ 'title' : '', 'content' : _content })
