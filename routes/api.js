@@ -169,6 +169,8 @@ function convertCategory(clubCategory){
             conditions += "AND (category1='소모임' OR category1='준소모임')"; break;
         case 'academic-clubs':
             conditions += "AND category1='학회'"; break;
+        case 'students-org':
+            conditions += "AND category1='학생단체'"; break;
         default:
             conditions = '';
     }
