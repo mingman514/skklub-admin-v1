@@ -3,30 +3,19 @@ const router = express.Router();
 
 const sql = require("../custom_modules/mysql-query");
 
-/**
-     * @author mingman
-     * Seed needs to be changed once a day.
-     * Therefore, seed format should be 'yyyymmdd',
-     * which is a number of 8 digits.
-     * 
-     * Get today's date and then convert it into format above.
-     */
-var dateSeed = getSeedForRand();
-
-
     /**
      * API FOR TEST
      */
 router
-.get("/test/:category/:campus", (req, res, next) => {
+.get("/test/:category/:campus", getSeedForRand, (req, res, next) => {
     const clubCategory = req.params.category;
     const clubCampus = req.params.campus;
     console.log("/test/:category/:campus")
     let API_sql = `SELECT cid, cname, authority, category1, category2, category3, campus, logo_path
                    FROM CLUB_TEST
                    WHERE 1=1${convertCategory(clubCategory)}${convertCampus(clubCampus)} AND authority NOT IN (0, 2, 4, 6)
-                   ORDER BY RAND(${dateSeed})`;
-    console.log(API_sql)
+                   ORDER BY RAND(${req.seed});`;
+    
     sql.requestData(API_sql, null, (err, results) => {
         if (err) {
             console.log(err);
@@ -88,15 +77,15 @@ router
   */
 // Category/Campus Format
 router
-    .get("/:category/:campus", (req, res, next) => {
+    .get("/:category/:campus", getSeedForRand, (req, res, next) => {
         const clubCategory = req.params.category;
         const clubCampus = req.params.campus;
         console.log("/:category/:campus")
         let API_sql = `SELECT cid, cname, authority, category1, category2, category3, campus, logo_path
                        FROM CLUB
                        WHERE 1=1${convertCategory(clubCategory)}${convertCampus(clubCampus)} AND authority NOT IN (0, 2, 4, 6)
-                       ORDER BY RAND(${dateSeed})`;
-
+                       ORDER BY RAND(${req.seed});`;
+        
         sql.requestData(API_sql, null, (err, results) => {
             if (err) {
                 console.log(err);
@@ -191,7 +180,15 @@ function convertCampus(clubCampus){
     return conditions;
 }
 
-function getSeedForRand() {
+/**
+ * @author mingman
+ * Seed needs to be changed once a day.
+ * Therefore, seed format should be 'yyyymmdd',
+ * which is a number of 8 digits.
+ * 
+ * Get today's date and then convert it into format above.
+ */
+function getSeedForRand(req, res, next) {
     // Converter date -> int
     let date = new Date();
     let year = date.getFullYear(); 
@@ -201,7 +198,9 @@ function getSeedForRand() {
     month = addZero(month);
     day = addZero(day);
     
-    return (Number) (year + month + day);
+    req.seed = (Number) (year + month + day);
+
+    next();
 
     function addZero(str) {
         return str.length == 1? '0' + str : str;
