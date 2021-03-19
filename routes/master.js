@@ -233,7 +233,6 @@ router
         console.log(err);
         res.json({'RESULT' : 'FAIL'});
       } else {
-        console.log(results);
         if(results[0].AUTH >= req.user.authority){
           res.json({'RESULT' : 'UNAUTHORIZED'});
         } else {

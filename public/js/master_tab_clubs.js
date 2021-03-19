@@ -1,5 +1,10 @@
 import Util from './modules/util.js'
 
+(function(){
+
+   'use strict';
+
+
 // ==================================
 // Datatable
 // ==================================
@@ -500,4 +505,4 @@ function checkEachClub(){
    })
  })
 
-
+})();
