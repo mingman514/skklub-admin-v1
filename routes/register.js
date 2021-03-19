@@ -25,7 +25,13 @@ const smtpTransport = nodemailer.createTransport({
  */
 router
     .get('/regular', (req, res) => {
-        res.render("regist_regular.ejs", {cname: req.user.cname? req.user.cname : null});
+        let cname;
+        try{
+            cname = req.user.cname;
+        } catch(e) {
+            cname = null;
+        }
+        res.render("regist_regular.ejs", {cname: cname});
     })
 
 router
@@ -232,7 +238,13 @@ router
  */
 router
     .get('/extra', (req, res) => {
-        res.render("regist_extra.ejs", {cname: req.user.cname? req.user.cname : null});
+        let cname;
+        try{
+            cname = req.user.cname;
+        } catch(e) {
+            cname = null;
+        }
+        res.render("regist_extra.ejs", {cname: cname});
     })
 
 router
